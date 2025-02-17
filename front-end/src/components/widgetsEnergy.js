@@ -16,7 +16,7 @@ function WidgetsEnergy() {
       <div>
         <div className="baseGreen rounded-lg mb-4 p-4 flex flex-col justify-center">
           <img
-            src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
+            src="https://plus.unsplash.com/premium_photo-1706140675031-1e0548986ad1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bGl2aW5ncm9vbXxlbnwwfHwwfHx8MA%3D%3D"
             alt=""
             className="rounded-lg mb-4"
             style={{ height: "170px" }}
