@@ -9,9 +9,9 @@ function RoomsRobots() {
     { img: "/image/living_room.jpg", name: "Living Room" },
     { img: "/image/kitchen.jpg", name: "Kitchen" },
     { img: "/image/bathroom.jpg", name: "Bathroom" },
-    { img: "/image/master.jpeg", name: "Master" },
+    { img: "/image/master.jpg", name: "Master" },
     { img: "/image/guest.jpeg", name: "Guest Room" },
-    { img: "/image/study.jpeg", name: "Study" },
+    { img: "/image/study.jpg", name: "Study" },
     { img: "/image/garage.jpg", name: "Garage" },
     { img: "/image/plus.png", name:"Add Room"}
   ]);
