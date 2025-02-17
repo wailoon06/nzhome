@@ -5,18 +5,16 @@ function RoomsRobots() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [animationClass, setAnimationClass] = useState(""); // Track animation
   const [tempIndex, setTempIndex] = useState(currentIndex); // Temporary index for animation
-  const rooms = [
-    { img: "room1.jpg", name: "Living Room" },
-    { img: "room2.jpg", name: "Kitchen" },
-    { img: "room3.jpg", name: "Bathroom" },
-    { img: "room4.jpg", name: "Master" },
-    { img: "room5.jpg", name: "Guest Room" },
-    { img: "room6.jpg", name: "Office" },
-    { img: "room7.jpg", name: "Garage" },
-    { img: "room8.jpg", name: "Patio" },
-    { img: "room8.jpg", name: "Patio" },
-    { img: "room8.jpg", name: "Patio" },
-  ];
+  const [rooms, setRooms] = useState([
+    { img: "/image/living_room.jpg", name: "Living Room" },
+    { img: "/image/kitchen.jpg", name: "Kitchen" },
+    { img: "/image/bathroom.jpg", name: "Bathroom" },
+    { img: "/image/master.jpeg", name: "Master" },
+    { img: "/image/guest.jpeg", name: "Guest Room" },
+    { img: "/image/study.jpeg", name: "Study" },
+    { img: "/image/garage.jpg", name: "Garage" },
+    { img: "/image/plus.png", name:"Add Room"}
+  ]);
 
   const totalPages = Math.ceil(rooms.length / 4);
   const currentPage = Math.floor(currentIndex / 4);
@@ -56,15 +54,14 @@ function RoomsRobots() {
             onAnimationEnd={handleAnimationEnd}
           >
             {rooms.slice(tempIndex, tempIndex + 4).map((room, index) => (
+               
               <div
                 key={index}
                 className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end"
               >
                 <div className="flex justify-center items-center mb-4 h-[170px]">
                   <img
-                    src={
-                      "https://wallpapers.com/images/featured/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg"
-                    }
+                    src={room.img}
                     alt={""}
                     className="rounded-lg object-contain"
                     style={{ maxHeight: "100%" }}
@@ -109,6 +106,7 @@ function RoomsRobots() {
           </button>
         </div>
       </div>
+
       {/* Track Robot */}
       <div className="baseGreen rounded-lg mb-4 p-4 flex flex-col justify-center">
         <img
