@@ -1,36 +1,52 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import React, { useState, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const emailRef = useRef(null);
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const handleEmailChange = (e) => setEmail(e.target.value);
+  // const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    const userData = { email, password };
+  //   const userData = { email, password };
 
-    axios.post(`http://localhost:8080/api/login`, userData)
-      .then(response => {
-        console.log(response.data);
-        alert(response.data);
-        navigate("/"); // Redirect after successful log in
-      })
-      .catch(error => {
-        console.error("There was an error logging in!", error);
-        alert("Error Logging In.");
-      });
-  };
+  //   axios
+  //     .post(`http://localhost:8080/api/login`, userData)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       alert(response.data);
+  //       navigate("/"); // Redirect after successful log in
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error logging in!", error);
+  //       alert("Error Logging In.");
+  //     });
+  // };
 
-  const handleButtonClick = (event) => {
+  // email check
+  const handleButtonClick = async (event) => {
     event.preventDefault(); // Prevent default form submission
-    navigate("/");
+    const theEmail = emailRef.current.value; // Get this from input field
+
+    try {
+      const { data: exists } = await axios.get(`/api/users/exists`, {
+        params: { theEmail },
+      });
+
+      if (exists) {
+        alert("Email already exists!");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error checking email:", error);
+    }
   };
 
   return (
@@ -69,6 +85,7 @@ function LoginPage() {
                 type="email"
                 name="email"
                 placeholder="Email"
+                ref={emailRef}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
                 autocomplete="email"
@@ -106,13 +123,14 @@ function LoginPage() {
               <hr className="flex-grow border-t" />
             </div>
 
-            <button
-              type="button"
-              className="button2 bg-blue-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
-              onClick={handleButtonClick}
-            >
-              Register
-            </button>
+            <Link to={`/register`}>
+              <button
+                type="button"
+                className="button2 bg-blue-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
+              >
+                Register
+              </button>
+            </Link>
           </form>
         </div>
       </div>
@@ -121,5 +139,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
-

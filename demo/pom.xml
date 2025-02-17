@@ -6,9 +6,10 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.2.2</version>  <!-- Change to the latest stable version -->
+        <relativePath/> 
     </parent>
+
 
     <groupId>com.example</groupId>
     <artifactId>demo</artifactId>
@@ -43,8 +44,7 @@
         <!-- Microsoft SQL Server JDBC driver -->
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>12.2.0.jre8</version> <!-- Use jre8 for wider support -->
+			<artifactId>mssql-jdbc</artifactId> <!-- Use jre8 for wider support -->
 		</dependency>
 
         <!-- Microsoft SQL Server JDBC driver -->
@@ -64,6 +64,22 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -76,7 +92,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
                 <configuration>
                     <argLine>-Djava.library.path=C:\GOG Games\SQL Authentication\sqljdbc_12.8\enu\auth\x64\mssql-jdbc_auth-12.8.1.x64.dll</argLine>
                 </configuration>
