@@ -40,6 +40,7 @@ import RoomsDevicesPage from "./components/pages/RoomsDevicesPage";
 import RoomEnergyUsagePage from "./components/pages/RoomEnergyUsagePage";
 import RoomDeviceSetActionPage from "./components/pages/RoomDeviceSetActionPage";
 
+
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
@@ -154,7 +155,7 @@ function App() {
             <div className="main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto">
               <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
                 {/* Header */}
-                <div className="flex justify-between items-center relative">
+                <div className="sticky top-0 z-[9999]">
                   <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
                     {/* Hamburger Button */}
                     <div
