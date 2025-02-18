@@ -234,7 +234,7 @@ function CameraPage() {
                         .map((room, index) => (
                           <div
                             key={index}
-                            className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end h-full"
+                            className="bg-white border-8 rounded-lg mb-4 py-3 flex flex-col justify-end h-full"
                           >
                             <div className="flex justify-center items-center mb-4 h-[23rem]">
                               <img
@@ -311,18 +311,18 @@ function CameraPage() {
                       </span>
                     ))}
                   </div>
-                  <div className="absolute inset-y-1/2 w-[95%] flex justify-between items-center">
+                  <div className="absolute inset-y-1/2 w-[90%] flex justify-between px-10 pe-6 items-center">
                     <button
                       onClick={prevItems}
                       disabled={currentIndex === 0}
-                      className="bg-white text-gray-800 p-2 rounded-full"
+                      className="bg-white border-4 text-gray-800 p-2 rounded-full"
                     >
                       <i className={"fas fa-chevron-left"}></i>
                     </button>
-                    <button
+                    <button 
                       onClick={nextItems}
                       disabled={currentIndex + 1 >= rooms.length}
-                      className="bg-white text-gray-800 p-2 rounded-full"
+                      className="bg-white border-4 text-gray-800 p-2 rounded-full"
                     >
                       <i className={"fas fa-chevron-right"}></i>
                     </button>

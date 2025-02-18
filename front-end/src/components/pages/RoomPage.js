@@ -115,7 +115,7 @@ function RoomPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <div className="flex justify-between items-center relative">
+            <div className="sticky top-0 z-[9999]">
               <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
                 {/* Hamburger Button */}
                 <div

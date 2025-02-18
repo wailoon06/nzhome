@@ -102,7 +102,7 @@ function Devices() {
   return (
     <div className="rounded-lg p-4 teal-text mb-4">
       <div className="grid grid-cols-1 gap-4">
-        <div className="rounded-lg p-4 baseGreen mb-4 relative overflow-hidden">
+        <div className=" rounded-lg p-4 baseGreen2 mb-4 relative overflow-hidden">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-white">Devices</h2>
             <div className="flex space-x-2">

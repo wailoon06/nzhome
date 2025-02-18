@@ -39,7 +39,7 @@ function RoomsRobots() {
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[3fr,1.2fr] p-4 gap-4">
       {/* Rooms */}
-      <div className="rounded-lg p-4 baseGreen mb-4 relative overflow-hidden">
+      <div className="rounded-lg p-4 baseGreen2 mb-4 relative overflow-hidden">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-white text-2xl font-bold mb-2">Rooms</h2>
           <div className="flex space-x-2">
@@ -108,7 +108,7 @@ function RoomsRobots() {
       </div>
 
       {/* Track Robot */}
-      <div className="baseGreen rounded-lg mb-4 p-4 flex flex-col justify-center">
+      <div className="baseGreen2 rounded-lg mb-4 p-4 flex flex-col justify-center">
         <img
           src="https://wallpapers.com/images/featured/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg"
           alt=""

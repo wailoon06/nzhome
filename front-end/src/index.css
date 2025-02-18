@@ -58,6 +58,12 @@ button {
 
 }
 
+.baseGreen2 {
+  background-color: #193334;
+  opacity: 0.9;
+
+}
+
 .baseBG {
   background-image: url('image/NZHome.png'); /* Adjust path if necessary */
   background-size: cover;

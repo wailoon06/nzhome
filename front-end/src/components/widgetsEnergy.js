@@ -14,7 +14,7 @@ function WidgetsEnergy() {
     <div className="grid grid-cols-2 p-4 gap-4 mb-4">
       {/* Widgets */}
       <div>
-        <div className="baseGreen rounded-lg mb-4 p-4 flex flex-col justify-center">
+        <div className="baseGreen2 rounded-lg mb-4 p-4 flex flex-col justify-center">
           <img
             src="https://plus.unsplash.com/premium_photo-1706140675031-1e0548986ad1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bGl2aW5ncm9vbXxlbnwwfHwwfHx8MA%3D%3D"
             alt=""
@@ -30,10 +30,10 @@ function WidgetsEnergy() {
 
         <a href="#">
           <div className="mt-12">
-            <div className="rounded-lg p-3 baseGreen flex flex-wrap gap-2 mt-2 overflow-hidden">
+            <div className="rounded-lg p-3 baseGreen2 flex flex-wrap gap-2 mt-2 overflow-hidden px-4 py-8">
               {/* Weather Today */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
-                <div className="text-sm sm:text-base md:text-lg truncate">
+                <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
                   Weather Today
                 </div>
                 <div className="text-2xl sm:text-2xl md:text-3xl truncate">
@@ -43,17 +43,17 @@ function WidgetsEnergy() {
 
               {/* Temperature */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
-                <div className="text-sm sm:text-base md:text-lg truncate">
+                <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
                   Temperature
                 </div>
-                <div className="text-2xl sm:text-2xl md:text-3xl truncate">
+                <div className="text-2xl sm:text-2xl md:text-3xl truncate ">
                   20 °C
                 </div>
               </div>
 
               {/* Device Status */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
-                <div className="text-sm sm:text-base md:text-lg truncate">
+                <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
                   Device Status
                 </div>
                 <div className="text-2xl sm:text-2xl md:text-3xl truncate">
@@ -63,7 +63,7 @@ function WidgetsEnergy() {
 
               {/* Network */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
-                <div className="text-sm sm:text-base md:text-lg truncate">
+                <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
                   Network
                 </div>
                 <div className="text-2xl sm:text-2xl md:text-3xl truncate">
@@ -75,7 +75,7 @@ function WidgetsEnergy() {
         </a>
       </div>
 
-      <div className="baseGreen rounded-lg mb-4 p-4 teal-text">
+      <div className="baseGreen2 rounded-lg mb-4 p-4 teal-text">
         {/* Date Picker */}
         <div className="flex justify-center items-center mb-6">
           <div className="relative bg-white text-gray-800 rounded-full text-sm py-1 px-2 flex items-center cursor-pointer w-[170px] z-50">

@@ -146,7 +146,7 @@ function AllRoomPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <div className="flex justify-between items-center relative">
+            <div className="sticky top-0 z-[9999]">
               <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
                 {/* Hamburger Button */}
                 <div
@@ -209,7 +209,7 @@ function AllRoomPage() {
                         .map((room, index) => (
                           <div
                             key={index}
-                            className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end h-full"
+                            className="baseGreen rounded-lg mb-4 p-4 flex flex-col justify-end h-full"
                           >
                             <div className="flex justify-center items-center mb-4 h-[23rem]">
                               <img
@@ -220,20 +220,21 @@ function AllRoomPage() {
                               />
                             </div>
 
-                            <div className="relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center">
+                            <div className="relative bg-white text-gray-800  text-lg font-bold py-2 px-4 flex justify-center items-center">
                               {room.name}
                             </div>
-                            <div className="grid grid-cols-2 relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center gap-4">
+                            <div className="py-1"></div>
+                            <div className="grid grid-cols-2 relative baseGreen text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center gap-4">
                               <Link
                                 key={room.name}
                                 to={`/rooms/summary/${room.name}`}
                               >
-                                <div className="border border-gray-400 relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center">
+                                <div className="border border-gray-400 relative bg-white font-bold text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center">
                                   Summary
                                 </div>{" "}
                               </Link>
                               <Link to={`/rooms/devices/${room.name}`}>
-                                <div className="border border-gray-400 relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center">
+                                <div className="border border-gray-400 relative bg-white font-bold text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center">
                                   Devices
                                 </div>
                               </Link>
