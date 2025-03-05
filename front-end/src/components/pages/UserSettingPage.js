@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function UserSettingPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -14,6 +15,12 @@ function UserSettingPage() {
   const handleNavigation = (path) => {
     navigate(path);
   };
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -45,11 +52,11 @@ function UserSettingPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -59,7 +66,7 @@ function UserSettingPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -73,7 +80,7 @@ function UserSettingPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -87,7 +94,7 @@ function UserSettingPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -139,7 +146,7 @@ function UserSettingPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -162,7 +169,7 @@ function UserSettingPage() {
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
                 <h1 className="text-center lg:text-4xl w-full ml-[-4%]">
-                  Settings
+                  {translations.settingsTitle}
                 </h1>
               </div>
 
@@ -172,42 +179,46 @@ function UserSettingPage() {
                   href="/profile/languages"
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
-                  <span className="font-bold">Languages</span>
+                  <span className="font-bold">{translations.languages}</span>
                 </a>
 
                 <div
                   onClick={() => handleNavigation("#")}
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
-                  <span className="font-bold">Notifications</span>
+                  <span className="font-bold">
+                    {translations.notifications}
+                  </span>
                 </div>
 
                 <div
                   onClick={() => handleNavigation("#")}
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
-                  <span className="font-bold">Help and Feedback</span>
+                  <span className="font-bold">
+                    {translations.helpAndFeedback}
+                  </span>
                 </div>
 
                 <div
                   onClick={() => handleNavigation("#")}
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
-                  <span className="font-bold">Security</span>
+                  <span className="font-bold">{translations.security}</span>
                 </div>
 
                 <div
                   onClick={() => handleNavigation("#")}
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
-                  <span className="font-bold">Privacy</span>
+                  <span className="font-bold">{translations.privacy}</span>
                 </div>
 
                 <div
                   onClick={() => handleNavigation("#")}
                   className="rounded-md border border-gray-500 bg-white p-4 mt-12 flex items-center justify-center text-center text-lg w-[96%]"
                 >
-                  <span className="font-bold">Log out</span>
+                  <span className="font-bold">{translations.logOut}</span>
                 </div>
               </div>
             </div>

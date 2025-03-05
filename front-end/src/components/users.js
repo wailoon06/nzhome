@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import translationsMap from "../components/locales/translationsMap";
 
 function Users() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,13 +37,19 @@ function Users() {
   const totalPages = Math.ceil(users.length / 3);
   const currentPage = Math.floor(currentIndex / 3);
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="rounded-lg p-4 mb-4">
       <div className="grid grid-cols-1 gap-4">
         {/* Users Section */}
         <div className="rounded-lg p-4 baseGreen2 mb-4 relative overflow-hidden">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-white">Users</h2>
+            <h2 className="text-2xl font-bold text-white">{translations.allUsers}</h2>
           </div>
 
           <div className="transition-all duration-500 ease-in-out">

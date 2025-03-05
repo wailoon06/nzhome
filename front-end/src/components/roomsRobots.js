@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import translationsMap from "../components/locales/translationsMap";
 
 function RoomsRobots() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -13,7 +14,7 @@ function RoomsRobots() {
     { img: "/image/guest.jpeg", name: "Guest Room" },
     { img: "/image/study.jpg", name: "Study" },
     { img: "/image/garage.jpg", name: "Garage" },
-    { img: "/image/plus.png", name:"Add Room"}
+    { img: "/image/plus.png", name: "Add Room" },
   ]);
 
   const totalPages = Math.ceil(rooms.length / 4);
@@ -36,15 +37,25 @@ function RoomsRobots() {
     setCurrentIndex(tempIndex); // Update actual index after animation ends
   };
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[3fr,1.2fr] p-4 gap-4">
       {/* Rooms */}
       <div className="rounded-lg p-4 baseGreen2 mb-4 relative overflow-hidden">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-white text-2xl font-bold mb-2">Rooms</h2>
+          <h2 className="text-white text-2xl font-bold mb-2">
+            {translations.rooms}
+          </h2>
           <div className="flex space-x-2">
             <Link to="/rooms">
-              <div className="text-white font-bold">View All Rooms</div>
+              <div className="text-white font-bold">
+                {translations.viewAllRooms}
+              </div>
             </Link>
           </div>
         </div>
@@ -54,7 +65,6 @@ function RoomsRobots() {
             onAnimationEnd={handleAnimationEnd}
           >
             {rooms.slice(tempIndex, tempIndex + 4).map((room, index) => (
-               
               <div
                 key={index}
                 className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end"
@@ -117,7 +127,7 @@ function RoomsRobots() {
         />
         <a href="/robots">
           <div className="relative bg-white text-gray-800 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center cursor-pointer">
-            Track Robot
+            {translations.trackRobot}
           </div>
         </a>
       </div>

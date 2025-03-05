@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function LODevicesPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
-
-  //   const { name } = useParams();
 
   const devices = [{ name: "xiaomi", type: "vacuum", status: "Offline" }];
 
@@ -24,6 +23,12 @@ function LODevicesPage() {
       [deviceName]: !prevState[deviceName], // Toggle the state for the specific device
     }));
   };
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -55,11 +60,11 @@ function LODevicesPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -69,7 +74,7 @@ function LODevicesPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -83,7 +88,7 @@ function LODevicesPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -97,7 +102,7 @@ function LODevicesPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -149,7 +154,7 @@ function LODevicesPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -179,7 +184,7 @@ function LODevicesPage() {
                         <i className="fa fa-2x fa-arrow-left"></i>
                       </a>
                       <h1 className="text-center lg:text-4xl w-full ml-[-1%]">
-                        List Of Devices
+                        {translations.list_of_devices}
                       </h1>
                       <a href="/devices/new">
                         <i class="fas fa-plus text-2xl"></i>
@@ -213,8 +218,8 @@ function LODevicesPage() {
                                   }`}
                                 >
                                   {deviceStates[device.name]
-                                    ? "Online"
-                                    : "Offline"}
+                                    ? `${translations.online}`
+                                    : `${translations.offline}`}
                                 </div>
                                 <div className="flex flex-col items-center justify-center">
                                   <div

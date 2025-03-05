@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import enTranslations from "../locales/en.json";
-import zhTranslations from "../locales/zh.json";
-
-const translationsMap = {
-  en: enTranslations,
-  zh: zhTranslations,
-};
+import translationsMap from "../locales/translationsMap";
 
 function ChangePasswordPage() {
   const navigate = useNavigate();
@@ -21,21 +15,29 @@ function ChangePasswordPage() {
     return localStorage.getItem("language") || "en";
   });
 
-  const translations = translationsMap[language] || enTranslations;
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG border border-black px-4 pt-3 grid grid-rows-[5rem_1fr] flex-1 h-screen">
-      {/* Main Content Header */}
-      <div className="flex justify-between items-center relative">
-        <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
-          {/* Centered Text */}
-          <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-            {translations.title}
-          </h1>
+      {/* Main Content */}
+      <div className="main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto">
+        <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
+          {/* Main Content Header */}
+          <div className="flex justify-between items-center relative">
+            <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
+              {/* Centered Text */}
+              <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
+                {translations.title}
+              </h1>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="baseGreen rounded-lg w-[70%] sm:w-[30%] mt-10 mb-12 mx-auto">
+      <div className="baseGreen rounded-lg w-[70%] sm:w-[30%] mt-10 mb-12 mx-auto grid grid-rows-[auto,1fr]">
+        <a className="mt-3 relative pl-4" href="/profile">
+          <i className="fa fa-2x fa-arrow-left text-white"></i>
+        </a>
         <div className="text-center">
           <img
             src="./image/NZHome.png"

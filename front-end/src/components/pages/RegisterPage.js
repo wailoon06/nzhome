@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
+import translationsMap from "../locales/translationsMap";
 
 function RegisterPage() {
   const navigate = useNavigate();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleNameChange = (e) => setName(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
@@ -18,13 +19,14 @@ function RegisterPage() {
 
     const userData = { name, email, password };
 
-    axios.post("http://localhost:8080/api/register", userData)
-      .then(response => {
+    axios
+      .post("http://localhost:8080/api/register", userData)
+      .then((response) => {
         console.log(response.data);
         alert(response.data);
         navigate("/"); // Redirect after successful registration
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("There was an error registering!", error);
         alert("Error registering user.");
       });
@@ -35,13 +37,19 @@ function RegisterPage() {
     navigate("/");
   };
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="baseBG border border-black px-4 pt-3 grid grid-rows-[5rem_1fr] flex-1 h-screen">
       <div className="flex justify-between items-center relative">
         <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
           {/* Centered Text */}
           <h1 className="flex-grow text-center lg:text-4xl titleGold">
-            <a href="/">NZ HOME</a>
+            <a href="/">{translations.title}</a>
           </h1>
         </div>
       </div>
@@ -53,14 +61,14 @@ function RegisterPage() {
             alt="NZ Home Logo"
             className="w-2/5 mx-auto -mb-6"
           />
-          <h2 className="mb-4 subtitle text-white">Register</h2>
+          <h2 className="mb-4 subtitle text-white">{translations.register}</h2>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <input
                 type="text"
                 name="username"
-                placeholder="Username"
+                placeholder={translations.username}
                 value={name}
                 onChange={handleNameChange}
                 required
@@ -72,7 +80,7 @@ function RegisterPage() {
               <input
                 type="email"
                 name="email"
-                placeholder="Email"
+                placeholder={translations.email}
                 value={email}
                 onChange={handleEmailChange}
                 required
@@ -84,7 +92,7 @@ function RegisterPage() {
               <input
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder={translations.password}
                 value={password}
                 onChange={handlePasswordChange}
                 required
@@ -93,16 +101,23 @@ function RegisterPage() {
             </div>
 
             <p className="pText text-white">
-              <input type="checkbox" name="checkbox" required className="mr-2" />
-              I have read and agreed to the
-              <a href=" " className="terms"> Terms & Conditions of Use</a>
+              <input
+                type="checkbox"
+                name="checkbox"
+                required
+                className="mr-2"
+              />
+              {translations.term1}
+              <a href=" " className="terms">
+                {translations.term2}
+              </a>
             </p>
 
             <button
               type="submit"
               className="button1 bg-green-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
             >
-              Sign Up
+              {translations.register}
             </button>
           </form>
         </div>

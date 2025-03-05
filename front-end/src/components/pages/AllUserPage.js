@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import enTranslations from "../locales/en.json";
-import zhTranslations from "../locales/zh.json";
-
-const translationsMap = {
-  en: enTranslations,
-  zh: zhTranslations,
-};
+import translationsMap from "../locales/translationsMap";
 
 function AllUserPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -25,7 +19,7 @@ function AllUserPage() {
     return localStorage.getItem("language") || "en";
   });
 
-  const translations = translationsMap[language] || enTranslations;
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">

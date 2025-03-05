@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import enTranslations from "../locales/en.json";
-import zhTranslations from "../locales/zh.json";
-
-const translationsMap = {
-  en: enTranslations,
-  zh: zhTranslations,
-};
+import translationsMap from "../locales/translationsMap";
 
 function NotificationPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -17,7 +11,7 @@ function NotificationPage() {
     return localStorage.getItem("language") || "en";
   });
 
-  const translations = translationsMap[language] || enTranslations;
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">

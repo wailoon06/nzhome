@@ -1,18 +1,184 @@
 {
-  "title": "NZ HOME",
+  "title": "NZ Home",
   "devices": "Devices",
   "electricalUsage": "Electrical Usage",
   "internetUsage": "Internet Usage",
   "calendar": "Calendar",
-
   "notifications": "Notifications",
-  "noNotifications": "No notifications available",
+  "noNotifications": "No available notifications",
+
+  "switchLanguage": "Switch Language",
 
   "en": "English",
   "zh": "Chinese",
   "ja": "Japanese",
-  "kr": "Korean",
-  "switchLanguage": "Switch Language"
+  "ko": "Korean",
+  "ms": "Bahasa Melayu (Malaysia)",
 
-  
+  "setAction": "Set Action",
+  "temperature": "Temperature",
+  "select": "Select",
+  "turnOn": "Turn On",
+  "turnOff": "Turn Off",
+  "auto": "Auto",
+  "done": "Done",
+
+  "temperatureLabel": "Temperature",
+  "autoLabel": "Auto",
+
+  "selectTemperature": "Select Temperature",
+
+  "selectDevice": "Select Device",
+  "airConditionerBrand": "Air Conditioner Brand",
+  "televisionBrand": "Television Brand",
+
+  "addUser": "Add User",
+  "enterEmailForRow": "Enter email for row {index}",
+
+  "rooms": "Rooms",
+  "summary": "Summary",
+
+  "allUsers": "All Users",
+
+  "reminders": "Reminders",
+  "event_title": "Event Title",
+  "event_description": "Event Description",
+  "select_device": "Select Device",
+  "add_event": "Add Event",
+  "generate_report": "Generate Report",
+  "view_all": "View All",
+  "on_repeat": "On Repeat",
+  "off_repeat": "Off Repeat",
+  "deselect": "Deselect",
+  "favorited": "Favorited",
+  "favorite": "Favorite",
+  "no_favorites": "No favorites added yet",
+  "choose_date": "Choose Date",
+  "hour": "Hour",
+  "minute": "Minute",
+  "delete": "Delete",
+  "reminder_repeat": "This event is set to repeat",
+
+  "cameras": "Cameras",
+  "up": "Up",
+  "down": "Down",
+  "left": "Left",
+  "right": "Right",
+  "back": "Back",
+  "next": "Next",
+  "previous": "Previous",
+
+  "change_password": "Change Password",
+
+  "email": "Email",
+  "password": "New Password",
+  "confirm_password": "Confirm Password",
+  "reset": "Reset",
+
+  "offline": "Offline",
+  "today": "Today",
+  "set_action": "Set Action",
+
+  "overall_energy_usage": "Overall Energy Usage",
+  "energy_consumption_kWh": "Energy Consumption / kWh",
+  "energy_generation_W": "Energy Generation / W",
+  "view_specific_devices": "View Specific Devices",
+
+  "network": "Network",
+  "internet_used": "Internet Used / MB",
+  "monthly": "Monthly",
+  "next_payment_date": "Next Payment Date",
+
+  "list_of_devices": "List of Devices",
+  "online": "Online",
+
+  "sign_in": "Sign In",
+  "forgot_password": "Forgot Password",
+  "or": "Or",
+  "register": "Register",
+
+  "enter_device_unique_serial_code": "Enter device unique serial code",
+  "enter_serial_code": "Enter serial code",
+  "select_which_space_to_add_to": "Select which space to add to",
+  "living_room": "Living Room",
+  "kitchen": "Kitchen",
+  "bedroom": "Bedroom",
+  "bathroom": "Bathroom",
+  "garage": "Garage",
+  "check_validity": "Check Validity",
+  "valid": "Valid",
+
+  "username": "Username",
+  "term1": "I have read and agree to",
+  "term2": "Terms and Conditions",
+
+  "Temperature": "Temperature",
+
+  "roomAccessPermission": "Room Access Permission",
+  "assignAccess": "Assign who can access",
+  "noUsersMessage": "No users",
+  "nextStep": "Next Step",
+
+  "createRoom": "Create Room",
+  "uploadPicture": "Upload Picture",
+  "roomTitle": "Room Title",
+  "viewAllItemsTitle": "View All Devices",
+
+  "selectRobot": "Select Robot",
+
+  "testConnection1": "Test",
+  "testConnection2": "'s connection",
+  "step1": "Step 1: Turn on the device",
+  "step2": "Step 2: Use the buttons below to test the connection",
+  "step3": "Step 3: If the connection is successful, proceed to the next step",
+  "step41": "Step 4: Check the message popup displayed on the device at",
+  "step42": "Step 5: Click 'Done'",
+  "testConnectivity": "Test Connectivity",
+  "connectionSuccessful": "Connection Successful",
+
+  "profileTitle": "Profile",
+  "loginButton": "Login",
+  "registerButton": "Register",
+  "generalSettings": "General Settings",
+  "generalSettingsDescription": "Language, Notifications, Feedback, Security, Privacy",
+  "addUserDescription": "Add users to your home",
+  "allUsersDescription": "View the number of existing users",
+  "changePassword": "Change Password",
+  "changePasswordDescription": "Change your account password",
+
+  "settingsTitle": "Settings",
+  "languages": "Languages",
+  "helpAndFeedback": "Help and Feedback",
+  "security": "Security",
+  "privacy": "Privacy",
+  "logOut": "Log Out",
+
+  "vacuumBot": "Vacuum Bot",
+  "operationTime": "Operation Time",
+  "resume": "Resume",
+  "stop": "Stop",
+  "goHome": "Go Home",
+
+  "turnAllOn": "Turn All On",
+  "turnAllOff": "Turn All Off",
+  "searchDevices": "Search Devices...",
+  "all": "All",
+  "active": "Active",
+  "inactive": "Inactive",
+  "modalDeviceName": "Device Name",
+  "additionalDeviceDetails": "More Device Details",
+  "close": "Close",
+
+  "viewAllRooms": "View All Rooms",
+  "trackRobot": "Track Robot",
+
+  "checkCamera": "Check Camera",
+  "weatherToday": "Today's Weather",
+  "clear": "Clear",
+  "deviceStatus": "Device Status",
+  "stable": "Stable",
+  "energyUsage": "Energy Usage",
+  "thisMonth": "This Month",
+  "energyGeneration": "Energy Generation",
+  "thisMonthGeneration": "This Month"
 }

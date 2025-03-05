@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function ViewSpecificDeviceReportPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -8,6 +9,12 @@ function ViewSpecificDeviceReportPage() {
   };
 
   const { name, date } = useParams();
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -23,14 +30,14 @@ function ViewSpecificDeviceReportPage() {
             <div className="h-[100px] flex items-center justify-center">
               <a href="/">
                 <img
-                  src="\image\NZHome.png"
+                  src="./image/NZHome.png"
                   alt="NZ Home Logo"
                   className={`${isCollapsed ? "hidden" : "block"}`}
                 />
               </a>
             </div>
             {/* Sidebar Items */}
-            <a href="/">
+            <a href="/devices">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
                   className={`fas fa-layer-group text-white text-2xl ${
@@ -39,11 +46,11 @@ function ViewSpecificDeviceReportPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -53,7 +60,7 @@ function ViewSpecificDeviceReportPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -67,12 +74,12 @@ function ViewSpecificDeviceReportPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
             </a>
-            <a href="#">
+            <a href="/calendar">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
                   className={`fas fa-wind text-white text-2xl ${
@@ -81,7 +88,7 @@ function ViewSpecificDeviceReportPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -133,7 +140,7 @@ function ViewSpecificDeviceReportPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -176,7 +183,7 @@ function ViewSpecificDeviceReportPage() {
                           />
                           <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
                             <div className="text-2xl w-full mb-2 rounded-full text-white inline-block bg-red-500">
-                              Offline
+                              {translations.offline}
                             </div>
                           </div>
                         </div>
@@ -202,7 +209,7 @@ function ViewSpecificDeviceReportPage() {
                         style={{ height: "100px", width: "100px" }}
                       />
                       <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">Today </div>
+                        <div className="mb-2">{translations.today} </div>
                         <div className="teal-text text-2xl w-full mb-2">
                           10.5 kWh
                         </div>
@@ -216,7 +223,7 @@ function ViewSpecificDeviceReportPage() {
                         style={{ height: "100px", width: "100px" }}
                       />
                       <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">Today </div>
+                        <div className="mb-2">{translations.today} </div>
                         <div className="teal-text text-2xl w-full mb-2">
                           10.5 kWh
                         </div>
@@ -232,7 +239,7 @@ function ViewSpecificDeviceReportPage() {
                         style={{ height: "100px", width: "100px" }}
                       />
                       <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">Today </div>
+                        <div className="mb-2">{translations.today} </div>
                         <div className="teal-text text-2xl w-full mb-2">
                           10.5 kWh
                         </div>

@@ -9,10 +9,11 @@
 
   "switchLanguage": "切换语言",
 
-  "en": "英文",
+  "en": "英语",
   "zh": "中文",
   "ja": "日语",
-  "kr": "韩语",
+  "ko": "韩语",
+  "ms": "马来语 (马来西亚)",
 
   "setAction": "设置操作",
   "temperature": "温度",
@@ -72,5 +73,113 @@
   "email": "电子邮件",
   "password": "新密码",
   "confirm_password": "确认密码",
-  "reset": "重置"
+  "reset": "重置",
+
+  "offline": "离线",
+  "today": "今天",
+  "set_action": "设置操作",
+
+  "overall_energy_usage": "总体能源使用",
+  "energy_consumption_kWh": "能源消耗 / kWh",
+  "energy_generation_W": "能源生成 / W",
+  "view_specific_devices": "查看特定设备",
+
+  "network": "网络",
+  "internet_used": "已用互联网 / MB",
+  "monthly": "每月",
+  "next_payment_date": "下次付款日期",
+
+  "list_of_devices": "设备列表",
+  "online": "在线",
+
+  "sign_in": "登录",
+  "forgot_password": "忘记密码",
+  "or": "或",
+  "register": "注册",
+
+  "enter_device_unique_serial_code": "输入设备唯一序列号",
+  "enter_serial_code": "输入序列号",
+  "select_which_space_to_add_to": "选择要添加的空间",
+  "living_room": "客厅",
+  "kitchen": "厨房",
+  "bedroom": "卧室",
+  "bathroom": "浴室",
+  "garage": "车库",
+  "check_validity": "检查有效性",
+  "valid": "有效",
+
+  "username": "用户名",
+  "term1": "我已阅读并同意",
+  "term2": "使用条款和条件",
+
+  "Temperature": "温度",
+
+  "roomAccessPermission": "房间访问权限",
+  "assignAccess": "指定谁可以访问",
+  "noUsersMessage": "没有用户",
+  "nextStep": "下一步",
+
+  "createRoom": "创建房间",
+  "uploadPicture": "上传图片",
+  "roomTitle": "房间名称",
+  "viewAllItemsTitle": "查看所有设备",
+
+  "selectRobot": "选择机器人",
+
+  "testConnection1": "测试",
+  "testConnection2": "的连接",
+  "step1": "步骤 1：打开设备",
+  "step2": "步骤 2：使用下面的按钮测试连接",
+  "step3": "步骤 3：如果连接成功，则继续下一步",
+  "step41": "步骤 4：检查在",
+  "step42": "设备上显示的消息弹窗",
+  "step5": "步骤 5：点击“完成”",
+  "testConnectivity": "测试连接",
+  "connectionSuccessful": "连接成功",
+
+  "profileTitle": "个人资料",
+  "loginButton": "登录",
+  "registerButton": "注册",
+  "generalSettings": "常规设置",
+  "generalSettingsDescription": "语言、通知、反馈、安全、隐私",
+  "addUserDescription": "将用户添加到您的家庭",
+  "allUsersDescription": "查看现有用户的数量",
+  "changePassword": "更改密码",
+  "changePasswordDescription": "更改您的帐户密码",
+
+  "settingsTitle": "设置",
+  "languages": "语言",
+  "helpAndFeedback": "帮助与反馈",
+  "security": "安全",
+  "privacy": "隐私",
+  "logOut": "注销",
+
+  "vacuumBot": "吸尘机器人",
+  "operationTime": "操作时间",
+  "resume": "继续",
+  "stop": "停止",
+  "goHome": "回家",
+
+  "turnAllOn": "开启所有",
+  "turnAllOff": "关闭所有",
+  "searchDevices": "搜索设备...",
+  "all": "所有",
+  "active": "激活",
+  "inactive": "未激活",
+  "modalDeviceName": "设备名称",
+  "additionalDeviceDetails": "更多设备详情",
+  "close": "关闭",
+
+  "viewAllRooms": "查看所有房间",
+  "trackRobot": "追踪机器人",
+
+  "checkCamera": "查看相机",
+  "weatherToday": "今天的天气",
+  "clear": "晴朗",
+  "deviceStatus": "设备状态",
+  "stable": "稳定",
+  "energyUsage": "能源使用",
+  "thisMonth": "本月",
+  "energyGeneration": "能源生成",
+  "thisMonthGeneration": "本月"
 }

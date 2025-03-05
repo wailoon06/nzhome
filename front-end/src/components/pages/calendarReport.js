@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import enTranslations from "../locales/en.json";
-import zhTranslations from "../locales/zh.json";
-
-const translationsMap = {
-  en: enTranslations,
-  zh: zhTranslations,
-};
+import translationsMap from "../locales/translationsMap";
 
 function CalendarReport() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -20,14 +14,14 @@ function CalendarReport() {
     return localStorage.getItem("language") || "en";
   });
 
-  const translations = translationsMap[language] || enTranslations;
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-             {/* Sidebar */}
-             <div
+          {/* Sidebar */}
+          <div
             className={`sidebar ${isCollapsed ? "w-[0px]" : "w-[100px]"} ${
               isCollapsed ? "" : "baseGreen"
             } rounded-lg min-h-full flex flex-col overflow-y-auto`}
@@ -201,7 +195,9 @@ function CalendarReport() {
                         <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
                           <div className="items-center gap-4">
                             <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">{translations.generate_report}</div>
+                              <div className="mb-2">
+                                {translations.generate_report}
+                              </div>
                             </div>
                           </div>
                         </div>

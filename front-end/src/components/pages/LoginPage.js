@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import translationsMap from "../locales/translationsMap";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -49,13 +50,19 @@ function LoginPage() {
     }
   };
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="baseBG border border-black px-4 pt-3 grid grid-rows-[5rem_1fr] flex-1 h-screen">
       <div className="flex justify-between items-center relative">
         <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
           {/* Centered Text */}
           <h1 className="flex-grow text-center lg:text-4xl titleGold">
-            <a href="/">NZ HOME</a>
+            <a href="/">{translations.title}</a>
           </h1>
         </div>
       </div>
@@ -105,7 +112,7 @@ function LoginPage() {
             <p className="pText mr-[40%] text-white">
               <a href=" " className="terms">
                 {" "}
-                Forgot Password
+                {translations.forgot_password}
               </a>
             </p>
 
@@ -114,12 +121,12 @@ function LoginPage() {
               className="button1 bg-green-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
               onClick={handleButtonClick}
             >
-              Sign In
+              {translations.sign_in}
             </button>
 
             <div className="flex items-center my-4">
               <hr className="flex-grow border-t" />
-              <span className="mx-4 text-white">Or</span>
+              <span className="mx-4 text-white">{translations.or}</span>
               <hr className="flex-grow border-t" />
             </div>
 
@@ -128,7 +135,7 @@ function LoginPage() {
                 type="button"
                 className="button2 bg-blue-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
               >
-                Register
+                {translations.register}
               </button>
             </Link>
           </form>

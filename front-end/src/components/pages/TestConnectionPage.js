@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function TestConnectionPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -23,6 +24,12 @@ function TestConnectionPage() {
       setIsConnected(true); // Set connection status to successful
     }, 1000); // Simulated delay
   };
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -54,11 +61,11 @@ function TestConnectionPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -68,7 +75,7 @@ function TestConnectionPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -82,7 +89,7 @@ function TestConnectionPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -96,7 +103,7 @@ function TestConnectionPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -148,7 +155,7 @@ function TestConnectionPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -173,7 +180,7 @@ function TestConnectionPage() {
                     <i className="fa fa-2x fa-arrow-left"></i>
                   </a>
                   <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
-                    Test {name}'s Connection
+                    {translations.testConnection1} {name} {translations.testConnection2}
                   </h1>
                 </div>
 
@@ -183,21 +190,19 @@ function TestConnectionPage() {
                     <div className="grid grid-rows-[auto] p-4 flex justify-center items-center gap-4">
                       <div className="mb-9">
                         <p className="md:text-lg font-semibold">
-                          Step 1 : Turn on the device
+                          {translations.step1}
                         </p>
                         <p className="md:text-lg font-semibold">
-                          Step 2 : Test Connection using the button below
+                          {translations.step2}
                         </p>
                         <p className="md:text-lg font-semibold">
-                          Step 3 : If connection is successful then proceed to
-                          the next step
+                          {translations.step3}
                         </p>
                         <p className="md:text-lg font-semibold">
-                          Step 4 : Check message pop up shown on the “{name}”
-                          device
+                          {translations.step41} “{name}” {translations.step42}
                         </p>
                         <p className="md:text-lg font-semibold">
-                          Step 5 : Click “Done”
+                          {translations.step5}
                         </p>
                       </div>
 
@@ -208,7 +213,7 @@ function TestConnectionPage() {
                           onClick={handleTestConnectivity} // Call the test connectivity function
                           className="px-6 py-2 bg-gray-200 text-lg font-semibold rounded-md"
                         >
-                          Test Connectivity
+                          {translations.testConnectivity}
                         </button>
                       </div>
 
@@ -216,7 +221,7 @@ function TestConnectionPage() {
                       {isConnected && (
                         <div className="flex justify-center">
                           <p className="text-green-500 text-lg font-semibold">
-                            Connection Successful
+                            {translations.connectionSuccessful}
                           </p>
                         </div>
                       )}
@@ -228,7 +233,7 @@ function TestConnectionPage() {
                             type="submit"
                             className="px-6 py-2 bg-black text-white text-lg font-semibold rounded-md"
                           >
-                            Done
+                            {translations.done}
                           </button>
                         </div>
                       )}

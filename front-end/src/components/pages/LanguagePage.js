@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import enTranslations from "../locales/en.json";
-import zhTranslations from "../locales/zh.json";
-import jaTranslations from "../locales/ja.json";
-
-const translationsMap = {
-  en: enTranslations,
-  zh: zhTranslations,
-  ja: jaTranslations,
-};
+import translationsMap from "../locales/translationsMap";
 
 function LanguagePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -24,7 +16,7 @@ function LanguagePage() {
     localStorage.setItem("language", language);
   }, [language]);
 
-  const translations = translationsMap[language] || enTranslations;
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -210,9 +202,19 @@ function LanguagePage() {
                 </div>
 
                 <div className="flex items-center border border-gray-300 rounded-lg bg-white p-4 mb-4">
-                  <span className="font-bold">{translations.kr} </span>
+                  <span className="font-bold">{translations.ko} </span>
                   <button
-                    onClick={() => setLanguage("kr")}
+                    onClick={() => setLanguage("ko")}
+                    className="ml-auto text-blue-500"
+                  >
+                    {translations.switchLanguage}
+                  </button>
+                </div>
+
+                <div className="flex items-center border border-gray-300 rounded-lg bg-white p-4 mb-4">
+                  <span className="font-bold">{translations.ms} </span>
+                  <button
+                    onClick={() => setLanguage("ms")}
                     className="ml-auto text-blue-500"
                   >
                     {translations.switchLanguage}
