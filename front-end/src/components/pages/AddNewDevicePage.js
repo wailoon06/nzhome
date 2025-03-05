@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import enTranslations from "../locales/en.json";
+import zhTranslations from "../locales/zh.json";
+
+const translationsMap = {
+  en: enTranslations,
+  zh: zhTranslations,
+};
 
 function AddNewDevicePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -7,10 +14,15 @@ function AddNewDevicePage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  //   const { name } = useParams();
-
   const aircon = [{ name: "DaikinAC" }, { name: "SamsungAC" }];
   const TV = [{ name: "SonyTV" }, { name: "SamsungTV" }];
+
+  // translations
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || enTranslations;
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -42,11 +54,11 @@ function AddNewDevicePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -56,7 +68,7 @@ function AddNewDevicePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -70,7 +82,7 @@ function AddNewDevicePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -84,7 +96,7 @@ function AddNewDevicePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -136,7 +148,7 @@ function AddNewDevicePage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -152,13 +164,11 @@ function AddNewDevicePage() {
             </div>
 
             {/* <!-- Main Content --> */}
-            <div class="flex flex-col flex-1">
-              {/* Main Content */}
+            <div className="flex flex-col flex-1">
               <div
                 className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
               >
                 <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
-                  {/* Main Content */}
                   <div className="flex flex-col flex-1">
                     {/* Setting Section */}
                     <div className="grid grid-cols-[auto,1fr,auto] items-center mt-5 w-full">
@@ -166,14 +176,14 @@ function AddNewDevicePage() {
                         <i className="fa fa-2x fa-arrow-left"></i>
                       </a>
                       <h1 className="text-center lg:text-4xl w-full ml-[-1%]">
-                        Select a device
+                        {translations.selectDevice}
                       </h1>
                     </div>
 
                     <div className="grid grid-rows-[auto,1fr] gap-4 mt-[5%]">
                       {/* Air Conditioner Brand */}
                       <div className="text-left font-medium text-lg ml-6">
-                        Air Conditioner Brand
+                        {translations.airConditionerBrand}
                       </div>
 
                       {/* Main Content Section */}
@@ -206,9 +216,9 @@ function AddNewDevicePage() {
                     </div>
 
                     <div className="grid grid-rows-[auto,1fr] gap-4">
-                      {/* Air Conditioner Brand */}
+                      {/* Television Brand */}
                       <div className="text-left font-medium text-lg mt-6 ml-6">
-                        Television Brand
+                        {translations.televisionBrand}
                       </div>
 
                       {/* Main Content Section */}

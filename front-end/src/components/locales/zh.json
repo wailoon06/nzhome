@@ -1,0 +1,76 @@
+{
+  "title": "NZ 主页",
+  "devices": "设备",
+  "electricalUsage": "电力使用",
+  "internetUsage": "互联网使用",
+  "calendar": "日历",
+  "notifications": "通知",
+  "noNotifications": "没有可用的通知",
+
+  "switchLanguage": "切换语言",
+
+  "en": "英文",
+  "zh": "中文",
+  "ja": "日语",
+  "kr": "韩语",
+
+  "setAction": "设置操作",
+  "temperature": "温度",
+  "select": "选择",
+  "turnOn": "开启",
+  "turnOff": "关闭",
+  "auto": "自动",
+  "done": "完成",
+
+  "temperatureLabel": "温度",
+  "autoLabel": "自动",
+
+  "selectTemperature": "选择温度",
+
+  "selectDevice": "选择设备",
+  "airConditionerBrand": "空调品牌",
+  "televisionBrand": "电视品牌",
+
+  "addUser": "添加用户",
+  "enterEmailForRow": "请输入第 {index} 行的电子邮件",
+
+  "rooms": "房间",
+  "summary": "总结",
+
+  "allUsers": "所有用户",
+
+  "reminders": "提醒",
+  "event_title": "事件标题",
+  "event_description": "事件描述",
+  "select_device": "选择设备",
+  "add_event": "添加事件",
+  "generate_report": "生成报告",
+  "view_all": "查看所有",
+  "on_repeat": "开启重复",
+  "off_repeat": "关闭重复",
+  "deselect": "取消选择",
+  "favorited": "已收藏",
+  "favorite": "收藏",
+  "no_favorites": "尚未添加收藏",
+  "choose_date": "选择日期",
+  "hour": "小时",
+  "minute": "分钟",
+  "delete": "删除",
+  "reminder_repeat": "此事件设置为重复",
+
+  "cameras": "摄像头",
+  "up": "向上",
+  "down": "向下",
+  "left": "向左",
+  "right": "向右",
+  "back": "返回",
+  "next": "下一页",
+  "previous": "上一页",
+
+  "change_password": "更改密码",
+
+  "email": "电子邮件",
+  "password": "新密码",
+  "confirm_password": "确认密码",
+  "reset": "重置"
+}

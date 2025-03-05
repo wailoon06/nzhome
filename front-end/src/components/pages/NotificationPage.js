@@ -1,10 +1,23 @@
 import React, { useState } from "react";
+import enTranslations from "../locales/en.json";
+import zhTranslations from "../locales/zh.json";
+
+const translationsMap = {
+  en: enTranslations,
+  zh: zhTranslations,
+};
 
 function NotificationPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || enTranslations;
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -36,11 +49,11 @@ function NotificationPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -50,7 +63,7 @@ function NotificationPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -64,7 +77,7 @@ function NotificationPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -78,7 +91,7 @@ function NotificationPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -97,40 +110,20 @@ function NotificationPage() {
                 isCollapsed ? "scale-0 opacity-0" : "scale-100 opacity-100"
               }`}
             >
-              <i
-                className={`fas ${
-                  isCollapsed ? "fa-chevron-left" : "fa-chevron-left"
-                }`}
-              ></i>
+              <i className="fas fa-chevron-left"></i>
             </button>
           </div>
         </div>
 
         {/* Main Content */}
-        <div
-          className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
-        >
+        <div className="main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto">
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
             <div className="flex justify-between items-center relative">
               <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
-                {/* Hamburger Button */}
-                <div
-                  className={`flex items-center ${
-                    isCollapsed ? "block" : "hidden"
-                  }`}
-                >
-                  <button
-                    onClick={toggleSidebar}
-                    className="text-white text-2xl bg-transparent border-0 mr-4"
-                  >
-                    <i className="fas fa-bars"></i>
-                  </button>
-                </div>
-
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -145,25 +138,20 @@ function NotificationPage() {
               </div>
             </div>
 
-            {/* <!-- Main Content --> */}
-            <div class="flex flex-col flex-1">
-              {/* <!-- Main Content --> */}
-              <div class="flex flex-col flex-1 gap-4">
-                {/* Internet Usage Section */}
-                <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
-                  <a className="relative pl-4" href="/devices/new">
-                    <i className="fa fa-2x fa-arrow-left"></i>
-                  </a>
-                  <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
-                    Notifications
-                  </h1>
-                </div>
+            {/* Main Content */}
+            <div className="flex flex-col flex-1">
+              <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
+                <a className="relative pl-4" href="/devices/new">
+                  <i className="fa fa-2x fa-arrow-left"></i>
+                </a>
+                <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
+                  {translations.notifications}
+                </h1>
+              </div>
 
-                {/* ==================== */}
-                <div className="flex justify-center h-full">
-                  <div className="text-gray-400 flex items-center justify-between p-3 gap-2">
-                    No Notifications
-                  </div>
+              <div className="flex justify-center h-full">
+                <div className="text-gray-400 flex items-center justify-between p-3 gap-2">
+                  {translations.noNotifications}
                 </div>
               </div>
             </div>

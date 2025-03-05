@@ -1,0 +1,18 @@
+{
+  "title": "NZ ホーム",
+  "devices": "デバイス",
+  "electricalUsage": "電力使用",
+  "internetUsage": "インターネット使用",
+  "calendar": "カレンダー",
+  "notifications": "通知",
+  "noNotifications": "通知はありません",
+
+  "switchLanguage": "言語を切り替え",
+
+  "back": "戻る",
+
+  "en": "英語",
+  "zh": "中国語",
+  "ja": "日本語",
+  "kr": "韓国語"
+}

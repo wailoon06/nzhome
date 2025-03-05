@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import enTranslations from "../locales/en.json";
+import zhTranslations from "../locales/zh.json";
+
+const translationsMap = {
+  en: enTranslations,
+  zh: zhTranslations,
+};
 
 function ActionSchedulePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -18,7 +25,7 @@ function ActionSchedulePage() {
 
   const { name, type } = useParams();
 
-  // Handle temperature change (for the dropdown) 
+  // Handle temperature change (for the dropdown)
   const handleTemperatureChange = (e) => {
     setTemperature(e.target.value);
   };
@@ -40,6 +47,13 @@ function ActionSchedulePage() {
 
     navigate(`/devices/${type}/${name}/details`);
   };
+
+  // translations
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || enTranslations;
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -71,11 +85,11 @@ function ActionSchedulePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -85,7 +99,7 @@ function ActionSchedulePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -99,7 +113,7 @@ function ActionSchedulePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -113,7 +127,7 @@ function ActionSchedulePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -165,7 +179,7 @@ function ActionSchedulePage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -180,21 +194,17 @@ function ActionSchedulePage() {
               </div>
             </div>
 
-            {/* <!-- Main Content --> */}
-            <div class="flex flex-col flex-1">
-              {/* <!-- Main Content --> */}
-              <div class="flex flex-col flex-1 gap-4">
-                {/* Internet Usage Section */}
+            <div className="flex flex-col flex-1">
+              <div className="flex flex-col flex-1 gap-4">
                 <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
                   <a className="relative pl-4" href="/devices">
                     <i className="fa fa-2x fa-arrow-left"></i>
                   </a>
                   <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
-                    Set Action
+                    {translations.setAction}
                   </h1>
                 </div>
 
-                {/* ==================== */}
                 <form
                   onSubmit={handleSubmit}
                   className="grid grid-rows-[auto,1fr] p-4 mt-2 gap-4 rounded-lg bg-white"
@@ -204,19 +214,17 @@ function ActionSchedulePage() {
                   </h1>
 
                   <div className="border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-between">
-                    {/* Label */}
                     <span className="text-lg font-medium text-gray-700">
-                      Temperature
+                      {translations.temperature}
                     </span>
 
-                    {/* Dropdown */}
                     <select
                       className="border border-gray-300 rounded-lg p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       value={temperature}
                       onChange={handleTemperatureChange}
                     >
                       <option value="" disabled>
-                        Select
+                        {translations.select}
                       </option>
                       {Array.from({ length: 100 }, (_, i) => i + 1).map(
                         (temp) => (
@@ -229,7 +237,6 @@ function ActionSchedulePage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-6 p-5">
-                    {/* Turn On Button */}
                     <div
                       onClick={() => handleButtonClick("on")}
                       className={`border border-gray-300 h-[3rem] rounded-lg text-sm sm:text-base text-center flex justify-center items-center cursor-pointer transition-all ${
@@ -238,10 +245,9 @@ function ActionSchedulePage() {
                           : "bg-white text-black"
                       }`}
                     >
-                      <div className="text-1xl">Turn On</div>
+                      <div className="text-1xl">{translations.turnOn}</div>
                     </div>
 
-                    {/* Turn Off Button */}
                     <div
                       onClick={() => handleButtonClick("off")}
                       className={`border border-gray-300 h-[3rem] rounded-lg text-sm sm:text-base text-center flex justify-center items-center cursor-pointer transition-all ${
@@ -250,18 +256,16 @@ function ActionSchedulePage() {
                           : "bg-white text-black"
                       }`}
                     >
-                      <div className="text-1xl">Turn Off</div>
+                      <div className="text-1xl">{translations.turnOff}</div>
                     </div>
                   </div>
 
                   <div className="flex justify-center items-center h-full w-full">
                     <div className="border border-gray-300 rounded-lg bg-white p-4 w-[40%] flex items-center justify-between">
-                      {/* Label */}
                       <span className="text-lg font-medium text-gray-700">
-                        Auto
+                        {translations.auto}
                       </span>
 
-                      {/* Switch */}
                       <div
                         onClick={toggleSwitch}
                         className={`w-12 h-6 sm:w-16 sm:h-8 flex items-center rounded-full p-1 cursor-pointer transition-all ${
@@ -284,7 +288,9 @@ function ActionSchedulePage() {
                       type="submit"
                       className="rounded-lg bg-black text-sm sm:text-base w-full mb-2 text-center sm:w-[15%] md:w-[15%] h-[3rem] flex justify-center items-center"
                     >
-                      <div className="text-1xl text-white">Done</div>
+                      <div className="text-1xl text-white">
+                        {translations.done}
+                      </div>
                     </button>
                   </div>
                 </form>

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import enTranslations from "../locales/en.json";
+import zhTranslations from "../locales/zh.json";
+
+const translationsMap = {
+  en: enTranslations,
+  zh: zhTranslations,
+};
 
 function CalendarReport() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -9,12 +16,18 @@ function CalendarReport() {
 
   const [eventDate, setEventDate] = useState(null); // Date object for event selection
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || enTranslations;
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-          {/* Sidebar */}
-          <div
+             {/* Sidebar */}
+             <div
             className={`sidebar ${isCollapsed ? "w-[0px]" : "w-[100px]"} ${
               isCollapsed ? "" : "baseGreen"
             } rounded-lg min-h-full flex flex-col overflow-y-auto`}
@@ -39,11 +52,11 @@ function CalendarReport() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -53,7 +66,7 @@ function CalendarReport() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -67,7 +80,7 @@ function CalendarReport() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -81,7 +94,7 @@ function CalendarReport() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar report
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -133,7 +146,7 @@ function CalendarReport() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -158,7 +171,7 @@ function CalendarReport() {
                     <i className="fa fa-2x fa-arrow-left"></i>
                   </a>
                   <h1 className="text-center md:text-4xl lg:text-4xl w-full ml-[-5%]">
-                    Choose a Date
+                    {translations.choose_date}
                   </h1>
                 </div>
 
@@ -188,7 +201,7 @@ function CalendarReport() {
                         <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
                           <div className="items-center gap-4">
                             <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">Print Full Report</div>
+                              <div className="mb-2">{translations.generate_report}</div>
                             </div>
                           </div>
                         </div>

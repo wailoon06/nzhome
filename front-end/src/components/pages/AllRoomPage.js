@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import enTranslations from "../locales/en.json";
+import zhTranslations from "../locales/zh.json";
+
+const translationsMap = {
+  en: enTranslations,
+  zh: zhTranslations,
+};
 
 function AllRoomPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -40,6 +47,13 @@ function AllRoomPage() {
     setCurrentIndex(tempIndex); // Update actual index after animation ends
   };
 
+  // translations
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || enTranslations;
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -54,14 +68,14 @@ function AllRoomPage() {
             <div className="h-[100px] flex items-center justify-center">
               <a href="/">
                 <img
-                  src="\image\NZHome.png"
+                  src="./image/NZHome.png"
                   alt="NZ Home Logo"
                   className={`${isCollapsed ? "hidden" : "block"}`}
                 />
               </a>
             </div>
             {/* Sidebar Items */}
-            <a href="/">
+            <a href="/devices">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
                   className={`fas fa-layer-group text-white text-2xl ${
@@ -70,11 +84,11 @@ function AllRoomPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -84,7 +98,7 @@ function AllRoomPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -98,12 +112,12 @@ function AllRoomPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
             </a>
-            <a href="#">
+            <a href="/calendar">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
                   className={`fas fa-wind text-white text-2xl ${
@@ -112,7 +126,7 @@ function AllRoomPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -164,7 +178,7 @@ function AllRoomPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -180,19 +194,19 @@ function AllRoomPage() {
             </div>
 
             {/* <!-- Main Content --> */}
-            <div class="flex flex-col flex-1">
+            <div className="flex flex-col flex-1">
               {/* <!-- Main Content --> */}
-              <div class="flex flex-col flex-1 gap-4">
+              <div className="flex flex-col flex-1 gap-4">
                 {/* Internet Usage Section */}
                 <div className="grid grid-cols-[auto,1fr,auto] items-center mt-5 w-full">
                   <a className="relative pl-4" href="/">
                     <i className="fa fa-2x fa-arrow-left"></i>
                   </a>
                   <h1 className="text-center lg:text-4xl w-full ml-[-1%]">
-                    Rooms
+                    {translations.rooms}
                   </h1>
                   <a href="/rooms/new">
-                    <i class="fas fa-plus text-2xl"></i>
+                    <i className="fas fa-plus text-2xl"></i>
                   </a>
                 </div>
 
@@ -220,7 +234,7 @@ function AllRoomPage() {
                               />
                             </div>
 
-                            <div className="relative bg-white text-gray-800  text-lg font-bold py-2 px-4 flex justify-center items-center">
+                            <div className="relative bg-white text-gray-800 text-lg font-bold py-2 px-4 flex justify-center items-center">
                               {room.name}
                             </div>
                             <div className="py-1"></div>
@@ -230,12 +244,12 @@ function AllRoomPage() {
                                 to={`/rooms/summary/${room.name}`}
                               >
                                 <div className="border border-gray-400 relative bg-white font-bold text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center">
-                                  Summary
-                                </div>{" "}
+                                  {translations.summary}
+                                </div>
                               </Link>
                               <Link to={`/rooms/devices/${room.name}`}>
                                 <div className="border border-gray-400 relative bg-white font-bold text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center">
-                                  Devices
+                                  {translations.devices}
                                 </div>
                               </Link>
                             </div>
