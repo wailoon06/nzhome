@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import translationsMap from "../locales/translationsMap";
+import Sidebar from "./Sidebar";
 
 function UserSettingPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -26,100 +27,7 @@ function UserSettingPage() {
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-          {/* Sidebar */}
-          <div
-            className={`sidebar ${isCollapsed ? "w-[0px]" : "w-[100px]"} ${
-              isCollapsed ? "" : "baseGreen"
-            } rounded-lg min-h-full flex flex-col overflow-y-auto`}
-          >
-            {/* Sidebar Logo */}
-            <div className="h-[100px] flex items-center justify-center">
-              <a href="/">
-                <img
-                  src="./image/NZHome.png"
-                  alt="NZ Home Logo"
-                  className={`${isCollapsed ? "hidden" : "block"}`}
-                />
-              </a>
-            </div>
-            {/* Sidebar Items */}
-            <a href="/devices">
-              <div className="flex flex-col items-center justify-center px-4 py-2">
-                <i
-                  className={`fas fa-layer-group text-white text-2xl ${
-                    isCollapsed ? "hidden" : "block"
-                  }`}
-                ></i>
-                {!isCollapsed && (
-                  <span className="text-white text-center text-sm mt-2">
-                    {translations.devices}
-                  </span>
-                )}
-              </div>
-            </a>
-            <a href="/electric">
-              <div className="flex flex-col items-center justify-center px-4 py-2">
-                <i
-                  className={`fas fa-bolt text-white text-2xl ${
-                    isCollapsed ? "hidden" : "block"
-                  }`}
-                ></i>
-                {!isCollapsed && (
-                  <span className="text-white text-center text-sm mt-2">
-                    {translations.electricalUsage}
-                  </span>
-                )}
-              </div>
-            </a>
-            <a href="/internet">
-              <div className="flex flex-col items-center justify-center px-4 py-2">
-                <i
-                  className={`fas fa-chart-pie text-white text-2xl ${
-                    isCollapsed ? "hidden" : "block"
-                  }`}
-                ></i>
-                {!isCollapsed && (
-                  <span className="text-white text-center text-sm mt-2">
-                    {translations.internetUsage}
-                  </span>
-                )}
-              </div>
-            </a>
-            <a href="/calendar">
-              <div className="flex flex-col items-center justify-center px-4 py-2">
-                <i
-                  className={`fas fa-wind text-white text-2xl ${
-                    isCollapsed ? "hidden" : "block"
-                  }`}
-                ></i>
-                {!isCollapsed && (
-                  <span className="text-white text-center text-sm mt-2">
-                    {translations.calendar}
-                  </span>
-                )}
-              </div>
-            </a>
-          </div>
-
-          {/* Collapse Button */}
-          <div
-            className={`absolute top-1/2 transform -translate-y-1/2 transition-all duration-500 ease-in-out ${
-              isCollapsed ? "left-[0px]" : "left-[80px]"
-            }`}
-          >
-            <button
-              onClick={toggleSidebar}
-              className={`text-white text-2xl baseGreen p-2 rounded-full shadow-md transform transition-all duration-500 ease-in-out ${
-                isCollapsed ? "scale-0 opacity-0" : "scale-100 opacity-100"
-              }`}
-            >
-              <i
-                className={`fas ${
-                  isCollapsed ? "fa-chevron-left" : "fa-chevron-left"
-                }`}
-              ></i>
-            </button>
-          </div>
+          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
         </div>
 
         {/* Main Content */}
