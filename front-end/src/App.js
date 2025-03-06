@@ -71,7 +71,7 @@ function App() {
                 <div className="h-[100px] flex items-center justify-center">
                   <a href="/">
                     <img
-                      src="./image/NZHome.png"
+                      src="./image/NZHome2.png"
                       alt="NZ Home Logo"
                       className={`${isCollapsed ? "hidden" : "block"}`}
                     />
