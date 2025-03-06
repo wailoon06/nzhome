@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function CameraPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -68,6 +69,12 @@ function CameraPage() {
       activeButton === direction ? "bg-gray-500" : "bg-gray-300"
     } transition-colors duration-150 ease-in-out`;
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -98,11 +105,11 @@ function CameraPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -112,7 +119,7 @@ function CameraPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -126,7 +133,7 @@ function CameraPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -140,7 +147,7 @@ function CameraPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -192,7 +199,7 @@ function CameraPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -217,7 +224,7 @@ function CameraPage() {
                     <i className="fa fa-2x fa-arrow-left"></i>
                   </a>
                   <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
-                    Cameras
+                    {translations.cameras}
                   </h1>
                 </div>
 
@@ -259,7 +266,7 @@ function CameraPage() {
                                 onMouseLeave={handleMouseUp} // Stop if the mouse leaves the button
                                 className={buttonStyles("Up")}
                               >
-                                Up
+                                {translations.up}
                               </button>
 
                               <div className="flex space-x-4">
@@ -270,7 +277,7 @@ function CameraPage() {
                                   onMouseLeave={handleMouseUp}
                                   className={buttonStyles("Left")}
                                 >
-                                  Left
+                                  {translations.left}
                                 </button>
 
                                 {/* Down Button */}
@@ -280,7 +287,7 @@ function CameraPage() {
                                   onMouseLeave={handleMouseUp}
                                   className={buttonStyles("Down")}
                                 >
-                                  Down
+                                  {translations.down}
                                 </button>
 
                                 {/* Right Button */}
@@ -290,7 +297,7 @@ function CameraPage() {
                                   onMouseLeave={handleMouseUp}
                                   className={buttonStyles("Right")}
                                 >
-                                  Right
+                                  {translations.right}
                                 </button>
                               </div>
                             </div>
@@ -319,7 +326,7 @@ function CameraPage() {
                     >
                       <i className={"fas fa-chevron-left"}></i>
                     </button>
-                    <button 
+                    <button
                       onClick={nextItems}
                       disabled={currentIndex + 1 >= rooms.length}
                       className="bg-white border-4 text-gray-800 p-2 rounded-full"

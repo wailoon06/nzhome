@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function LanguagePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -7,13 +7,16 @@ function LanguagePage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  // const { name } = useParams();
+  // translations
+  const [language, setLanguage] = useState(
+    localStorage.getItem("language") || "en"
+  );
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -45,11 +48,11 @@ function LanguagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -59,7 +62,7 @@ function LanguagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -73,7 +76,7 @@ function LanguagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -87,7 +90,7 @@ function LanguagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -139,7 +142,7 @@ function LanguagePage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -155,55 +158,67 @@ function LanguagePage() {
             </div>
 
             {/* Main Content */}
-            <div class="flex flex-col flex-1">
+            <div className="flex flex-col flex-1">
               {/* Setting Section */}
               <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
                 <a className="relative pl-4" href="/">
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
-                <h1 className="text-center lg:text-4xl w-full">Languages</h1>
+                <h1 className="text-center lg:text-4xl w-full">
+                  {translations.switchLanguage}
+                </h1>
               </div>
 
               {/* Options */}
               <div className="grid grid-rows-4 mt-4">
                 <div className="flex items-center border border-gray-300 rounded-lg bg-white p-4 mb-4">
-                  <span className="font-bold">Chinese </span>
-                  <span
-                    onClick={() => handleNavigation("#")}
+                  <span className="font-bold">{translations.zh} </span>
+                  <button
+                    onClick={() => setLanguage("zh")}
                     className="ml-auto text-blue-500"
                   >
-                    Switch
-                  </span>
+                    {translations.switchLanguage}
+                  </button>
                 </div>
 
                 <div className="flex items-center border border-gray-300 rounded-lg bg-white p-4 mb-4">
-                  <span className="font-bold">Jananese </span>
-                  <span
-                    onClick={() => handleNavigation("#")}
+                  <span className="font-bold">{translations.ja} </span>
+                  <button
+                    onClick={() => setLanguage("ja")}
                     className="ml-auto text-blue-500"
                   >
-                    Switch
-                  </span>
+                    {translations.switchLanguage}
+                  </button>
                 </div>
 
                 <div className="flex items-center border border-gray-300 rounded-lg bg-white p-4 mb-4">
-                  <span className="font-bold">English </span>
-                  <span
-                    onClick={() => handleNavigation("#")}
+                  <span className="font-bold">{translations.en} </span>
+                  <button
+                    onClick={() => setLanguage("en")}
                     className="ml-auto text-blue-500"
                   >
-                    Switch
-                  </span>
+                    {translations.switchLanguage}
+                  </button>
                 </div>
 
                 <div className="flex items-center border border-gray-300 rounded-lg bg-white p-4 mb-4">
-                  <span className="font-bold">Korean </span>
-                  <span
-                    onClick={() => handleNavigation("#")}
+                  <span className="font-bold">{translations.ko} </span>
+                  <button
+                    onClick={() => setLanguage("ko")}
                     className="ml-auto text-blue-500"
                   >
-                    Switch
-                  </span>
+                    {translations.switchLanguage}
+                  </button>
+                </div>
+
+                <div className="flex items-center border border-gray-300 rounded-lg bg-white p-4 mb-4">
+                  <span className="font-bold">{translations.ms} </span>
+                  <button
+                    onClick={() => setLanguage("ms")}
+                    className="ml-auto text-blue-500"
+                  >
+                    {translations.switchLanguage}
+                  </button>
                 </div>
               </div>
             </div>

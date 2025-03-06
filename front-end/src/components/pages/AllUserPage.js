@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function AllUserPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -7,13 +8,18 @@ function AllUserPage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  // const { name } = useParams();
-
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
     navigate(path);
   };
+
+  // translation
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -45,11 +51,11 @@ function AllUserPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -59,7 +65,7 @@ function AllUserPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -73,7 +79,7 @@ function AllUserPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -87,7 +93,7 @@ function AllUserPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -139,7 +145,7 @@ function AllUserPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -162,7 +168,7 @@ function AllUserPage() {
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
                 <h1 className="text-center lg:text-4xl w-full ml-[-4%]">
-                  All Users
+                  {translations.allUsers}
                 </h1>
               </div>
 

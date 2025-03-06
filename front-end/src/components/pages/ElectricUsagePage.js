@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function ElectricUsagePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -7,7 +8,11 @@ function ElectricUsagePage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  // const { name } = useParams()
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -39,11 +44,11 @@ function ElectricUsagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -53,7 +58,7 @@ function ElectricUsagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -67,7 +72,7 @@ function ElectricUsagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -81,7 +86,7 @@ function ElectricUsagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -133,7 +138,7 @@ function ElectricUsagePage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  <a href="/">NZ HOME</a>
+                  <a href="/">{translations.title}</a>
                 </h1>
 
                 {/* User Icon */}
@@ -156,7 +161,7 @@ function ElectricUsagePage() {
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
                 <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
-                  Overall Energy Usage
+                  {translations.overall_energy_usage}
                 </h1>
               </div>
 
@@ -173,7 +178,7 @@ function ElectricUsagePage() {
                           style={{ height: "100px", width: "100px" }}
                         />
                         <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                          <div className="mb-2">Today </div>
+                          <div className="mb-2">{translations.today}</div>
                           <div className="teal-text text-2xl w-full mb-2">
                             10.5 kWh
                           </div>
@@ -189,7 +194,7 @@ function ElectricUsagePage() {
                           style={{ height: "100px", width: "100px" }}
                         />
                         <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                          <div className="mb-2">Today </div>
+                          <div className="mb-2">{translations.today}</div>
                           <div className="teal-text text-2xl w-full mb-2">
                             10.5 kWh
                           </div>
@@ -213,7 +218,7 @@ function ElectricUsagePage() {
                   <div className="grid grid-rows-[auto,1fr]">
                     <div className="flex flex-col items-center">
                       <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 w-[50%]">
-                        Energy Consumption / kWh
+                        {translations.energy_consumption_kWh}
                       </div>
                     </div>
 
@@ -228,7 +233,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today}</div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -244,7 +249,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today}</div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -260,7 +265,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today} </div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -276,7 +281,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today} </div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -292,7 +297,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today} </div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -308,7 +313,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today} </div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -324,7 +329,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today} </div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -340,7 +345,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today} </div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -356,7 +361,7 @@ function ElectricUsagePage() {
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Today </div>
+                            <div className="mb-2">{translations.today} </div>
                             <div className="teal-text text-2xl w-full mb-2">
                               10.5 kWh
                             </div>
@@ -372,7 +377,7 @@ function ElectricUsagePage() {
                   <div className="grid grid-rows-[auto,1fr]">
                     <div className="flex flex-col items-center">
                       <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 w-[50%]">
-                        Energy Generation / W
+                        {translations.energy_generation_W}
                       </div>
                     </div>
 
@@ -392,7 +397,9 @@ function ElectricUsagePage() {
                         <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
                           <div className="items-center gap-4">
                             <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">View Specific Devices</div>
+                              <div className="mb-2">
+                                {translations.view_specific_devices}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -401,7 +408,9 @@ function ElectricUsagePage() {
                         <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
                           <div className="items-center gap-4">
                             <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">Print Full Report</div>
+                              <div className="mb-2">
+                                {translations.generate_report}
+                              </div>
                             </div>
                           </div>
                         </div>

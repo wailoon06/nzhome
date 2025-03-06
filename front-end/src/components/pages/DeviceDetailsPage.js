@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function DeviceDetailsPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -8,6 +9,13 @@ function DeviceDetailsPage() {
   };
 
   const { name, type } = useParams();
+
+  // translation
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -39,11 +47,11 @@ function DeviceDetailsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -53,7 +61,7 @@ function DeviceDetailsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -67,7 +75,7 @@ function DeviceDetailsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -81,7 +89,7 @@ function DeviceDetailsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -133,7 +141,7 @@ function DeviceDetailsPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -176,7 +184,7 @@ function DeviceDetailsPage() {
                           />
                           <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
                             <div className="text-2xl w-full mb-2 rounded-full text-white inline-block bg-red-500">
-                              Offline
+                              {translations.offline}
                             </div>
                           </div>
                         </div>
@@ -202,7 +210,7 @@ function DeviceDetailsPage() {
                         style={{ height: "100px", width: "100px" }}
                       />
                       <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">Today </div>
+                        <div className="mb-2">{translations.today}</div>
                         <div className="teal-text text-2xl w-full mb-2">
                           10.5 kWh
                         </div>
@@ -216,7 +224,7 @@ function DeviceDetailsPage() {
                         style={{ height: "100px", width: "100px" }}
                       />
                       <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">Today </div>
+                        <div className="mb-2">{translations.today}</div>
                         <div className="teal-text text-2xl w-full mb-2">
                           10.5 kWh
                         </div>
@@ -232,7 +240,7 @@ function DeviceDetailsPage() {
                         style={{ height: "100px", width: "100px" }}
                       />
                       <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">Today </div>
+                        <div className="mb-2">{translations.today}</div>
                         <div className="teal-text text-2xl w-full mb-2">
                           10.5 kWh
                         </div>
@@ -246,7 +254,9 @@ function DeviceDetailsPage() {
                     <div className="p-4 gap-4 flex justify-center items-center">
                       <div className="rounded-lg border-[2px] border-gray-300 bg-black items-center gap-4 p-4 sm:w-[50%] md:w-[35%]">
                         <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                          <div className="text-2xl text-white">Set Action </div>
+                          <div className="text-2xl text-white">
+                            {translations.set_action}
+                          </div>
                         </div>
                       </div>
                     </div>{" "}

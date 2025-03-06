@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
+import translationsMap from "../locales/translationsMap";
 
 function RoomsNewPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -63,6 +64,12 @@ function RoomsNewPage() {
     setRoomTitle(e.target.value);
   };
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -93,11 +100,11 @@ function RoomsNewPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -107,7 +114,7 @@ function RoomsNewPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -121,7 +128,7 @@ function RoomsNewPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -135,7 +142,7 @@ function RoomsNewPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -187,7 +194,7 @@ function RoomsNewPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -212,7 +219,7 @@ function RoomsNewPage() {
                     <i className="fa fa-2x fa-arrow-left"></i>
                   </a>
                   <h1 className="text-center md:text-4xl lg:text-4xl w-full ml-[-5%]">
-                    Create Room
+                    {translations.createRoom}
                   </h1>
                 </div>
 
@@ -227,7 +234,7 @@ function RoomsNewPage() {
                           htmlFor="image-upload"
                           className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded shadow-md hover:bg-blue-600 transition-colors"
                         >
-                          Upload Picture
+                          {translations.uploadPicture}
                         </label>
                         <input
                           id="image-upload"
@@ -252,7 +259,7 @@ function RoomsNewPage() {
                       {/* ======================== */}
                       <input
                         type="text"
-                        placeholder="Room Title"
+                        placeholder={translations.roomTitle}
                         value={roomTitle}
                         onChange={getTitle}
                         className="w-full border border-gray-300 rounded p-2 mb-4"
@@ -263,7 +270,7 @@ function RoomsNewPage() {
                       <div className="grid grid-cols-2">
                         {/* Left Section */}
                         <h3 className="text-xl font-semibold m-5">
-                          Select Device
+                          {translations.selectDevice}
                         </h3>
 
                         {/* Right Section */}
@@ -273,7 +280,7 @@ function RoomsNewPage() {
                             className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors"
                             onClick={openModal}
                           >
-                            View All
+                            {translations.view_all}
                           </button>
 
                           {/* Modal */}
@@ -283,7 +290,7 @@ function RoomsNewPage() {
                                 {/* Header */}
                                 <div className="flex justify-between items-center mb-4">
                                   <h2 className="text-xl font-semibold">
-                                    View All Items
+                                    {translations.view_all}
                                   </h2>
                                   <button
                                     className="text-gray-500 hover:text-gray-700 transition"
@@ -327,8 +334,8 @@ function RoomsNewPage() {
                                           }`}
                                         >
                                           {favorites.includes(device.name)
-                                            ? "Favorited"
-                                            : "Favorite"}
+                                            ? `${translations.favorited}`
+                                            : `${translations.favorite}`}
                                         </button>
 
                                         <button
@@ -338,8 +345,8 @@ function RoomsNewPage() {
                                           className="text-sm px-3 py-1 rounded-md ml-2"
                                         >
                                           {selectedDevices.includes(device.name)
-                                            ? "Deselect"
-                                            : "Select"}
+                                            ? `${translations.deselect}`
+                                            : `${translations.select}`}
                                         </button>
                                       </li>
                                     ))}
@@ -385,7 +392,7 @@ function RoomsNewPage() {
                         {/* Message if no favorites */}
                         {favorites.length === 0 && (
                           <p className="text-gray-500 col-span-4 text-center">
-                            No favorites added yet.
+                            {translations.no_favorites}
                           </p>
                         )}
                       </div>
@@ -397,7 +404,7 @@ function RoomsNewPage() {
                         roomTitle ? "" : "pointer-events-none opacity-50"
                       }`}
                     >
-                      Next
+                      {translations.nextStep}
                     </Link>
                     {/* ===================================== */}
                   </div>

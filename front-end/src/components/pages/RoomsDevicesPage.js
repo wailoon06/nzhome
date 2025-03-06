@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function RoomsDevicesPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -24,6 +25,12 @@ function RoomsDevicesPage() {
       [deviceName]: !prevState[deviceName], // Toggle the state for the specific device
     }));
   };
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -55,11 +62,11 @@ function RoomsDevicesPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -69,7 +76,7 @@ function RoomsDevicesPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -83,7 +90,7 @@ function RoomsDevicesPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -97,7 +104,7 @@ function RoomsDevicesPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -149,7 +156,7 @@ function RoomsDevicesPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -210,8 +217,8 @@ function RoomsDevicesPage() {
                                   }`}
                                 >
                                   {deviceStates[device.name]
-                                    ? "Online"
-                                    : "Offline"}
+                                    ? `${translations.online}`
+                                    : `${translations.offline}`}
                                 </div>
                                 <div className="flex flex-col items-center justify-center">
                                   <div

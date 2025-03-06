@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function InternetUsagePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -7,13 +7,11 @@ function InternetUsagePage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  // const { name } = useParams();
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
 
-  const navigate = useNavigate();
-
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -45,11 +43,11 @@ function InternetUsagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -59,7 +57,7 @@ function InternetUsagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -73,7 +71,7 @@ function InternetUsagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -87,7 +85,7 @@ function InternetUsagePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -139,7 +137,7 @@ function InternetUsagePage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  <a href="/">NZ HOME</a>
+                  <a href="/">{translations.title}</a>
                 </h1>
 
                 {/* User Icon */}
@@ -162,7 +160,7 @@ function InternetUsagePage() {
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
                 <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
-                  Internet Usages
+                  {translations.internetUsage}
                 </h1>
               </div>
               {/* ==================== */}
@@ -175,7 +173,7 @@ function InternetUsagePage() {
                     style={{ height: "150px", width: "140px" }}
                   />
                   <div className="teal-text text-sm sm:text-base w-full text-center mb-2">
-                    Network
+                    {translations.network}
                   </div>
                   <div className="teal-text text-2xl sm:text-3xl lg:text-4xl w-full text-center mb-2">
                     500 Mb/s
@@ -192,13 +190,13 @@ function InternetUsagePage() {
                         style={{ height: "100px", width: "100px" }}
                       />
                       <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">Internet Used / MB</div>
+                        <div className="mb-2">{translations.internet_used}</div>
                         <div className="grid grid-cols-2">
                           <div className="teal-text text-sm sm:text-base w-full mb-2">
-                            Today
+                            {translations.today}
                           </div>
                           <div className="teal-text text-sm sm:text-base w-full mb-2">
-                            Monthly
+                            {translations.monthly}
                           </div>
                         </div>
                         <div className="grid grid-cols-2">
@@ -221,7 +219,9 @@ function InternetUsagePage() {
                         style={{ height: "100px", width: "100px" }}
                       />
                       <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">Next Payment Date</div>
+                        <div className="mb-2">
+                          {translations.next_payment_date}
+                        </div>
                         <div className="teal-text text-2xl w-full mb-2">
                           02/01/2025
                         </div>

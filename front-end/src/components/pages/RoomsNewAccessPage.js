@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
+import translationsMap from "../locales/translationsMap";
 
 function RoomsNewAccessPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -26,6 +27,12 @@ function RoomsNewAccessPage() {
   // Get title
   const { roomTitle } = useParams();
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -47,7 +54,7 @@ function RoomsNewAccessPage() {
               </a>
             </div>
             {/* Sidebar Items */}
-            <a href="/users">
+            <a href="/devices">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
                   className={`fas fa-layer-group text-white text-2xl ${
@@ -56,11 +63,11 @@ function RoomsNewAccessPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -70,7 +77,7 @@ function RoomsNewAccessPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -84,7 +91,7 @@ function RoomsNewAccessPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -98,7 +105,7 @@ function RoomsNewAccessPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -150,7 +157,7 @@ function RoomsNewAccessPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -175,7 +182,7 @@ function RoomsNewAccessPage() {
                     <i className="fa fa-2x fa-arrow-left"></i>
                   </a>
                   <h1 className="text-center md:text-4xl lg:text-4xl w-full ml-[-5%]">
-                    Room Access Permission
+                    {translations.roomAccessPermission}
                   </h1>
                 </div>
 
@@ -186,7 +193,7 @@ function RoomsNewAccessPage() {
                     <div className="grid grid-rows-[auto]">
                       <div className="grid grid-cols-1">
                         <h3 className="text-xl font-semibold m-5 text-center">
-                          Assign who can access to the “{roomTitle}”
+                          {translations.assignAccess} “{roomTitle}”
                         </h3>{" "}
                       </div>
 
@@ -224,7 +231,7 @@ function RoomsNewAccessPage() {
                         {/* Message if no users */}
                         {users.length === 0 && (
                           <p className="text-gray-500 col-span-4 text-center">
-                            No Users
+                            {translations.noUsersMessage}
                           </p>
                         )}
                       </div>
@@ -239,7 +246,7 @@ function RoomsNewAccessPage() {
                           : ""
                       }`} // Disable button if no users are selected
                     >
-                      Next
+                      {translations.nextStep}
                     </Link>
                   </div>
                 </div>

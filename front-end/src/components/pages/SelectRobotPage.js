@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function SelectRobotPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -7,9 +8,13 @@ function SelectRobotPage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  // const { name } = useParams();
-
   const robots = [{ name: "Xiaomi" }];
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -41,11 +46,11 @@ function SelectRobotPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -55,7 +60,7 @@ function SelectRobotPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -69,7 +74,7 @@ function SelectRobotPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -83,7 +88,7 @@ function SelectRobotPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -135,7 +140,7 @@ function SelectRobotPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -158,7 +163,7 @@ function SelectRobotPage() {
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
                 <h1 className="text-center lg:text-4xl w-full ml-[-4%]">
-                  Select Robot
+                  {translations.selectRobot}
                 </h1>
               </div>
 
@@ -179,7 +184,7 @@ function SelectRobotPage() {
                         <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
                           <div className="mb-2">Xiaomi </div>
                           <div className="text-2xl w-full mb-2 bg-red-500 rounded-full text-white inline-block">
-                            Offline
+                            {translations.offline}
                           </div>
                         </div>
                       </div>

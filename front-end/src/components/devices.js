@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import translationsMap from "../components/locales/translationsMap";
 
 function Devices() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -99,24 +100,33 @@ function Devices() {
     previousStateRef.current = devicesState;
   }, [devicesState]);
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="rounded-lg p-4 teal-text mb-4">
       <div className="grid grid-cols-1 gap-4">
         <div className=" rounded-lg p-4 baseGreen2 mb-4 relative overflow-hidden">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-white">Devices</h2>
+            <h2 className="text-2xl font-bold text-white">
+              {" "}
+              {translations.devices}
+            </h2>
             <div className="flex space-x-2">
               <button
                 onClick={() => handleToggleAll(true)}
                 className="text-white font-bold"
               >
-                Turn All On
+                {translations.turnAllOn}
               </button>
               <button
                 onClick={() => handleToggleAll(false)}
                 className="text-white font-bold"
               >
-                Turn All Off
+                {translations.turnAllOff}
               </button>
             </div>
           </div>
@@ -124,7 +134,7 @@ function Devices() {
           <div className="flex space-x-2 mb-4">
             <input
               type="text"
-              placeholder="Search devices..."
+              placeholder={translations.searchDevices}
               className="p-2 border rounded w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -134,9 +144,9 @@ function Devices() {
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >
-              <option value="all">All</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="all">{translations.all}</option>
+              <option value="active">{translations.active}</option>
+              <option value="inactive">{translations.inactive}</option>
             </select>
           </div>
 
@@ -215,12 +225,12 @@ function Devices() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-4 rounded-lg">
             <h3 className="text-xl font-bold mb-2">{modalDevice.name}</h3>
-            <p>Additional device details go here.</p>
+            <p>{translations.additionalDeviceDetails}</p>
             <button
               onClick={closeModal}
               className="mt-4 bg-teal-500 teal-text px-4 py-2 rounded"
             >
-              Close
+              {translations.close}
             </button>
           </div>
         </div>

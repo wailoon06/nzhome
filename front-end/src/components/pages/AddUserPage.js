@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import translationsMap from "../locales/translationsMap";
 
 function UserProfilePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -10,6 +11,13 @@ function UserProfilePage() {
   const addRow = () => {
     setRows([...rows, ""]); // Add an empty string to rows for new input field
   };
+
+  // translations
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -41,11 +49,11 @@ function UserProfilePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -55,7 +63,7 @@ function UserProfilePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -69,7 +77,7 @@ function UserProfilePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -83,7 +91,7 @@ function UserProfilePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -135,7 +143,7 @@ function UserProfilePage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -151,14 +159,14 @@ function UserProfilePage() {
             </div>
 
             {/* <!-- Main Content --> */}
-            <div class="flex flex-col flex-1">
+            <div className="flex flex-col flex-1">
               {/* Profile Section */}
               <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
                 <a className="relative pl-4" href="/profile">
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
                 <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
-                  Add User
+                  {translations.addUser}
                 </h1>
               </div>
 
@@ -169,7 +177,10 @@ function UserProfilePage() {
                     <input
                       className="text-center rounded-lg border border-gray-500 bg-white p-4 w-full max-w-[400px]"
                       type="text"
-                      placeholder={`Enter Email for Row ${index + 1}`}
+                      placeholder={translations.enterEmailForRow.replace(
+                        "{index}",
+                        index + 1
+                      )} // Dynamic translations
                       value={row} // Bind the input value to the 'row'
                       onChange={(e) => {
                         const newRows = [...rows];

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function NewDeviceDetailsPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -42,6 +43,12 @@ function NewDeviceDetailsPage() {
     // No navigation occurs here
   };
 
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -72,11 +79,11 @@ function NewDeviceDetailsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -86,7 +93,7 @@ function NewDeviceDetailsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -100,7 +107,7 @@ function NewDeviceDetailsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -114,7 +121,7 @@ function NewDeviceDetailsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -166,7 +173,7 @@ function NewDeviceDetailsPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -203,21 +210,21 @@ function NewDeviceDetailsPage() {
                   <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-between">
                     {/* Label */}
                     <span className="text-lg font-medium text-gray-700">
-                      Enter Device Unique Serial Code
+                      {translations.enter_device_unique_serial_code}
                     </span>
 
                     {/* Input */}
                     <input
                       type="text"
                       className="border border-gray-300 rounded-lg p-2 ml-5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter Serial Code"
+                      placeholder={translations.enter_serial_code}
                     />
                   </div>
 
                   <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-between">
                     {/* Label */}
                     <span className="text-lg font-medium text-gray-700">
-                      Select which space to add to
+                      {translations.select_which_space_to_add_to}
                     </span>
 
                     {/* Dropdown */}
@@ -227,14 +234,14 @@ function NewDeviceDetailsPage() {
                       onChange={handleTemperatureChange}
                     >
                       <option value="" disabled>
-                        Select
+                        {translations.select}
                       </option>
                       {[
-                        "Living Room",
-                        "Kitchen",
-                        "Bedroom",
-                        "Bathroom",
-                        "Garage",
+                        `${translations.living_room}`,
+                        `${translations.kitchen}`,
+                        `${translations.bedroom}`,
+                        `${translations.bathroom}`,
+                        `${translations.garage}`,
                       ].map((room) => (
                         <option key={room} value={room}>
                           {room}
@@ -250,12 +257,12 @@ function NewDeviceDetailsPage() {
                         onClick={handleCheckValidity}
                         className="text-lg font-medium text-gray-700"
                       >
-                        Check Validity
+                        {translations.check_validity}
                       </button>
 
                       {/* Switch */}
                       <div className="text-green-700 w-full h-full flex items-center justify-center">
-                        Valid
+                        {translations.valid}
                       </div>
                     </div>
                   </div>
@@ -265,7 +272,9 @@ function NewDeviceDetailsPage() {
                       type="submit"
                       className="rounded-lg bg-black text-sm sm:text-base w-full mb-2 text-center sm:w-[15%] md:w-[15%] h-[3rem] flex justify-center items-center"
                     >
-                      <div className="text-1xl text-white">Done</div>
+                      <div className="text-1xl text-white">
+                        {translations.done}
+                      </div>
                     </button>
                   </div>
                 </form>

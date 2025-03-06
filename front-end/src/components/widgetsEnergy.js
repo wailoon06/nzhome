@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import translationsMap from "../components/locales/translationsMap";
 
 function WidgetsEnergy() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -9,6 +10,12 @@ function WidgetsEnergy() {
     setSelectedDate(date);
     console.log(date.toLocaleDateString("en-US"));
   };
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="grid grid-cols-2 p-4 gap-4 mb-4">
@@ -23,7 +30,7 @@ function WidgetsEnergy() {
           />
           <a href="/camera">
             <div className="relative bg-white text-gray-800 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center cursor-pointer">
-              Check Camera
+              {translations.checkCamera}
             </div>
           </a>
         </div>
@@ -34,17 +41,17 @@ function WidgetsEnergy() {
               {/* Weather Today */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
                 <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
-                  Weather Today
+                  {translations.weatherToday}
                 </div>
                 <div className="text-2xl sm:text-2xl md:text-3xl truncate">
-                  Clear
+                  {translations.clear}
                 </div>
               </div>
 
               {/* Temperature */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
                 <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
-                  Temperature
+                  {translations.temperature}
                 </div>
                 <div className="text-2xl sm:text-2xl md:text-3xl truncate ">
                   20 °C
@@ -54,17 +61,17 @@ function WidgetsEnergy() {
               {/* Device Status */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
                 <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
-                  Device Status
+                  {translations.deviceStatus}
                 </div>
                 <div className="text-2xl sm:text-2xl md:text-3xl truncate">
-                  Stable
+                  {translations.stable}
                 </div>
               </div>
 
               {/* Network */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
                 <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
-                  Network
+                  {translations.network}
                 </div>
                 <div className="text-2xl sm:text-2xl md:text-3xl truncate">
                   500 mb/s
@@ -91,7 +98,7 @@ function WidgetsEnergy() {
 
         {/* Energy Usage Section */}
         <div className="bg-white p-4 rounded-lg shadow-md overflow-hidden">
-          <h2 className="text-xl mb-4">Energy Usage</h2>
+          <h2 className="text-xl mb-4">{translations.energyUsage}</h2>
 
           {/* Today Energy Usage */}
 
@@ -100,7 +107,9 @@ function WidgetsEnergy() {
             <a href="#">
               <div className="flex flex-wrap items-center p-2 rounded-xl bg-gray-200 mb-3 overflow-hidden relative">
                 <i className="fas fa-bolt text-lg mr-3"></i>
-                <span className="text-sm sm:text-base">Today</span>
+                <span className="text-sm sm:text-base">
+                  {translations.today}
+                </span>
                 <div className="ml-auto font-bold w-full sm:w-auto text-left sm:text-right truncate">
                   <span className="block sm:inline text-xs sm:text-sm md:text-lg">
                     28.6 kWh
@@ -122,7 +131,9 @@ function WidgetsEnergy() {
             <a href="#">
               <div className="flex flex-wrap items-center p-2 rounded-xl bg-gray-200 mb-3 overflow-hidden relative">
                 <i className="fas fa-bolt text-lg mr-3"></i>
-                <span className="text-sm sm:text-base">This Month</span>
+                <span className="text-sm sm:text-base">
+                  {translations.thisMonth}
+                </span>
                 <div className="ml-auto font-bold w-full sm:w-auto text-left sm:text-right truncate">
                   <span className="block sm:inline text-xs sm:text-sm md:text-lg">
                     325.37 kWh
@@ -140,7 +151,7 @@ function WidgetsEnergy() {
 
         {/* Energy Generation Section */}
         <div className="bg-white p-4 rounded-lg shadow-md mt-6 overflow-hidden relative">
-          <h2 className="text-xl mb-4">Energy Generation</h2>
+          <h2 className="text-xl mb-4">{translations.energyGeneration}</h2>
 
           <div className="relative">
             {/* Main Container */}
@@ -151,7 +162,7 @@ function WidgetsEnergy() {
 
                 {/* Label */}
                 <span className="text-sm sm:text-base md:text-lg truncate">
-                  This Month
+                  {translations.thisMonth}
                 </span>
 
                 {/* Energy Value */}

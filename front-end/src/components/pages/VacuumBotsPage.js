@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function VacuumBotsPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -9,11 +10,11 @@ function VacuumBotsPage() {
 
   const { name } = useParams();
 
-  const navigate = useNavigate();
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -45,11 +46,11 @@ function VacuumBotsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -59,7 +60,7 @@ function VacuumBotsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -73,7 +74,7 @@ function VacuumBotsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -87,7 +88,7 @@ function VacuumBotsPage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -139,7 +140,7 @@ function VacuumBotsPage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -169,7 +170,7 @@ function VacuumBotsPage() {
                         <i className="fa fa-2x fa-arrow-left"></i>
                       </a>
                       <h1 className="text-center lg:text-4xl w-full ml-[-1%]">
-                        {name} Vacuum Bot
+                        {name} {translations.vacuumBot}
                       </h1>
                       <a href="/">
                         <i class="fas fa-plus text-2xl"></i>
@@ -188,7 +189,7 @@ function VacuumBotsPage() {
                       <div className="grid grid-rows-2">
                         <div className="grid grid-cols-1">
                           <div className="font-bold rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]">
-                            Operation Time
+                            {translations.operationTime}
                           </div>{" "}
                           <div className="rounded-lg border-[2px] border-gray-300 bg-white p-4 mt-4 flex items-center justify-center text-center w-[96%]">
                             <div className="grid grid-cols-[.4fr,1fr] sm:grid-cols-[.5fr,1fr] items-center gap-4">
@@ -206,19 +207,19 @@ function VacuumBotsPage() {
                             type="submit"
                             className="font-bold rounded-md border border-gray-300 bg-green-500 p-4 mt-4 flex items-center justify-center text-center text-lg w-[92%]"
                           >
-                            Resume
+                            {translations.resume}
                           </button>{" "}
                           <button
                             type="submit"
                             className="font-bold rounded-md border border-gray-300 bg-red-500 p-4 mt-4 flex items-center justify-center text-center text-lg w-[92%]"
                           >
-                            Stop
+                            {translations.stop}
                           </button>
                           <button
                             type="submit"
                             className="font-bold rounded-md border border-gray-300 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[92%]"
                           >
-                            Go Home
+                            {translations.goHome}
                           </button>{" "}
                         </div>
                       </div>

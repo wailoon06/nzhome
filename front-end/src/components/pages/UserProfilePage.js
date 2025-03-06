@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import translationsMap from "../locales/translationsMap";
 
 function UserProfilePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -15,11 +15,11 @@ function UserProfilePage() {
   //   document.getElementById("datetime").innerHTML = dateOnly;
   // }, []);
 
-  const navigate = useNavigate();
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -51,11 +51,11 @@ function UserProfilePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Devices
+                    {translations.devices}
                   </span>
                 )}
               </div>
-            </a>{" "}
+            </a>
             <a href="/electric">
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <i
@@ -65,7 +65,7 @@ function UserProfilePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Electrical Usage
+                    {translations.electricalUsage}
                   </span>
                 )}
               </div>
@@ -79,7 +79,7 @@ function UserProfilePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Internet Usage
+                    {translations.internetUsage}
                   </span>
                 )}
               </div>
@@ -93,7 +93,7 @@ function UserProfilePage() {
                 ></i>
                 {!isCollapsed && (
                   <span className="text-white text-center text-sm mt-2">
-                    Calendar
+                    {translations.calendar}
                   </span>
                 )}
               </div>
@@ -145,7 +145,7 @@ function UserProfilePage() {
 
                 {/* Centered Text */}
                 <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  NZ HOME
+                  {translations.title}
                 </h1>
 
                 {/* User Icon */}
@@ -168,7 +168,7 @@ function UserProfilePage() {
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
                 <h1 className="text-center lg:text-4xl w-full ml-[-5%]">
-                  Profile
+                  {translations.profileTitle}
                 </h1>
               </div>
 
@@ -190,13 +190,13 @@ function UserProfilePage() {
                   href="/login"
                   className="button2 bg-green-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
                 >
-                  Login
+                  {translations.sign_in}
                 </a>{" "}
                 <a
                   href="/register"
                   className="button2 bg-blue-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
                 >
-                  Register
+                  {translations.register}
                 </a>
               </div>
 
@@ -205,9 +205,9 @@ function UserProfilePage() {
                 href="/settings"
                 className="grid grid-cols-2 rounded-lg border border-gray-500 bg-white p-5 my-2.5 w-full max-w-full"
               >
-                <div className="font-bold">General Settings</div>{" "}
+                <div className="font-bold">{translations.generalSettings}</div>{" "}
                 <div className="font-bold text-gray-500 text-right">
-                  Languages, Notifications, Feedback, Security, Privacy
+                  {translations.generalSettingsDescription}
                 </div>
               </a>
 
@@ -215,9 +215,9 @@ function UserProfilePage() {
                 href="/profile/AddUser"
                 className="grid grid-cols-2 rounded-lg border border-gray-500 bg-white p-5 my-2.5 w-full max-w-full"
               >
-                <div className="font-bold">Add User </div>
+                <div className="font-bold">{translations.addUser}</div>
                 <div className="font-bold text-gray-500 text-right">
-                  Add User to Your Home
+                  {translations.addUserDescription}
                 </div>
               </a>
 
@@ -225,9 +225,9 @@ function UserProfilePage() {
                 href="/users"
                 className="grid grid-cols-2 rounded-lg border border-gray-500 bg-white p-5 my-2.5 w-full max-w-full"
               >
-                <div className="font-bold">All Users </div>{" "}
+                <div className="font-bold">{translations.allUsers}</div>{" "}
                 <div className="font-bold text-gray-500 text-right">
-                  View The Amount of Existing Users
+                  {translations.allUsersDescription}
                 </div>
               </a>
 
@@ -235,9 +235,9 @@ function UserProfilePage() {
                 href="/change&password"
                 className="grid grid-cols-2 rounded-lg border border-gray-500 bg-white p-5 my-2.5 w-full max-w-full"
               >
-                <div className="font-bold">Change Password </div>{" "}
+                <div className="font-bold">{translations.changePassword}</div>{" "}
                 <div className="font-bold text-gray-500 text-right">
-                  Change your account's password
+                  {translations.changePasswordDescription}
                 </div>
               </a>
             </div>

@@ -29,7 +29,6 @@ import TestConnectionPage from "./components/pages/TestConnectionPage";
 import CameraPage from "./components/pages/CameraPage";
 import AllRoomPage from "./components/pages/AllRoomPage";
 import CalendarPage from "./components/pages/CalendarPage";
-import Bac from "./components/pages/bac";
 import CalendarReport from "./components/pages/calendarReport";
 import RoomsNewPage from "./components/pages/RoomsNewPage";
 import RoomsNewAccessPage from "./components/pages/RoomsNewAccessPage";
@@ -40,12 +39,19 @@ import RoomsDevicesPage from "./components/pages/RoomsDevicesPage";
 import RoomEnergyUsagePage from "./components/pages/RoomEnergyUsagePage";
 import RoomDeviceSetActionPage from "./components/pages/RoomDeviceSetActionPage";
 
+import translationsMap from "./components/locales/translationsMap";
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+
+  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <Routes>
@@ -65,7 +71,7 @@ function App() {
                 <div className="h-[100px] flex items-center justify-center">
                   <a href="/">
                     <img
-                      src="/image/NZHome2.png"
+                      src="./image/NZHome.png"
                       alt="NZ Home Logo"
                       className={`${isCollapsed ? "hidden" : "block"}`}
                     />
@@ -81,11 +87,11 @@ function App() {
                     ></i>
                     {!isCollapsed && (
                       <span className="text-white text-center text-sm mt-2">
-                        Devices
+                        {translations.devices}
                       </span>
                     )}
                   </div>
-                </a>{" "}
+                </a>
                 <a href="/electric">
                   <div className="flex flex-col items-center justify-center px-4 py-2">
                     <i
@@ -95,7 +101,7 @@ function App() {
                     ></i>
                     {!isCollapsed && (
                       <span className="text-white text-center text-sm mt-2">
-                        Electrical Usage
+                        {translations.electricalUsage}
                       </span>
                     )}
                   </div>
@@ -109,7 +115,7 @@ function App() {
                     ></i>
                     {!isCollapsed && (
                       <span className="text-white text-center text-sm mt-2">
-                        Internet Usage
+                        {translations.internetUsage}
                       </span>
                     )}
                   </div>
@@ -123,7 +129,7 @@ function App() {
                     ></i>
                     {!isCollapsed && (
                       <span className="text-white text-center text-sm mt-2">
-                        Calendar
+                        {translations.calendar}
                       </span>
                     )}
                   </div>
@@ -173,7 +179,7 @@ function App() {
 
                     {/* Centered Text */}
                     <h1 className="font-bold text-white flex-grow text-center lg:text-4xl ml-[4%] titleGold">
-                      NZ HOME
+                      {translations.title}
                     </h1>
 
                     {/* User Icon */}
@@ -249,7 +255,6 @@ function App() {
         path="/rooms/summary/:roomTitle/setAction"
         element={<RoomDeviceSetActionPage />}
       />
-      <Route path="/bac" element={<Bac />} />
     </Routes>
   );
 }
