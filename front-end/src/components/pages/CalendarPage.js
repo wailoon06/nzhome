@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
+import MainContentHeader from "./MainContentHeader";
 
 function CalendarPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -134,38 +135,7 @@ function CalendarPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <div className="flex justify-between items-center relative">
-              <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
-                {/* Hamburger Button */}
-                <div
-                  className={`flex items-center ${
-                    isCollapsed ? "block" : "hidden"
-                  }`}
-                >
-                  <button
-                    onClick={toggleSidebar}
-                    className="text-white text-2xl bg-transparent border-0 mr-4"
-                  >
-                    <i className="fas fa-bars"></i>
-                  </button>
-                </div>
-
-                {/* Centered Text */}
-                <h1 className="font-bold text-white flex-grow text-center lg:text-4xl titleGold">
-                  {translations.title}
-                </h1>
-
-                {/* User Icon */}
-                <a href="#" className="mr-8">
-                  <i className="fas fa-user text-white text-3xl"></i>
-                </a>
-
-                {/* Bell Icon */}
-                <a href="/notification" className="ml-auto">
-                  <i className="fas fa-bell text-white text-3xl"></i>
-                </a>
-              </div>
-            </div>
+            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
 
             {/* <!-- Main Content --> */}
             <div class="flex flex-col flex-1">
