@@ -1,21 +1,15 @@
-package com.example.demo;
+package com.nz.backend.dto;
 
-public class RegisterDTO {
-    private String name;
+public class LoginDTO {
     private String email;
     private String password;
 
-    public RegisterDTO () {}
+    public LoginDTO() {}
 
-    public RegisterDTO (String name, String email, String password) {
-        this.name = name;
+    public LoginDTO(String email, String password) {
         this.email = email;
         this.password = password;
     }
-
-    // Getters and Setters
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
