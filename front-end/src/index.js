@@ -4,11 +4,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./components/pages/LoginPage";
 import RegisterPage from "./components/pages/RegisterPage";
 import App from "./App";
+import LandingPage from "./LandingPage";
 import "./index.css";
 
 const Root = () => (
   <Router>
-    <App />
+    <LandingPage />
 
     <Routes>
       <Route path="/login" element={<LoginPage />} />
