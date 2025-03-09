@@ -4,31 +4,38 @@ import axios from "axios";
 import translationsMap from "../locales/translationsMap";
 
 function RegisterPage() {
-  const navigate = useNavigate();
 
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate("");
 
-  const handleNameChange = (e) => setName(e.target.value);
+  const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const userData = { name, email, password };
-
     axios
-      .post("http://localhost:8080/api/register", userData)
+      .post(
+        "http://localhost:8080/api/register",
+        { username, email, password }
+      )
       .then((response) => {
         console.log(response.data);
         alert(response.data);
-        navigate("/"); // Redirect after successful registration
+        navigate("/login"); // Redirect after successful registration
       })
       .catch((error) => {
-        console.error("There was an error registering!", error);
-        alert("Error registering user.");
+        console.error("Registration error:", error);
+        if (error.response) {
+          // The server responded with a status code outside the 2xx range
+          console.log("Response data:", error.response.data);
+          console.log("Response status:", error.response.status);
+          alert("Error registering user: " + JSON.stringify(error.response.data));
+        } else {
+          alert("Error registering user: " + error.message);
+        }
       });
   };
 
@@ -67,10 +74,10 @@ function RegisterPage() {
             <div className="mb-4">
               <input
                 type="text"
-                name="username"
+                username="username"
                 placeholder={translations.username}
-                value={name}
-                onChange={handleNameChange}
+                value={username}
+                onChange={handleUsernameChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />
