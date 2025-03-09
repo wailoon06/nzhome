@@ -52,14 +52,12 @@ const Root = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={hasStarted ? <App /> : <LandingPage />} />
+        <Route
+          path="/"
+          element={hasStarted === "true" ? <App /> : <LandingPage />}
+        />
         {/* <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} /> */}
-        <Route path="/" element={<WidgetsEnergy />} />
-        <Route path="/rooms" element={<RoomsRobots />} />
-        <Route path="/devices" element={<Devices />} />
-        <Route path="/users" element={<Users />} />
-
         <Route path="/room/:name" element={<RoomPage />} />
         <Route
           path="/devices/:type/:name/details"
@@ -71,23 +69,6 @@ const Root = () => {
         <Route path="/profile/AddUser" element={<AddUserPage />} />
         <Route path="/internet" element={<InternetUsagePage />} />
         <Route path="/electric" element={<ElectricUsagePage />} />
-        <Route path="/settings" element={<UserSettingPage />} />
-        <Route path="/users/all" element={<AllUserPage />} />
-        <Route path="/change-password" element={<ChangePasswordPage />} />
-        <Route path="/select-robot" element={<SelectRobotPage />} />
-        <Route path="/vacuum-bots" element={<VacuumBotsPage />} />
-        <Route path="/notifications" element={<NotificationPage />} />
-        <Route path="/schedule" element={<ActionSchedulePage />} />
-        <Route path="/lo-devices" element={<LODevicesPage />} />
-        <Route path="/add-device" element={<AddNewDevicePage />} />
-        <Route path="/new-device-details" element={<NewDeviceDetailsPage />} />
-        <Route path="/test-connection" element={<TestConnectionPage />} />
-        <Route path="/camera" element={<CameraPage />} />
-        <Route path="/rooms/all" element={<AllRoomPage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/calendar/report" element={<CalendarReport />} />
-        <Route path="/rooms/new" element={<RoomsNewPage />} />
-        <Route path="/rooms/access" element={<RoomsNewAccessPage />} />
         <Route path="/electric/date" element={<ViewSpecificDeviceDatePage />} />
         <Route
           path="/electric/:date/devices"
@@ -97,9 +78,45 @@ const Root = () => {
           path="/electric/:date/:name/report"
           element={<ViewSpecificDeviceReportPage />}
         />
-        <Route path="/rooms/devices" element={<RoomsDevicesPage />} />
-        <Route path="/room/energy" element={<RoomEnergyUsagePage />} />
-        <Route path="/room/action" element={<RoomDeviceSetActionPage />} />
+        <Route path="/settings" element={<UserSettingPage />} />
+        <Route path="/users" element={<AllUserPage />} />
+        <Route path="/change&password" element={<ChangePasswordPage />} />
+        <Route path="/robots" element={<SelectRobotPage />} />
+        <Route path="/robots/vacuum/:name" element={<VacuumBotsPage />} />
+        <Route path="/notification" element={<NotificationPage />} />
+        <Route path="/devices" element={<LODevicesPage />} />
+        <Route
+          path="/devices/:type/:name/details/setAction"
+          element={<ActionSchedulePage />}
+        />
+        <Route path="/devices/new" element={<AddNewDevicePage />} />
+        <Route path="/devices/new/:name" element={<NewDeviceDetailsPage />} />
+        <Route
+          path="/devices/new/:name/test"
+          element={<TestConnectionPage />}
+        />
+        <Route path="/camera" element={<CameraPage />} />
+        <Route path="/rooms" element={<AllRoomPage />} />
+        {/* <Route path="/electric/rooms/:name" element={<AllRoomPage />} /> */}
+        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/calendar/report" element={<CalendarReport />} />
+        <Route path="/rooms/new" element={<RoomsNewPage />} />
+        <Route
+          path="/rooms/:roomTitle/access"
+          element={<RoomsNewAccessPage />}
+        />
+        <Route
+          path="/rooms/devices/:roomTitle"
+          element={<RoomsDevicesPage />}
+        />
+        <Route
+          path="/rooms/summary/:roomTitle"
+          element={<RoomEnergyUsagePage />}
+        />{" "}
+        <Route
+          path="/rooms/summary/:roomTitle/setAction"
+          element={<RoomDeviceSetActionPage />}
+        />
       </Routes>
     </Router>
   );

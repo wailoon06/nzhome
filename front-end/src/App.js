@@ -53,6 +53,11 @@ function App() {
 
   const translations = translationsMap[language] || translationsMap["en"];
 
+  const handleReturnGetStarted = () => {
+    localStorage.setItem("started", "false"); // Save flag
+    window.location.reload();
+  };
+
   return (
     <Routes>
       {/* Routes that require a full layout */}
@@ -134,6 +139,19 @@ function App() {
                     )}
                   </div>
                 </a>
+
+                <button
+                  onClick={handleReturnGetStarted}
+                  className="mt-auto mb-[20%]"
+                >
+                  <div className="flex flex-col items-center justify-center px-4 py-2">
+                    <i
+                      className={`fas fa-sign-out-alt text-white text-2xl ${
+                        isCollapsed ? "hidden" : "block"
+                      }`}
+                    ></i>
+                  </div>
+                </button>
               </div>
 
               {/* Collapse Button */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import NZHome2 from "./image/NZHome2.jpg";
 import translationsMap from "./components/locales/translationsMap";
 import bgVideo from "./video/bg.mp4";
@@ -27,17 +27,9 @@ function LandingPage() {
     return () => clearTimeout(timeout);
   }, []);
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    // If user has already clicked "Get Started", redirect them to App.js
-    if (localStorage.getItem("started")) {
-      navigate("/");
-    }
-  }, [navigate]);
-
   const handleGetStarted = () => {
     localStorage.setItem("started", "true"); // Save flag
-    navigate("/"); // Navigate to "/"
+    window.location.reload();
   };
 
   return (
