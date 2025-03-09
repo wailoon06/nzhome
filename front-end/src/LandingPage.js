@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import NZHome2 from "./image/NZHome2.jpg";
 import translationsMap from "./components/locales/translationsMap";
 import bgVideo from "./video/bg.mp4";
@@ -14,10 +14,6 @@ function LandingPage() {
 
   const [animate, setAnimate] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -30,6 +26,19 @@ function LandingPage() {
 
     return () => clearTimeout(timeout);
   }, []);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    // If user has already clicked "Get Started", redirect them to App.js
+    if (localStorage.getItem("started")) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  const handleGetStarted = () => {
+    localStorage.setItem("started", "true"); // Save flag
+    navigate("/"); // Navigate to "/"
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col items-center bg-white">
@@ -138,6 +147,7 @@ function LandingPage() {
           </p>
           <div className="flex justify-center">
             <button
+              onClick={handleGetStarted}
               className={`hover:bg-gray-800 bg-orange-500 mt-4 rounded-full px-6 py-2 border border-white text-white w-full md:w-[40%] transition-opacity ${
                 animate ? "opacity-100" : "opacity-0"
               }`}
