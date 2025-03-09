@@ -56,6 +56,8 @@ const Root = () => {
           path="/"
           element={hasStarted === "true" ? <App /> : <LandingPage />}
         />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         {/* <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} /> */}
         <Route path="/room/:name" element={<RoomPage />} />
