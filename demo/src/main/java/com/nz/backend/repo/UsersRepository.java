@@ -2,12 +2,12 @@ package com.nz.backend.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.nz.backend.entities.Users;
+import com.nz.backend.entities.User;
 
-public interface UsersRepository extends JpaRepository<Users, Long> {
+public interface UsersRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
 
-    Users findByUsername (String username);
-    Users findByEmail(String email);
+    User findByUsername (String username);
+    User findByEmail(String email);
 }

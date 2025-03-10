@@ -23,8 +23,8 @@ import com.nz.backend.dto.RegUserDTO;
 import com.nz.backend.dto.LoginDTO;
 import com.nz.backend.dto.RegOwnerDTO;
 import com.nz.backend.entities.Family;
-import com.nz.backend.entities.Role;
-import com.nz.backend.entities.Users;
+import com.nz.backend.entities.User;
+import com.nz.backend.enums.Role;
 import com.nz.backend.repo.FamilyRepo;
 import com.nz.backend.repo.UsersRepository;
 import com.nz.backend.services.JwtService;
@@ -82,7 +82,7 @@ public class UsersControllers {
 
         familyRepo.save(family);
 
-        Users user = new Users(
+        User user = new User(
             regOwnerDTO.getUsername(),
             regOwnerDTO.getEmail(),
             passwordEncoder.encode(regOwnerDTO.getPassword()),
@@ -106,7 +106,7 @@ public class UsersControllers {
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
 
-        Users owner = usersRepository.findByEmail(email);
+        User owner = usersRepository.findByEmail(email);
 
         if (owner.getRole().name().equals("user")){
             return ResponseEntity.badRequest().body("You don't have access!");
@@ -127,7 +127,7 @@ public class UsersControllers {
         Family family = owner.getFamily();
         familyRepo.save(family);
 
-        Users newUser = new Users(
+        User newUser = new User(
             regUserDTO.getUsername(),
             regUserDTO.getEmail(),
             passwordEncoder.encode(regUserDTO.getPassword()),
@@ -151,7 +151,7 @@ public class UsersControllers {
             return ResponseEntity.badRequest().body("Password is required");
         }
 
-        Users user = usersRepository.findByEmail(loginDTO.getEmail());
+        User user = usersRepository.findByEmail(loginDTO.getEmail());
 
         if (user == null || !passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             return ResponseEntity.badRequest().body("Error: Wrong user or password");
@@ -181,7 +181,7 @@ public class UsersControllers {
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
 
-        Users user = usersRepository.findByEmail(email);
+        User user = usersRepository.findByEmail(email);
         
         if (user == null){
             return ResponseEntity.badRequest().body("User not found");
@@ -200,7 +200,7 @@ public class UsersControllers {
     @PutMapping("/forgetPassword")
     public ResponseEntity<?> forgetPassword(@RequestBody ForgetPassDTO forgetPassDTO){
         
-        Users user = usersRepository.findByEmail(forgetPassDTO.getEmail());
+        User user = usersRepository.findByEmail(forgetPassDTO.getEmail());
         
         if (user == null){
             return ResponseEntity.badRequest().body("User not found");
@@ -226,7 +226,7 @@ public class UsersControllers {
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
 
-        Users user = usersRepository.findByEmail(email);
+        User user = usersRepository.findByEmail(email);
         if (user == null){
             return ResponseEntity.badRequest().body("User not found");
         }

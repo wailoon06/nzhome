@@ -1,5 +1,7 @@
 package com.nz.backend.entities;
 
+import com.nz.backend.enums.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
@@ -33,12 +35,12 @@ public class Users {
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "familyid")  // Foreign key to Family table
+    @JoinColumn(name = "Familyid") 
     private Family family;
 
-    public Users() {}
+    public User() {}
 
-    public Users(String username, String email, String password, Role role, Family family) {
+    public User(String username, String email, String password, Role role, Family family) {
         this.username = username;
         this.email = email;
         this.password = password;
