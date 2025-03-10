@@ -18,15 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nz.backend.dto.ChangePassDTO;
+import com.nz.backend.dto.ForgetPassDTO;
+import com.nz.backend.dto.RegUserDTO;
 import com.nz.backend.dto.LoginDTO;
-import com.nz.backend.dto.RegisterDTO;
+import com.nz.backend.dto.RegOwnerDTO;
+import com.nz.backend.entities.Family;
 import com.nz.backend.entities.Role;
 import com.nz.backend.entities.Users;
+import com.nz.backend.repo.FamilyRepo;
 import com.nz.backend.repo.UsersRepository;
 import com.nz.backend.services.JwtService;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 
 @RestController
 @RequestMapping("/api")
@@ -35,6 +36,9 @@ public class UsersControllers {
 
     @Autowired
     private UsersRepository usersRepository;
+    
+    @Autowired
+    private FamilyRepo familyRepo;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -45,34 +49,93 @@ public class UsersControllers {
     @Value("${jwt.secret.key}")
     private String secretKey;
     
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
+    @Value("$(fam.pass)")
+    private String famPass;
 
-        if (registerDTO.getUsername() == null || registerDTO.getEmail() == null || registerDTO.getPassword() == null) {
+    @PostMapping("/registerOwner")
+    public ResponseEntity<?> register_owner(@RequestBody RegOwnerDTO regOwnerDTO) {
+        
+        if (regOwnerDTO.getUsername() == null || regOwnerDTO.getEmail() == null || regOwnerDTO.getPassword() == null 
+            || regOwnerDTO.getFamilyName() == null || regOwnerDTO.getFamPass() == null) {
             return ResponseEntity.badRequest().body("All fields are required!");
         }
 
-        if (usersRepository.existsByEmail(registerDTO.getEmail())) {
+        if (usersRepository.existsByEmail(regOwnerDTO.getEmail())) {
             return ResponseEntity.badRequest().body("Email already exists!");
         }
 
-        if (usersRepository.existsByUsername(registerDTO.getUsername())) {
+        if (usersRepository.existsByUsername(regOwnerDTO.getUsername())) {
+            return ResponseEntity.badRequest().body("Username already exists!");
+        }
+
+        if (familyRepo.existsByFamilyName(regOwnerDTO.getFamilyName())){
+            return ResponseEntity.badRequest().body("Family already exists!");
+        }
+
+        if (regOwnerDTO.getFamPass().equals(famPass)){
+            return ResponseEntity.badRequest().body("Family key is wrong!");
+        }
+
+        Family family = new Family(
+            regOwnerDTO.getFamilyName()
+        );
+
+        familyRepo.save(family);
+
+        Users user = new Users(
+            regOwnerDTO.getUsername(),
+            regOwnerDTO.getEmail(),
+            passwordEncoder.encode(regOwnerDTO.getPassword()),
+            Role.Owner,
+            family
+        );
+
+        usersRepository.save(user);
+
+        return ResponseEntity.ok("Successfully Registered!");
+
+    }
+
+    @PostMapping("/registerUser")
+    public ResponseEntity<?> register_user(@RequestBody RegUserDTO regUserDTO, @RequestHeader("Authorization") String token) {
+
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
+
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+
+        Users owner = usersRepository.findByEmail(email);
+
+        if (owner.getRole().name().equals("user")){
+            return ResponseEntity.badRequest().body("You don't have access!");
+        }
+
+        if (regUserDTO.getUsername() == null || regUserDTO.getEmail() == null || regUserDTO.getPassword() == null) {
+            return ResponseEntity.badRequest().body("All fields are required!");
+        }
+
+        if (usersRepository.existsByEmail(regUserDTO.getEmail())) {
+            return ResponseEntity.badRequest().body("Email already exists!");
+        }
+
+        if (usersRepository.existsByUsername(regUserDTO.getUsername())) {
             return ResponseEntity.badRequest().body("Username already exists!");
         }
         
-        Role userRole = usersRepository.count() == 0 ? Role.SuperAdmin: Role.User;
-        
-        // Create a new user
-        Users user = new Users(
-            registerDTO.getUsername(),
-            registerDTO.getEmail(),
-            passwordEncoder.encode(registerDTO.getPassword()),
-            userRole,
-            null         
+        Family family = owner.getFamily();
+        familyRepo.save(family);
+
+        Users newUser = new Users(
+            regUserDTO.getUsername(),
+            regUserDTO.getEmail(),
+            passwordEncoder.encode(regUserDTO.getPassword()),
+            Role.User,
+            family         
         );
 
-        // Save to database
-        usersRepository.save(user);
+        usersRepository.save(newUser);
 
         return ResponseEntity.ok("Successfully Registered");
     }
@@ -129,6 +192,25 @@ public class UsersControllers {
         }
 
         user.setPassword(passwordEncoder.encode(changePassDTO.getNewPassword()));
+        usersRepository.save(user);
+
+        return ResponseEntity.ok("Succesfully change password");
+    }
+
+    @PutMapping("/forgetPassword")
+    public ResponseEntity<?> forgetPassword(@RequestBody ForgetPassDTO forgetPassDTO){
+        
+        Users user = usersRepository.findByEmail(forgetPassDTO.getEmail());
+        
+        if (user == null){
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        if (!passwordEncoder.matches(forgetPassDTO.getOldPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect old password");
+        }
+
+        user.setPassword(passwordEncoder.encode(forgetPassDTO.getNewPassword()));
         usersRepository.save(user);
 
         return ResponseEntity.ok("Succesfully change password");

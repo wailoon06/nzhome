@@ -1,13 +1,13 @@
 package com.nz.backend.dto;
 
-public class RegisterDTO {
+public class RegUserDTO {
     private String username;
     private String email;
     private String password;
 
-    public RegisterDTO () {}
+    public RegUserDTO () {}
 
-    public RegisterDTO (String username, String email, String password) {
+    public RegUserDTO (String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;

@@ -16,6 +16,7 @@ Family Controllers
 1. Create Fam 
     Role: Owner, SuperAdmin
     Owner needs to enter a special code that match with famPass only can create a family
+    DTO: Familyname, Family Password
 
 2. Add User Fam
     Role: Admin, Owner
