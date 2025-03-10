@@ -138,6 +138,7 @@
 
   "profileTitle": "プロフィール",
   "loginButton": "ログイン",
+  "activCode": "アクティベーションコード",
   "registerButton": "登録",
   "generalSettings": "一般設定",
   "generalSettingsDescription": "言語、通知、フィードバック、安全、プライバシー",

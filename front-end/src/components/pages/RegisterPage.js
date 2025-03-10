@@ -4,7 +4,6 @@ import axios from "axios";
 import translationsMap from "../locales/translationsMap";
 
 function RegisterPage() {
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,10 +16,7 @@ function RegisterPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(
-        "http://localhost:8080/api/register",
-        { username, email, password }
-      )
+      .post("http://localhost:8080/api/register", { username, email, password })
       .then((response) => {
         console.log(response.data);
         alert(response.data);
@@ -32,7 +28,9 @@ function RegisterPage() {
           // The server responded with a status code outside the 2xx range
           console.log("Response data:", error.response.data);
           console.log("Response status:", error.response.status);
-          alert("Error registering user: " + JSON.stringify(error.response.data));
+          alert(
+            "Error registering user: " + JSON.stringify(error.response.data)
+          );
         } else {
           alert("Error registering user: " + error.message);
         }
@@ -70,6 +68,18 @@ function RegisterPage() {
           />
           <h2 className="mb-4 subtitle text-white">{translations.register}</h2>
 
+          <div className="mb-4">
+            <input
+              type="text"
+              name="activCode"
+              placeholder={translations.activCode}
+              value={password}
+              onChange={handlePasswordChange}
+              required
+              className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+            />
+          </div>
+
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <input
@@ -90,18 +100,6 @@ function RegisterPage() {
                 placeholder={translations.email}
                 value={email}
                 onChange={handleEmailChange}
-                required
-                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-              />
-            </div>
-
-            <div className="mb-4">
-              <input
-                type="password"
-                name="password"
-                placeholder={translations.password}
-                value={password}
-                onChange={handlePasswordChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />

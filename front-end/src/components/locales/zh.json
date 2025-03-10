@@ -139,6 +139,7 @@
 
   "profileTitle": "个人资料",
   "loginButton": "登录",
+  "activCode": "激活码",
   "registerButton": "注册",
   "generalSettings": "常规设置",
   "generalSettingsDescription": "语言、通知、反馈、安全、隐私",
