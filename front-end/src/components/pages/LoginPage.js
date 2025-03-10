@@ -6,29 +6,50 @@ import translationsMap from "../locales/translationsMap";
 function LoginPage() {
   const navigate = useNavigate();
   const emailRef = useRef(null);
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // const handleEmailChange = (e) => setEmail(e.target.value);
-  // const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const userData = { email, password };
-
-  //   axios
-  //     .post(`http://localhost:8080/api/login`, userData)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       alert(response.data);
-  //       navigate("/"); // Redirect after successful log in
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error logging in!", error);
-  //       alert("Error Logging In.");
-  //     });
-  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    
+    try {
+        const response = await axios.post("http://localhost:8080/api/login", { email, password });
+        
+        if (response.data && response.data.token) {
+        
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            
+            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+            
+            navigate("/dashboard");
+        } else {
+            setError("Invalid response from server");
+        }
+    } catch (err) {
+        console.error("Login error:", err);
+        
+        if (err.response) {
+            
+            setError(err.response.data || "Invalid credentials! Please try again.");
+        } else if (err.request) {
+            
+            setError("No response from server. Please try again later.");
+        } else {
+            
+            setError("An error occurred. Please try again.");
+        }
+    } finally {
+        setLoading(false);
+    }
+  };
 
   // email check
   const handleButtonClick = async (event) => {
@@ -76,7 +97,7 @@ function LoginPage() {
           />
           <h2 className="mb-4 subtitle text-white">Sign In</h2>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             {/* <div className="mb-4">
               <input
                 type="text"
@@ -92,6 +113,8 @@ function LoginPage() {
                 type="email"
                 name="email"
                 placeholder="Email"
+                // value={email}
+                // onChange={handleEmailChange}
                 ref={emailRef}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"

@@ -7,6 +7,7 @@
     "cra-template": "1.2.0",
     "date-fns": "^4.1.0",
     "front-end": "file:",
+    "jwt-decode": "^4.0.0",
     "react": "^18.0.0",
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.0.0",

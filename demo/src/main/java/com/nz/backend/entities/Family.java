@@ -15,7 +15,7 @@ public class Family {
     @Column(name = "Familyid")
     private Long familyId;
 
-    @Column(nullable = false)
+    @Column(name = "familyname", nullable = false)
     private String familyName;
 
     // Default constructor

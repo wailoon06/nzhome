@@ -1,9 +1,47 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import translationsMap from "../locales/translationsMap";
+import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 function ChangePasswordPage() {
+  const [email, setEmail] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const navigate = useNavigate();
+
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  // const getEmail = () => {
+    
+  // }
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+ 
+  //   axios
+  //     .post("", {email, oldPassword, newPassword})
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       alert("Password successfully change");
+  //       navigate("/dashboard");
+  //     })
+  //     .catch((error) => {
+  //       console.error("Change Password Error: ", error);
+  //       if (error.response) {
+  //         // The server responded with a status code outside the 2xx range
+  //         console.log("Response data:", error.response.data);
+  //         console.log("Response status:", error.response.status);
+  //         alert("Error registering user: " + JSON.stringify(error.response.data));
+  //       } else {
+  //         alert("Error registering user: " + error.message);
+  //       }
+  //     });
+  // };
 
   const handleButtonClick = (event) => {
     event.preventDefault(); // Prevent default form submission
