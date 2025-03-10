@@ -12,9 +12,9 @@ function ChangePasswordPage() {
 
   const navigate = useNavigate();
 
-  const handleUsernameChange = (e) => setUsername(e.target.value);
+ // const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
+  //const handlePasswordChange = (e) => setPassword(e.target.value);
 
   // const getEmail = () => {
     
