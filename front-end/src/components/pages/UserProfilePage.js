@@ -23,13 +23,30 @@ function UserProfilePage() {
 
   const translations = translationsMap[language] || translationsMap["en"];
 
+  const [profileImage, setProfileImage] = useState(null);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         {/* Sidebar Component */}
         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
-         </div>
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
+        </div>
 
         {/* Main Content */}
         <div
@@ -37,7 +54,11 @@ function UserProfilePage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* <!-- Main Content --> */}
             <div class="flex flex-col flex-1">
@@ -53,19 +74,31 @@ function UserProfilePage() {
 
               {/* Profile Card */}
               <div className="rounded-lg border border-gray-500 bg-white p-5 my-5 flex items-center w-full max-w-[full]">
-                {/* <img
-                  src="https://static3.depositphotos.com/1000951/138/i/600/depositphotos_1380772-stock-photo-profile-of-beautiful-smiling-girl.jpg"
-                  alt="Profile Picture"
-                  className="rounded-full w-16 h-16 mr-5"
-                />
+                <label className="cursor-pointer relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt="Profile Picture"
+                      className="rounded-full w-20 h-20 mr-5 object-cover border-2 border-gray-300"
+                    />
+                  ) : (
+                    <i className="fas fa-user-circle text-gray-400 text-4xl mr-5"></i>
+                  )}
+                </label>
                 <div className="flex flex-col">
                   <h3 className="font-bold">Camilia Olson</h3>
                   <h4 className="text-gold">Admin</h4>
                   <span className="text-gray-500">
-                    Date Joined: <span id="datetime"></span>
+                    Date Joined: <span id="datetime">2024-03-10</span>
                   </span>
-                </div> */}
-                <a
+                </div>
+                {/* <a
                   href="/login"
                   className="button2 bg-green-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
                 >
@@ -76,7 +109,7 @@ function UserProfilePage() {
                   className="button2 bg-blue-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
                 >
                   {translations.register}
-                </a>
+                </a> */}
               </div>
 
               {/* Navigation Options */}

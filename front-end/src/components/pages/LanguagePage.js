@@ -39,7 +39,7 @@ function LanguagePage() {
             <div className="flex flex-col flex-1">
               {/* Setting Section */}
               <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
-                <a className="relative pl-4" href="/">
+                <a className="relative pl-4" href="/settings">
                   <i className="fa fa-2x fa-arrow-left"></i>
                 </a>
                 <h1 className="text-center lg:text-4xl w-full">
