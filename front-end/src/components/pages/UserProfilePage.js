@@ -3,40 +3,21 @@ import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function UserProfilePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // const { name } = useParams();a
-
-  // useEffect(() => {
-  //   const now = new Date();
-  //   const dateOnly = now.toLocaleDateString();
-  //   document.getElementById("datetime").innerHTML = dateOnly;
-  // }, []);
-
+  //Front
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
+  
   const translations = translationsMap[language] || translationsMap["en"];
 
   const [profileImage, setProfileImage] = useState(null);
@@ -51,6 +32,58 @@ function UserProfilePage() {
       reader.readAsDataURL(file);
     }
   };
+
+  //Back
+  const navigate = useNavigate("");
+
+  const [userDetails, setUserDetails] = useState(null);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      setLoading(true);
+      
+      try {
+        const token = localStorage.getItem('token');
+        
+        const response = await axios.get('http://localhost:8080/api/getUserDetails', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        // Store user details in state
+        setUserDetails(response.data);
+        
+      } catch (err) {
+        console.error('Error fetching user details:', err);
+        setError(err.message || 'Failed to load user details');
+        
+        // Handle token expiration or authentication issues
+        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+          // Token expired or invalid - redirect to login
+          console.log("Session expired!");
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      } finally {
+          setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  // Display user details
+  // if (loading) return <div>Loading user details...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  // const { name } = useParams();
+
+  // useEffect(() => {
+  //   const now = new Date();
+  //   const dateOnly = now.toLocaleDateString();
+  //   document.getElementById("datetime").innerHTML = dateOnly;
+  // }, []);
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -110,11 +143,17 @@ function UserProfilePage() {
                   )}
                 </label>
                 <div className="flex flex-col">
-                  <h3 className="font-bold">Camilia Olson</h3>
-                  <h4 className="text-gold">Admin</h4>
-                  <span className="text-gray-500">
-                    Date Joined: <span id="datetime">2024-03-10</span>
-                  </span>
+                  {userDetails ? (
+                      <>
+                        <h3 className="font-bold">{userDetails.username}</h3>
+                        <h4 className="text-gold">{userDetails.role}</h4>
+                        <span className="text-gray-500">
+                          Date Joined: <span id="datetime">{userDetails.createdDate}</span>
+                        </span>
+                      </>
+                    ) : (
+                      <p>Loading user data...</p>
+                    )}
                 </div>
                 
                 {/* Login and register */}

@@ -231,13 +231,19 @@ public class UsersControllers {
             return ResponseEntity.badRequest().body("User not found");
         }
 
+        // Map<String, Object> response = new HashMap<>();
+        // response.put("user", Map.of(
+        //     "username", user.getUsername(),
+        //     "email", user.getEmail(),
+        //     "role", user.getRole().name(),
+        //     "createdDate", user.getCreatedDate()
+        // ));
+
         Map<String, Object> response = new HashMap<>();
-        response.put("user", Map.of(
-            "username", user.getUsername(),
-            "email", user.getEmail(),
-            "role", user.getRole().name(),
-            "createdDate", user.getCreatedDate()
-        ));
+        response.put("username", user.getUsername());
+        response.put("email", user.getEmail());
+        response.put("role", user.getRole().name());
+        response.put("createdDate", user.getCreatedDate());
         
         return ResponseEntity.ok(response);  
     }

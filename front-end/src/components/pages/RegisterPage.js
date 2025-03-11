@@ -4,12 +4,14 @@ import axios from "axios";
 import translationsMap from "../locales/translationsMap";
 
 function RegisterPage() {
+  const navigate = useNavigate("");
+  
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [familyName, sethandlefamilyNameChange] = useState("");
-  const navigate = useNavigate("");
+  
 
   const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
@@ -20,7 +22,7 @@ function RegisterPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8080/api/register", { username, email, password })
+      .post("http://localhost:8080/api/registerOwner", { username, email, password, familyName, code})
       .then((response) => {
         console.log(response.data);
         alert(response.data);

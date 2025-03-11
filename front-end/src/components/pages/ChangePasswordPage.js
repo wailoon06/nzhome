@@ -12,36 +12,33 @@ function ChangePasswordPage() {
 
   const navigate = useNavigate();
 
- // const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
-  //const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleOldPasswordChange = (e) => setOldPassword(e.target.value);
+  const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
 
-  // const getEmail = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     
-  // }
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
- 
-  //   axios
-  //     .post("", {email, oldPassword, newPassword})
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       alert("Password successfully change");
-  //       navigate("/dashboard");
-  //     })
-  //     .catch((error) => {
-  //       console.error("Change Password Error: ", error);
-  //       if (error.response) {
-  //         // The server responded with a status code outside the 2xx range
-  //         console.log("Response data:", error.response.data);
-  //         console.log("Response status:", error.response.status);
-  //         alert("Error registering user: " + JSON.stringify(error.response.data));
-  //       } else {
-  //         alert("Error registering user: " + error.message);
-  //       }
-  //     });
-  // };
+    axios   
+      .post("http://localhost:8080/api/changePassword", {email, oldPassword, newPassword})
+      .then((response) => {
+        console.log(response.data);
+        alert("Password successfully change");
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error("Change Password Error: ", error);
+        if (error.response) {
+          // The server responded with a status code outside the 2xx range
+          console.log("Response data:", error.response.data);
+          console.log("Response status:", error.response.status);
+          alert("Error registering user: " + JSON.stringify(error.response.data));
+        } else {
+          alert("Error registering user: " + error.message);
+        }
+      });
+  };
 
   const handleButtonClick = (event) => {
     event.preventDefault(); // Prevent default form submission
@@ -86,7 +83,7 @@ function ChangePasswordPage() {
             {translations.change_password}
           </h2>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <input
                 type="email"

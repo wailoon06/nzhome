@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
 
 function UserSettingPage() {
+  //front
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -23,6 +24,15 @@ function UserSettingPage() {
   });
 
   const translations = translationsMap[language] || translationsMap["en"];
+
+  //back
+
+  /* Log Out */
+  const logOut = async () => {
+    localStorage.removeItem('token');
+    alert("Logout Successfully!")
+    navigate('/#')
+  }
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -93,7 +103,7 @@ function UserSettingPage() {
                 </div>
 
                 <div
-                  onClick={() => handleNavigation("#")}
+                  onClick={logOut}
                   className="rounded-md border border-gray-500 bg-white p-4 mt-12 flex items-center justify-center text-center text-lg w-[96%]"
                 >
                   <span className="font-bold">{translations.logOut}</span>

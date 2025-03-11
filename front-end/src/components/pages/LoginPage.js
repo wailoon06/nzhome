@@ -6,9 +6,9 @@ import translationsMap from "../locales/translationsMap";
 function LoginPage() {
   const navigate = useNavigate();
   const emailRef = useRef(null);
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleEmailChange = (e) => setEmail(e.target.value);
@@ -17,39 +17,34 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
     
-    try {
-        const response = await axios.post("http://localhost:8080/api/login", { email, password });
-        
-        if (response.data && response.data.token) {
-        
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
-            
-            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-            
-            navigate("/");
+    axios
+      .post("http://localhost:8080/api/login", { email, password })
+      .then((response) => {
+        console.log(response.data);
+        alert("Login Sucessfully!");
+
+        localStorage.setItem("token", response.data.token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Registration error:", error);
+        if (error.response) {
+          // The server responded with a status code outside the 2xx range
+          console.log("Response data:", error.response.data);
+          console.log("Response status:", error.response.status);
+          alert(
+            "Error registering user: " + JSON.stringify(error.response.data)
+          );
         } else {
-            setError("Invalid response from server");
+          alert("Error registering user: " + error.message);
         }
-    } catch (err) {
-        console.error("Login error:", err);
-        
-        if (err.response) {
-            
-            setError(err.response.data || "Invalid credentials! Please try again.");
-        } else if (err.request) {
-            
-            setError("No response from server. Please try again later.");
-        } else {
-            
-            setError("An error occurred. Please try again.");
-        }
-    } finally {
-        setLoading(false);
-    }
-  };
+      });
+
+      setLoading(false);
+  }
 
   // email check
   // const handleButtonClick = async (event) => {
@@ -135,7 +130,7 @@ function LoginPage() {
             </div>
 
             <p className="pText mr-[40%] text-white">
-              <a href=" " className="terms">
+              <a href="/change&Password" className="terms">
                 {" "}
                 {translations.forgot_password}
               </a>
