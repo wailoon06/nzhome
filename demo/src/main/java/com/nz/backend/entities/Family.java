@@ -12,8 +12,8 @@ import jakarta.persistence.Table;
 public class Family {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Familyid")
-    private Long familyId;
+    @Column(name = "familyid")
+    private Long familyid;
 
     @Column(name = "familyname", nullable = false)
     private String familyName;
@@ -27,12 +27,12 @@ public class Family {
     }
 
     // Getters and Setters
-    public Long getFamilyId() {
-        return familyId;
+    public Long getFamilyid() {
+        return familyid;
     }
 
-    public void setFamilyId(Long familyId) {
-        this.familyId = familyId;
+    public void setFamilyid(Long familyid) {
+        this.familyid = familyid;
     }
 
     public String getFamilyName() {

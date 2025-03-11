@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
@@ -40,7 +41,7 @@ public class Room {
     @JoinColumn(name = "familyid")
     private Family family;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "deviceid")
     private Device devices;
 
