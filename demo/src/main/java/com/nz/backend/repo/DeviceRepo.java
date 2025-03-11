@@ -8,5 +8,6 @@ import com.nz.backend.entities.Device;
 
 
 public interface DeviceRepo extends JpaRepository <Device, Long> {
-     Device findbyDeviceName (String device);
+
+     Device findByDeviceName (String device);
 }
