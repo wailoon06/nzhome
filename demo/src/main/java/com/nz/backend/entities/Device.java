@@ -43,6 +43,7 @@ public class Device {
     @Column(nullable = false)
     private LocalDateTime warrantyExp;
 
+
     // Constructors
     public Device() {}
 

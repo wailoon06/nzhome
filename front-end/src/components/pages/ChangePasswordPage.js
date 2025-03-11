@@ -98,6 +98,16 @@ function ChangePasswordPage() {
             <div className="mb-4">
               <input
                 type="password"
+                name="password2"
+                placeholder={translations.passwordOld}
+                required
+                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="password"
                 name="password1"
                 placeholder={translations.password}
                 required

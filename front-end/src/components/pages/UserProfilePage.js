@@ -125,7 +125,7 @@ function UserProfilePage() {
               <div className="rounded-lg border border-gray-500 bg-white p-5 my-5 flex items-center w-full max-w-[full]">
                 
                 {/* User data */}
-                <label className="cursor-pointer relative">
+                {/* <label className="cursor-pointer relative">
                   <input
                     type="file"
                     accept="image/*"
@@ -157,7 +157,7 @@ function UserProfilePage() {
                 </div>
                 
                 {/* Login and register */}
-                {/* <a
+                <a
                   href="/login"
                   className="button2 bg-green-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
                 >
@@ -168,7 +168,7 @@ function UserProfilePage() {
                   className="button2 bg-blue-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
                 >
                   {translations.register}
-                </a> */}
+                </a>
               </div>
 
               {/* Navigation Options */}
