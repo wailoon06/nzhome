@@ -7,6 +7,7 @@ function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [family, setFamily] = useState("");
   const [code, setCode] = useState("");
   const navigate = useNavigate("");
 
@@ -14,20 +15,20 @@ function RegisterPage() {
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleCodeChange = (e) => setCode(e.target.value);
+  const handleFamilyChange = (e) => setFamily(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8080/api/register", { username, email, password })
+      .post("http://localhost:8080/api/registerOwner", { username, email, password, family, code })
       .then((response) => {
         console.log(response.data);
         alert(response.data);
-        navigate("/login"); // Redirect after successful registration
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Registration error:", error);
         if (error.response) {
-          // The server responded with a status code outside the 2xx range
           console.log("Response data:", error.response.data);
           console.log("Response status:", error.response.status);
           alert(
@@ -70,18 +71,6 @@ function RegisterPage() {
           />
           <h2 className="mb-4 subtitle text-white">{translations.register}</h2>
 
-          <div className="mb-4">
-            <input
-              type="text"
-              name="activCode"
-              placeholder={translations.activCode}
-              value={code}
-              onChange={handleCodeChange}
-              required
-              className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-            />
-          </div>
-
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <input
@@ -118,6 +107,32 @@ function RegisterPage() {
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />
             </div>
+
+            <div className="mb-4">
+            <input
+              type="text"
+              name="family"
+              // placeholder={translations.activCode}
+              value={family}
+              onChange={handleFamilyChange}
+              required
+              className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+            />
+            </div>
+
+            <div className="mb-4">
+            <input
+              type="text"
+              name="activCode"
+              placeholder={translations.activCode}
+              value={code}
+              onChange={handleCodeChange}
+              required
+              className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+            />
+            </div>
+
+            
 
             <p className="pText text-white">
               <input

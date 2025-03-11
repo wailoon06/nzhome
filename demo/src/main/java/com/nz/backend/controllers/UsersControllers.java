@@ -56,7 +56,7 @@ public class UsersControllers {
     public ResponseEntity<?> register_owner(@RequestBody RegOwnerDTO regOwnerDTO) {
         
         if (regOwnerDTO.getUsername() == null || regOwnerDTO.getEmail() == null || regOwnerDTO.getPassword() == null 
-            || regOwnerDTO.getFamilyName() == null || regOwnerDTO.getFamPass() == null) {
+            || regOwnerDTO.getFamilyName() == null || regOwnerDTO.getCode() == null) {
             return ResponseEntity.badRequest().body("All fields are required!");
         }
 
@@ -72,7 +72,7 @@ public class UsersControllers {
             return ResponseEntity.badRequest().body("Family already exists!");
         }
 
-        if (regOwnerDTO.getFamPass().equals(famPass)){
+        if (regOwnerDTO.getCode().equals(famPass)){
             return ResponseEntity.badRequest().body("Family key is wrong!");
         }
 
@@ -235,7 +235,8 @@ public class UsersControllers {
         response.put("user", Map.of(
             "username", user.getUsername(),
             "email", user.getEmail(),
-            "role", user.getRole().name()
+            "role", user.getRole().name(),
+            "createdDate", user.getCreatedDate()
         ));
         
         return ResponseEntity.ok(response);  

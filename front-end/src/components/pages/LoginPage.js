@@ -29,7 +29,7 @@ function LoginPage() {
             
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
             
-            navigate("/dashboard");
+            navigate("/");
         } else {
             setError("Invalid response from server");
         }
@@ -52,24 +52,24 @@ function LoginPage() {
   };
 
   // email check
-  const handleButtonClick = async (event) => {
-    event.preventDefault(); // Prevent default form submission
-    const theEmail = emailRef.current.value; // Get this from input field
+  // const handleButtonClick = async (event) => {
+  //   event.preventDefault(); // Prevent default form submission
+  //   const theEmail = emailRef.current.value; // Get this from input field
 
-    try {
-      const { data: exists } = await axios.get(`/api/users/exists`, {
-        params: { theEmail },
-      });
+  //   try {
+  //     const { data: exists } = await axios.get(`/api/users/exists`, {
+  //       params: { theEmail },
+  //     });
 
-      if (exists) {
-        alert("Email already exists!");
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("Error checking email:", error);
-    }
-  };
+  //     if (exists) {
+  //       alert("Email already exists!");
+  //     } else {
+  //       navigate("/");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error checking email:", error);
+  //   }
+  // };
 
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
@@ -113,8 +113,8 @@ function LoginPage() {
                 type="email"
                 name="email"
                 placeholder="Email"
-                // value={email}
-                // onChange={handleEmailChange}
+                value={email}
+                onChange={handleEmailChange}
                 ref={emailRef}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
@@ -127,6 +127,8 @@ function LoginPage() {
                 type="password"
                 name="password"
                 placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />
@@ -142,7 +144,8 @@ function LoginPage() {
             <button
               type="submit"
               className="button1 bg-green-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
-              onClick={handleButtonClick}
+              // onClick={handleButtonClick}
+              disabled={loading}
             >
               {translations.sign_in}
             </button>
