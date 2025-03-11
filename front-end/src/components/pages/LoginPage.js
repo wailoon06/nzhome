@@ -135,7 +135,7 @@ function LoginPage() {
             </div>
 
             <p className="pText mr-[40%] text-white">
-              <a href=" " className="terms">
+              <a href="/change&password" className="terms">
                 {" "}
                 {translations.forgot_password}
               </a>
