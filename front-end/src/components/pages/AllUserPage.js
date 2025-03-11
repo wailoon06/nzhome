@@ -27,7 +27,11 @@ function AllUserPage() {
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
         </div>
 
         {/* Main Content */}
@@ -36,7 +40,11 @@ function AllUserPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* Main Content */}
             <div className="flex flex-col flex-1">
@@ -54,22 +62,34 @@ function AllUserPage() {
               <div className="flex flex-col items-center justify-center">
                 <div
                   onClick={() => handleNavigation("#")}
-                  className="grid grid-cols-[auto,1fr] rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[85%]"
+                  className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center justify-center text-center text-lg w-[85%] gap-4"
                 >
                   <h2>Mom</h2>
                   <div className="text-[14px] sm:text-2xl font-bold text-right">
                     pokegogo@gmail.com
                   </div>
+                  <button
+                    onClick={(e) => {}}
+                    className="text-red-500 text-xl font-bold px-2"
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
                 </div>
 
                 <div
                   onClick={() => handleNavigation("#")}
-                  className="grid grid-cols-[auto,1fr] rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[85%]"
+                  className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center justify-center text-center text-lg w-[85%] gap-4"
                 >
-                  <h2>Daughter</h2>
+                  <h2>Mom</h2>
                   <div className="text-[14px] sm:text-2xl font-bold text-right">
-                    rina011@gmail.com
+                    pokegogo@gmail.com
                   </div>
+                  <button
+                    onClick={(e) => {}}
+                    className="text-red-500 text-xl font-bold px-2"
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
                 </div>
               </div>
             </div>

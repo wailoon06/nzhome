@@ -74,6 +74,8 @@ function UserProfilePage() {
 
               {/* Profile Card */}
               <div className="rounded-lg border border-gray-500 bg-white p-5 my-5 flex items-center w-full max-w-[full]">
+                
+                {/* User data */}
                 <label className="cursor-pointer relative">
                   <input
                     type="file"
@@ -88,7 +90,7 @@ function UserProfilePage() {
                       className="rounded-full w-20 h-20 mr-5 object-cover border-2 border-gray-300"
                     />
                   ) : (
-                    <i className="fas fa-user-circle text-gray-400 text-4xl mr-5"></i>
+                    <i className="fas fa-user-circle text-gray-400 text-6xl mr-5"></i>
                   )}
                 </label>
                 <div className="flex flex-col">
@@ -98,6 +100,8 @@ function UserProfilePage() {
                     Date Joined: <span id="datetime">2024-03-10</span>
                   </span>
                 </div>
+                
+                {/* Login and register */}
                 {/* <a
                   href="/login"
                   className="button2 bg-green-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
