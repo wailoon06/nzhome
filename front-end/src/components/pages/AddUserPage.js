@@ -24,9 +24,13 @@ function UserProfilePage() {
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
-         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
-         </div>
+        <div className="relative flex">
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
+        </div>
 
         {/* Main Content */}
         <div
@@ -34,7 +38,11 @@ function UserProfilePage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* <!-- Main Content --> */}
             <div className="flex flex-col flex-1">
@@ -51,29 +59,54 @@ function UserProfilePage() {
               {/* Add User */}
               <div className="grid grid-rows-[auto] mt-4 gap-4 flex text-center items-center">
                 {rows.map((row, index) => (
-                  <div key={index}>
-                    <input
-                      className="text-center rounded-lg border border-gray-500 bg-white p-4 w-full max-w-[400px]"
-                      type="text"
-                      placeholder={translations.enterEmailForRow.replace(
-                        "{index}",
-                        index + 1
-                      )} // Dynamic translations
-                      value={row} // Bind the input value to the 'row'
-                      onChange={(e) => {
-                        const newRows = [...rows];
-                        newRows[index] = e.target.value; // Update specific row
-                        setRows(newRows);
-                      }}
-                    />
+                  <div key={`row-${index}`} className="flex flex-col gap-2">
+                    {" "}
+                    {/* Container for each row */}
+                    <div>
+                      <input
+                        className="text-center rounded-lg border border-gray-500 bg-white p-4 w-full max-w-[400px]"
+                        type="text"
+                        placeholder={translations.enterEmailForRow.replace(
+                          "{index}",
+                          index + 1
+                        )}
+                        value={row.email || ""}
+                        onChange={(e) => {
+                          const newRows = [...rows];
+                          newRows[index] = {
+                            ...newRows[index],
+                            email: e.target.value,
+                          };
+                          setRows(newRows);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <input
+                        className="text-center rounded-lg border border-gray-500 bg-white p-4 w-full max-w-[400px]"
+                        type="text"
+                        placeholder={translations.enterPasswordForRow.replace(
+                          "{index}",
+                          index + 1
+                        )}
+                        value={row.password || ""}
+                        onChange={(e) => {
+                          const newRows = [...rows];
+                          newRows[index] = {
+                            ...newRows[index],
+                            password: e.target.value,
+                          };
+                          setRows(newRows);
+                        }}
+                      />
+                    </div>
                   </div>
                 ))}
 
-                {/* Add a wrapper div to center the button */}
                 <div className="flex justify-center">
                   <button
                     type="button"
-                    onClick={addRow} // Add new row
+                    onClick={addRow}
                     className="fas fa-plus text-center rounded-lg border border-gray-500 bg-white p-4 flex items-center justify-center w-12 h-12"
                   ></button>
                 </div>

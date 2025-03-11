@@ -33,7 +33,8 @@
   "televisionBrand": "Television Brand",
 
   "addUser": "Add User",
-  "enterEmailForRow": "Enter email for row {index}",
+  "enterEmailForRow": "Enter Email",
+  "enterPasswordForRow": "Enter Password",
 
   "rooms": "Rooms",
   "summary": "Summary",

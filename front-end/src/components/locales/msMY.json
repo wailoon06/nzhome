@@ -33,7 +33,8 @@
   "televisionBrand": "Jenama Televisyen",
 
   "addUser": "Tambah Pengguna",
-  "enterEmailForRow": "Masukkan emel untuk baris {index}",
+  "enterEmailForRow": "Masukkan Emel",
+  "enterPasswordForRow": "Masukkan Kata Laluan",
 
   "rooms": "Bilik",
   "summary": "Ringkasan",
