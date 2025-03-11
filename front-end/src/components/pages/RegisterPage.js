@@ -7,28 +7,29 @@ function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [family, setFamily] = useState("");
   const [code, setCode] = useState("");
+  const [familyName, sethandlefamilyNameChange] = useState("");
   const navigate = useNavigate("");
 
   const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleCodeChange = (e) => setCode(e.target.value);
-  const handleFamilyChange = (e) => setFamily(e.target.value);
+  const handlefamilyNameChange = (e) => sethandlefamilyNameChange(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8080/api/registerOwner", { username, email, password, family, code })
+      .post("http://localhost:8080/api/register", { username, email, password })
       .then((response) => {
         console.log(response.data);
         alert(response.data);
-        navigate("/login");
+        navigate("/login"); // Redirect after successful registration
       })
       .catch((error) => {
         console.error("Registration error:", error);
         if (error.response) {
+          // The server responded with a status code outside the 2xx range
           console.log("Response data:", error.response.data);
           console.log("Response status:", error.response.status);
           alert(
@@ -75,6 +76,30 @@ function RegisterPage() {
             <div className="mb-4">
               <input
                 type="text"
+                name="activCode"
+                placeholder={translations.activCode}
+                value={code}
+                onChange={handleCodeChange}
+                required
+                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="text"
+                name="familyName"
+                placeholder={translations.familyName}
+                value={familyName}
+                onChange={handlefamilyNameChange}
+                required
+                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="text"
                 username="username"
                 placeholder={translations.username}
                 value={username}
@@ -107,32 +132,6 @@ function RegisterPage() {
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />
             </div>
-
-            <div className="mb-4">
-            <input
-              type="text"
-              name="family"
-              // placeholder={translations.activCode}
-              value={family}
-              onChange={handleFamilyChange}
-              required
-              className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-            />
-            </div>
-
-            <div className="mb-4">
-            <input
-              type="text"
-              name="activCode"
-              placeholder={translations.activCode}
-              value={code}
-              onChange={handleCodeChange}
-              required
-              className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-            />
-            </div>
-
-            
 
             <p className="pText text-white">
               <input

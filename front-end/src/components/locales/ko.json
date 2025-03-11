@@ -35,6 +35,7 @@
   "addUser": "사용자 추가",
   "enterEmailForRow": "이메일",
   "enterPasswordForRow": "비밀번호",
+  "familyName": "성",
 
   "rooms": "방",
   "summary": "요약",
