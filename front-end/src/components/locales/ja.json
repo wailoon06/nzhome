@@ -35,6 +35,7 @@
   "addUser": "ユーザーを追加",
   "enterEmailForRow": "メールアドレス",
   "enterPasswordForRow": "パスワード",
+  "familyName": "姓",
 
   "rooms": "部屋",
   "summary": "概要",

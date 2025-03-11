@@ -8,12 +8,14 @@ function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
+  const [familyName, sethandlefamilyNameChange] = useState("");
   const navigate = useNavigate("");
 
   const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleCodeChange = (e) => setCode(e.target.value);
+  const handlefamilyNameChange = (e) => sethandlefamilyNameChange(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -70,19 +72,31 @@ function RegisterPage() {
           />
           <h2 className="mb-4 subtitle text-white">{translations.register}</h2>
 
-          <div className="mb-4">
-            <input
-              type="text"
-              name="activCode"
-              placeholder={translations.activCode}
-              value={code}
-              onChange={handleCodeChange}
-              required
-              className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-            />
-          </div>
-
           <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <input
+                type="text"
+                name="activCode"
+                placeholder={translations.activCode}
+                value={code}
+                onChange={handleCodeChange}
+                required
+                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="text"
+                name="familyName"
+                placeholder={translations.familyName}
+                value={familyName}
+                onChange={handlefamilyNameChange}
+                required
+                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+              />
+            </div>
+
             <div className="mb-4">
               <input
                 type="text"
