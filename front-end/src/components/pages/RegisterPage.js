@@ -7,11 +7,13 @@ function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
   const navigate = useNavigate("");
 
   const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleCodeChange = (e) => setCode(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -73,8 +75,8 @@ function RegisterPage() {
               type="text"
               name="activCode"
               placeholder={translations.activCode}
-              value={password}
-              onChange={handlePasswordChange}
+              value={code}
+              onChange={handleCodeChange}
               required
               className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
             />
@@ -110,8 +112,8 @@ function RegisterPage() {
                 type="password"
                 name="password"
                 placeholder={translations.password}
-                value={email}
-                onChange={handleEmailChange}
+                value={password}
+                onChange={handlePasswordChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />
