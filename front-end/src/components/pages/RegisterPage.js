@@ -105,6 +105,18 @@ function RegisterPage() {
               />
             </div>
 
+            <div className="mb-4">
+              <input
+                type="password"
+                name="password"
+                placeholder={translations.password}
+                value={email}
+                onChange={handleEmailChange}
+                required
+                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+              />
+            </div>
+
             <p className="pText text-white">
               <input
                 type="checkbox"
