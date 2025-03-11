@@ -11,24 +11,19 @@ import javax.management.RuntimeErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.nz.backend.dto.ChangeRoleDTO;
 import com.nz.backend.dto.EmailDTO;
-import com.nz.backend.dto.RoleDTO;
-import com.nz.backend.entities.Family;
 import com.nz.backend.entities.User;
 import com.nz.backend.enums.Role;
-import com.nz.backend.repo.FamilyRepo;
 import com.nz.backend.repo.UsersRepository;
 import com.nz.backend.services.JwtService;
 
