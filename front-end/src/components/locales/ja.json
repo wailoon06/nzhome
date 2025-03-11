@@ -71,6 +71,7 @@
   "previous": "前へ",
 
   "change_password": "パスワードを変更",
+  "passwordOld": "古いパスワード",
 
   "email": "メールアドレス",
   "password": "新しいパスワード",

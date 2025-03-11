@@ -71,6 +71,7 @@
   "previous": "Previous",
 
   "change_password": "Change Password",
+  "passwordOld": "Old Password",
 
   "email": "Email",
   "password": "New Password",
