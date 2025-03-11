@@ -5,16 +5,16 @@ public class RegOwnerDTO {
     private String email;
     private String password;
     private String familyName;
-    private String famPass;
+    private String code;
 
     public RegOwnerDTO() {}
 
-    public RegOwnerDTO(String username, String email, String password, String familyName, String famPass) {
+    public RegOwnerDTO(String username, String email, String password, String familyName, String code) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.familyName = familyName;
-        this.famPass = famPass;
+        this.code = code;
     }
 
     public String getUsername() { return username; }
@@ -29,7 +29,7 @@ public class RegOwnerDTO {
     public String getFamilyName() { return familyName; }
     public void setFamilyName(String familyName) { this.familyName = familyName; }
 
-    public String getFamPass() { return famPass; }
-    public void setFamPass(String famPass) { this.famPass = famPass; }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
 }
 

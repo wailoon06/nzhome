@@ -1,5 +1,8 @@
 package com.nz.backend.entities;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.nz.backend.enums.Role;
 
 import jakarta.persistence.Column;
@@ -11,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -37,6 +41,14 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "Familyid") 
     private Family family;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDate createddate;
+
+    @PrePersist
+    protected void onCreate() {
+        createddate = LocalDate.now();
+    }  
 
     public User() {}
 
@@ -72,5 +84,9 @@ public class User {
     public Family getFamily() { return family; }
 
     public void setFamily(Family family) { this.family = family; }
+
+    public LocalDate getCreatedDate() {
+        return createddate;
+    }
 }
 

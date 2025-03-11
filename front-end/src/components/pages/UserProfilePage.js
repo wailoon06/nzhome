@@ -2,12 +2,28 @@ import React, { useState, useEffect } from "react";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
+import axios from "axios";
 
 function UserProfilePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // const { name } = useParams();a
 
