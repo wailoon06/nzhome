@@ -61,29 +61,23 @@ function LandingPage() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-12 justify-center text-[1.2rem] text-white">
+          <nav className="hidden md:flex md:space-x-6 lg:space-x-12 justify-center text-[1.2rem] text-white">
             <a href="#" className="hover:text-orange-500">
-              Home
+              About Us
             </a>
             <a href="#" className="hover:text-orange-500">
-              Tools
-            </a>
-            <a href="#" className="hover:text-orange-500">
-              Development
-            </a>
-            <a href="#" className="hover:text-orange-500">
-              Contact us
+              Contact Us
             </a>
           </nav>
 
           {/* Buttons */}
           <div className="hidden md:flex space-x-3 ml-auto text-[1.2rem]">
-            <button className="hover:bg-gray-800 border bg-orange-500 text-white px-4 py-2 rounded-full">
+            <a href="/login" className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full">
               Login
-            </button>
-            <button className="hover:bg-gray-800 border bg-orange-500 text-white px-4 py-2 rounded-full">
+            </a>
+            <a href="/register" className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full">
               Sign up
-            </button>
+            </a>
           </div>
         </div>
 
@@ -95,23 +89,23 @@ function LandingPage() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <nav className="relative md:hidden w-full bg-white shadow-md flex flex-col items-center space-y-2 py-4 text-[1.2rem]">
-          <a href="#" className="text-gray-700 hover:text-orange-500">
+        <nav className="relative md:hidden w-full bg-black shadow-md flex flex-col items-center space-y-2 py-4 text-[1.2rem]">
+          <a href="#" className="font-bold text-white hover:text-orange-500">
             Home
           </a>
-          <a href="#" className="text-gray-700 hover:text-orange-500">
+          <a href="#" className="font-bold text-white hover:text-orange-500">
             Tools
           </a>
-          <a href="#" className="text-gray-700 hover:text-orange-500">
+          <a href="#" className="font-bold text-white hover:text-orange-500">
             Development
           </a>
-          <a href="#" className="text-gray-700 hover:text-orange-500">
+          <a href="#" className="font-bold text-white hover:text-orange-500">
             Contact us
           </a>
-          <button className="hover:bg-gray-800 bg-orange-500 text-white px-4 py-2 rounded-full w-40">
+          <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
             Login
           </button>
-          <button className="hover:bg-gray-800 bg-orange-500 text-white px-4 py-2 rounded-full w-40">
+          <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
             Sign up
           </button>
         </nav>
@@ -140,7 +134,7 @@ function LandingPage() {
           <div className="flex justify-center">
             <button
               onClick={handleGetStarted}
-              className={`hover:bg-gray-800 bg-orange-500 mt-4 rounded-full px-6 py-2 border border-white text-white w-full md:w-[40%] transition-opacity ${
+              className={`hover:bg-gray-800 font-bold bg-orange-500 mt-4 rounded-full px-6 py-2 border border-white text-white w-full md:w-[40%] transition-opacity ${
                 animate ? "opacity-100" : "opacity-0"
               }`}
             >
@@ -173,7 +167,7 @@ function LandingPage() {
             solutions, all in one platform.
           </p>
           <button
-            className={`hover:bg-gray-800 border bg-orange-500 text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
+            className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
@@ -198,7 +192,7 @@ function LandingPage() {
             solutions, all in one platform.
           </p>
           <button
-            className={`hover:bg-gray-800 border bg-orange-500 text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
+            className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
@@ -223,7 +217,7 @@ function LandingPage() {
             solutions, all in one platform.
           </p>
           <button
-            className={`hover:bg-gray-800 border bg-orange-500 text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
+            className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
