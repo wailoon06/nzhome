@@ -2,8 +2,12 @@ package com.nz.backend.entities;
 
 import java.time.LocalDateTime;
 
+import com.nz.backend.enums.OnOff;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,10 +42,14 @@ public class Device {
     @PrePersist
     protected void onCreate() {
         createdTime = LocalDateTime.now();
-    }  
+    } 
 
     @Column(nullable = false)
     private LocalDateTime warrantyExp;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "onOff", nullable = false)
+    private OnOff onOff;
 
 
     // Constructors
@@ -52,6 +60,7 @@ public class Device {
         this.brand = brand;
         this.createdBy = createdBy;
         this.warrantyExp = warrantyExp;
+        
     }
 
     // Getters and Setters
@@ -98,4 +107,14 @@ public class Device {
     public void setWarrantyExp(LocalDateTime warrantyExp) {
         this.warrantyExp = warrantyExp;
     }
+
+    public OnOff getOnOff(){
+        return onOff;
+    }
+
+    public void setOnOff(OnOff onOff){
+        this.onOff = onOff;
+    }
+
+
 }
