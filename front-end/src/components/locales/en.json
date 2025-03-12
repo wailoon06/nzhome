@@ -34,6 +34,7 @@
 
   "addUser": "Add User",
   "enterEmailForRow": "Enter Email",
+  "enterUserNameForRow": "Enter Username",
   "enterPasswordForRow": "Enter Password",
   "familyName": "Family Name",
 

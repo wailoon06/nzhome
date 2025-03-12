@@ -9,9 +9,21 @@ function UserProfilePage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState([{ username: "", email: "", password: "" }]);
+
   const addRow = () => {
-    setRows([...rows, ""]); // Add an empty string to rows for new input field
+    setRows([...rows, { username: "", email: "", password: "" }]);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Filter out empty entries
+    const filteredRows = rows.filter(
+      (row) => row.username && row.email && row.password
+    );
+
+    console.log("Submitted data:", filteredRows);
   };
 
   // translations
@@ -57,20 +69,35 @@ function UserProfilePage() {
               </div>
 
               {/* Add User */}
-              <div className="grid grid-rows-[auto] mt-4 gap-4 flex text-center items-center">
-                {rows.map((row, index) => (
-                  <div key={`row-${index}`} className="flex flex-col gap-2">
-                    {" "}
-                    {/* Container for each row */}
-                    <div>
+              <form onSubmit={handleSubmit} className="mt-4">
+                <div className="grid grid-rows-[auto] gap-4 text-center items-center justify-center">
+                  {rows.map((row, index) => (
+                    <div key={`row-${index}`} className="flex flex-col gap-2">
                       <input
                         className="text-center rounded-lg border border-gray-500 bg-white p-4 w-full max-w-[400px]"
                         type="text"
+                        placeholder={translations.enterUserNameForRow.replace(
+                          "{index}",
+                          index + 1
+                        )}
+                        value={row.username}
+                        onChange={(e) => {
+                          const newRows = [...rows];
+                          newRows[index] = {
+                            ...newRows[index],
+                            username: e.target.value,
+                          };
+                          setRows(newRows);
+                        }}
+                      />
+                      <input
+                        className="text-center rounded-lg border border-gray-500 bg-white p-4 w-full max-w-[400px]"
+                        type="email"
                         placeholder={translations.enterEmailForRow.replace(
                           "{index}",
                           index + 1
                         )}
-                        value={row.email || ""}
+                        value={row.email}
                         onChange={(e) => {
                           const newRows = [...rows];
                           newRows[index] = {
@@ -80,16 +107,14 @@ function UserProfilePage() {
                           setRows(newRows);
                         }}
                       />
-                    </div>
-                    <div>
                       <input
                         className="text-center rounded-lg border border-gray-500 bg-white p-4 w-full max-w-[400px]"
-                        type="text"
+                        type="password"
                         placeholder={translations.enterPasswordForRow.replace(
                           "{index}",
                           index + 1
                         )}
-                        value={row.password || ""}
+                        value={row.password}
                         onChange={(e) => {
                           const newRows = [...rows];
                           newRows[index] = {
@@ -100,17 +125,25 @@ function UserProfilePage() {
                         }}
                       />
                     </div>
-                  </div>
-                ))}
+                  ))}
 
-                <div className="flex justify-center">
-                  <button
-                    type="button"
-                    onClick={addRow}
-                    className="fas fa-plus text-center rounded-lg border border-gray-500 bg-white p-4 flex items-center justify-center w-12 h-12"
-                  ></button>
+                  <div className="flex justify-center">
+                    <button
+                      type="submit"
+                      onClick={addRow}
+                      className="fas fa-plus text-center rounded-lg border border-gray-500 bg-white p-4 flex items-center justify-center w-12 h-12"
+                    ></button>
+                  </div>
                 </div>
-              </div>
+                {/* <div className="flex justify-center mt-4">
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white p-4 rounded-lg"
+                  >
+                    Submit
+                  </button>
+                </div> */}
+              </form>
             </div>
           </div>
         </div>

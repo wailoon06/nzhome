@@ -34,6 +34,7 @@
 
   "addUser": "ユーザーを追加",
   "enterEmailForRow": "メールアドレス",
+  "enterUserNameForRow": "ユーザー名",
   "enterPasswordForRow": "パスワード",
   "familyName": "姓",
 
