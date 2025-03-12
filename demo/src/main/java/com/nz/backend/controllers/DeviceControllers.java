@@ -1,4 +1,4 @@
-// package com.nz.backend.controllers;
+package com.nz.backend.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,126 +24,126 @@ import com.nz.backend.repo.DeviceRepo;
 import com.nz.backend.repo.UsersRepository;
 import com.nz.backend.services.JwtService;
 
-// @RestController
-// @RequestMapping("/api")
-// @CrossOrigin(origins = "http://localhost:3000")
-// public class DeviceControllers {
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
+public class DeviceControllers {
 
-//     @Autowired
-//     private UsersRepository usersRepository;
+    @Autowired
+    private UsersRepository usersRepository;
 
-//     @Autowired
-//     private DeviceRepo deviceRepo;
+    @Autowired
+    private DeviceRepo deviceRepo;
 
-//     @Autowired
-//     private JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
 
-//     @Value("${jwt.secret.key}")
-//     private String secretKey;
+    @Value("${jwt.secret.key}")
+    private String secretKey;
 
-//     @GetMapping("/getDevice")
-//     public ResponseEntity<?> getDevicesByRoom(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO) {
-//         if (token == null){
-//             return ResponseEntity.badRequest().body("Invalid token!");
-//         }
+    @GetMapping("/getDevice")
+    public ResponseEntity<?> getDevicesByRoom(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO) {
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
 
-//         String jwtToken = token.substring(7);
-//         String email = jwtService.extractEmail(jwtToken);
-//         User owner = usersRepository.findByEmail(email);
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+        User owner = usersRepository.findByEmail(email);
 
-//         String targetEmail = emailDTO.getEmail();
-//         User matchUser = usersRepository.findByEmail(targetEmail);
+        String targetEmail = emailDTO.getEmail();
+        User matchUser = usersRepository.findByEmail(targetEmail);
 
-//         if (!owner.getFamily().equals(matchUser.getFamily())) {
-//             return ResponseEntity.badRequest().body("You don't have access!");
-//         }
+        if (!owner.getFamily().equals(matchUser.getFamily())) {
+            return ResponseEntity.badRequest().body("You don't have access!");
+        }
 
         else {
             //continue later
         }
 
-//         return null;
-//     }
+        return null;
+    }
 
-//     @GetMapping("/getDeviceDetails")
-//     public ResponseEntity<?> getDevicesDetails(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody DeviceNameDTO devicenameDTO) {
+    @GetMapping("/getDeviceDetails")
+    public ResponseEntity<?> getDevicesDetails(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody DeviceNameDTO devicenameDTO) {
         
-//         if (token == null){
-//             return ResponseEntity.badRequest().body("Invalid token!");
-//         }
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
 
-//         String jwtToken = token.substring(7);
-//         String email = jwtService.extractEmail(jwtToken);
-//         User owner = usersRepository.findByEmail(email);
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+        User owner = usersRepository.findByEmail(email);
 
-//         String targetEmail = emailDTO.getEmail();
-//         User matchUser = usersRepository.findByEmail(targetEmail);
+        String targetEmail = emailDTO.getEmail();
+        User matchUser = usersRepository.findByEmail(targetEmail);
 
 
         Device matchDevice = deviceRepo.findByDeviceName(devicenameDTO.getDeviceName());
 
 
-//         if (owner == null) {
-//             return ResponseEntity.badRequest().body("User not found");
-//         }
+        if (owner == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
 
-//         if (!owner.getFamily().equals(matchUser.getFamily())) {
-//             return ResponseEntity.badRequest().body("You don't have access!");
-//         }
+        if (!owner.getFamily().equals(matchUser.getFamily())) {
+            return ResponseEntity.badRequest().body("You don't have access!");
+        }
 
-//         Map<String, Object> response = new HashMap<>();
-//         response.put("device", Map.of(
-//             "device_name", matchDevice.getDeviceName(),
-//             "created_by", matchDevice.getCreatedBy(),
-//             "created_time", matchDevice.getCreatedTime(),
-//             "warranty_expiration", matchDevice.getWarrantyExp()
-//         ));
+        Map<String, Object> response = new HashMap<>();
+        response.put("device", Map.of(
+            "device_name", matchDevice.getDeviceName(),
+            "created_by", matchDevice.getCreatedBy(),
+            "created_time", matchDevice.getCreatedTime(),
+            "warranty_expiration", matchDevice.getWarrantyExp()
+        ));
       
         
-//         return ResponseEntity.ok(response);
-//     }
+        return ResponseEntity.ok(response);
+    }
 
-//     @PutMapping("/OnOff")
-//     public ResponseEntity<?> turnOnOff (@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody DeviceNameDTO devicenameDTO){
-//         if (token == null){
-//             return ResponseEntity.badRequest().body("Invalid token!");
-//         }
+    @PutMapping("/OnOff")
+    public ResponseEntity<?> turnOnOff (@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody DeviceNameDTO devicenameDTO){
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
 
-//         String jwtToken = token.substring(7);
-//         String email = jwtService.extractEmail(jwtToken);
-//         User owner = usersRepository.findByEmail(email);
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+        User owner = usersRepository.findByEmail(email);
 
-//         String targetEmail = emailDTO.getEmail();
-//         User matchUser = usersRepository.findByEmail(targetEmail);
+        String targetEmail = emailDTO.getEmail();
+        User matchUser = usersRepository.findByEmail(targetEmail);
 
         Device matchDevice = deviceRepo.findByDeviceName(devicenameDTO.getDeviceName());
 
-//         if (owner == null) {
-//             return ResponseEntity.badRequest().body("User not found");
-//         }
+        if (owner == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
 
-//         if (!owner.getFamily().equals(matchUser.getFamily())) {
-//             return ResponseEntity.badRequest().body("You don't have access!");
-//         }
+        if (!owner.getFamily().equals(matchUser.getFamily())) {
+            return ResponseEntity.badRequest().body("You don't have access!");
+        }
 
-//         //continue later
+        //continue later
 
-//         return null;
-//     }
+        return null;
+    }
 
     @PostMapping("/addDevice")
     public ResponseEntity<?> addNewDevices(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody AddNewDeviceDTO addDeviceDTO){
         
-//         if (token == null){
-//             return ResponseEntity.badRequest().body("Invalid token!");
-//         }
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
 
-//         String jwtToken = token.substring(7);
-//         String email = jwtService.extractEmail(jwtToken);
-//         User owner = usersRepository.findByEmail(email);
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+        User owner = usersRepository.findByEmail(email);
 
-//         String targetEmail = emailDTO.getEmail();
-//         User matchUser = usersRepository.findByEmail(targetEmail);
+        String targetEmail = emailDTO.getEmail();
+        User matchUser = usersRepository.findByEmail(targetEmail);
 
         
         if (!owner.getFamily().equals(matchUser.getFamily())) {
@@ -160,7 +160,7 @@ import com.nz.backend.services.JwtService;
 
         return null;
 
-//     }
-// }
+    }
+}
 
 
