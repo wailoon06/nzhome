@@ -30,8 +30,10 @@ function UserSettingPage() {
   /* Log Out */
   const logOut = async () => {
     localStorage.removeItem('token');
-    alert("Logout Successfully!")
-    navigate('/#')
+    alert("Logout Successfully!");
+    navigate('/');
+    localStorage.setItem("started", "false");
+    window.location.reload();
   }
 
   return (

@@ -12,6 +12,7 @@ function UserProfilePage() {
   };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate("");
 
   //Front
   const [language, setLanguage] = useState(() => {
@@ -33,9 +34,8 @@ function UserProfilePage() {
     }
   };
 
-  //Back
-  const navigate = useNavigate("");
 
+  //Back
   const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
@@ -139,7 +139,8 @@ function UserProfilePage() {
                   ) : (
                     <i className="fas fa-user-circle text-gray-400 text-6xl mr-5"></i>
                   )}
-                </label><div className="flex flex-col">
+                </label>
+                <div className="flex flex-col">
                     {userDetails ? (
                       <>
                         <h3 className="font-bold">{userDetails.username}</h3>

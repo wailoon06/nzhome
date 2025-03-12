@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import translationsMap from "../locales/translationsMap";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
 
 function ChangePasswordPage() {
   const navigate = useNavigate();
@@ -22,59 +21,115 @@ function ChangePasswordPage() {
 
 
   //back
+  const [loading, setLoading] = useState(false);
+
   const [email, setEmail] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
+  const [userDetails, setUserDetails] = useState("");
+  
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleOldPasswordChange = (e) => setOldPassword(e.target.value);
   const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get('http://localhost:8080/api/getUserDetails', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        setUserDetails(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching user details:", error);
+        if (error.response?.status === 401) {
+          localStorage.removeItem('token');
+        }
+      });
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    if (newPassword !== confirmPassword) {
-      alert("New password is not matched!");
-      window.location.reload();
-      return ;
-    }
+    const token = localStorage.getItem('token');
 
-    if (oldPassword === newPassword) {
-      alert("New password is same as old password!");
-      window.location.reload();
-      return ;
-    }
-
-    axios   
-      .put("http://localhost:8080/api/forgetPassword", {email, oldPassword, newPassword})
-      .then((response) => {
-        console.log(response.data);
-        alert("Password successfully change!");
-
-        const token = localStorage.getItem('token');
-        if (token) {
-          navigate("/profile");
-        } else {
-          navigate("/login");
+    if (token) {
+        if (newPassword !== confirmPassword) {
+          alert("New password is not matched!");
+          window.location.reload();
+          setLoading(false);
+          return ;
         }
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.error("Change Password Error: ", error);
-        if (error.response) {
-          // The server responded with a status code outside the 2xx range
-          console.log("Response data:", error.response.data);
-          console.log("Response status:", error.response.status);
-          alert("Error changing password: " + JSON.stringify(error.response.data));
-        } else {
-          alert("Error changing password: " + error.message);
+        
+        if (oldPassword === newPassword) {
+          alert("New password is same as old password!");
+          window.location.reload();
+          setLoading(false);
+          return ;
         }
+
+        axios   
+          .put("http://localhost:8080/api/changePassword", 
+            {email: userDetails.email, oldPassword, newPassword}, 
+            {headers: { Authorization: `Bearer ${token}`}}
+          )
+          .then((response) => {
+            console.log(response.data);
+            alert("Password successfully change!");
+            setLoading(false);
+            navigate("/profile");
+          })
+          .catch((error) => {
+            handleError(error);
+          });
+ 
+    } else {
+      if (newPassword !== confirmPassword) {
+        alert("New password is not matched!");
         window.location.reload();
-      });
+        setLoading(false);
+        return ;
+      }
+  
+      if (oldPassword === newPassword) {
+        alert("New password is same as old password!");
+        window.location.reload();
+        setLoading(false);
+        return ;
+      }
+    
+      axios   
+        .put("http://localhost:8080/api/forgetPassword", {email, oldPassword, newPassword})
+        .then((response) => {
+          console.log(response.data);
+          alert("Password successfully change!");
+          setLoading(false);
+          navigate("/login");
+        })
+        .catch((error) => {
+          handleError(error);
+        });
+    }
+  };
+
+  const handleError = (error) => {
+    setLoading(false);
+    console.error("Change Password Error: ", error);
+    if (error.response) {
+      console.log("Response data:", error.response.data);
+      console.log("Response status:", error.response.status);
+      alert("Error changing password: " + JSON.stringify(error.response.data));
+    } else {
+      alert("Error changing password: " + error.message);
+    }
+    window.location.reload();
   };
 
   return (
@@ -110,15 +165,27 @@ function ChangePasswordPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <input
+              {localStorage.getItem('token') ? (
+                <input
+                type="email"
+                name="email"
+                placeholder={translations.email}
+                value={userDetails?.email}
+                disabled
+                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+                autoComplete="email"
+              />
+              ) : (
+                <input
                 type="email"
                 name="email"
                 placeholder={translations.email}
                 onChange={handleEmailChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-                autocomplete="email"
+                autoComplete="email"
               />
+              )}
             </div>
 
             <div className="mb-4">

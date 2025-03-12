@@ -183,7 +183,7 @@ public class UsersControllers {
 
         User user = usersRepository.findByEmail(email);
         
-        if (user == null){
+        if (user == null) {
             return ResponseEntity.badRequest().body("User not found");
         }
 
@@ -230,14 +230,6 @@ public class UsersControllers {
         if (user == null){
             return ResponseEntity.badRequest().body("User not found");
         }
-
-        // Map<String, Object> response = new HashMap<>();
-        // response.put("user", Map.of(
-        //     "username", user.getUsername(),
-        //     "email", user.getEmail(),
-        //     "role", user.getRole().name(),
-        //     "createdDate", user.getCreatedDate()
-        // ));
 
         Map<String, Object> response = new HashMap<>();
         response.put("username", user.getUsername());

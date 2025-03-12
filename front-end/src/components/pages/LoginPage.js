@@ -6,14 +6,15 @@ import translationsMap from "../locales/translationsMap";
 function LoginPage() {
   const navigate = useNavigate();
   const emailRef = useRef(null);
+  const [loading, setLoading] = useState(false);
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
+  
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
+  //back
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -28,6 +29,8 @@ function LoginPage() {
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
 
         navigate("/");
+        localStorage.setItem("started", "false"); // Save flag
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Registration error:", error);
@@ -41,6 +44,7 @@ function LoginPage() {
         } else {
           alert("Error registering user: " + error.message);
         }
+        window.location.reload();
       });
 
       setLoading(false);
@@ -66,6 +70,7 @@ function LoginPage() {
   //   }
   // };
 
+  //front
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
