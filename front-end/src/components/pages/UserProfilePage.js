@@ -125,25 +125,22 @@ function UserProfilePage() {
               <div className="rounded-lg border border-gray-500 bg-white p-5 my-5 flex items-center w-full max-w-[full]">
                 
                 {/* User data */}
-                {/* <label className="cursor-pointer relative">
+                {<><label className="cursor-pointer relative">
                   <input
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={handleImageUpload}
-                  />
+                    onChange={handleImageUpload} />
                   {profileImage ? (
                     <img
                       src={profileImage}
                       alt="Profile Picture"
-                      className="rounded-full w-20 h-20 mr-5 object-cover border-2 border-gray-300"
-                    />
+                      className="rounded-full w-20 h-20 mr-5 object-cover border-2 border-gray-300" />
                   ) : (
                     <i className="fas fa-user-circle text-gray-400 text-6xl mr-5"></i>
                   )}
-                </label>
-                <div className="flex flex-col">
-                  {userDetails ? (
+                </label><div className="flex flex-col">
+                    {userDetails ? (
                       <>
                         <h3 className="font-bold">{userDetails.username}</h3>
                         <h4 className="text-gold">{userDetails.role}</h4>
@@ -154,9 +151,9 @@ function UserProfilePage() {
                     ) : (
                       <p>Loading user data...</p>
                     )}
-                </div>
-                
-                {/* Login and register */}
+                  </div></>
+                } 
+                {/* Login and register
                 <a
                   href="/login"
                   className="button2 bg-green-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
@@ -168,7 +165,7 @@ function UserProfilePage() {
                   className="button2 bg-blue-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
                 >
                   {translations.register}
-                </a>
+                </a> */}
               </div>
 
               {/* Navigation Options */}

@@ -5,41 +5,9 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 
 function ChangePasswordPage() {
-  const [email, setEmail] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
   const navigate = useNavigate();
 
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handleOldPasswordChange = (e) => setOldPassword(e.target.value);
-  const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    axios   
-      .post("http://localhost:8080/api/changePassword", {email, oldPassword, newPassword})
-      .then((response) => {
-        console.log(response.data);
-        alert("Password successfully change");
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.error("Change Password Error: ", error);
-        if (error.response) {
-          // The server responded with a status code outside the 2xx range
-          console.log("Response data:", error.response.data);
-          console.log("Response status:", error.response.status);
-          alert("Error registering user: " + JSON.stringify(error.response.data));
-        } else {
-          alert("Error registering user: " + error.message);
-        }
-      });
-  };
-
+  // front
   const handleButtonClick = (event) => {
     event.preventDefault(); // Prevent default form submission
     navigate("/");
@@ -51,6 +19,63 @@ function ChangePasswordPage() {
   });
 
   const translations = translationsMap[language] || translationsMap["en"];
+
+
+  //back
+  const [email, setEmail] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleOldPasswordChange = (e) => setOldPassword(e.target.value);
+  const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (newPassword !== confirmPassword) {
+      alert("New password is not matched!");
+      window.location.reload();
+      return ;
+    }
+
+    if (oldPassword === newPassword) {
+      alert("New password is same as old password!");
+      window.location.reload();
+      return ;
+    }
+
+    axios   
+      .put("http://localhost:8080/api/forgetPassword", {email, oldPassword, newPassword})
+      .then((response) => {
+        console.log(response.data);
+        alert("Password successfully change!");
+
+        const token = localStorage.getItem('token');
+        if (token) {
+          navigate("/profile");
+        } else {
+          navigate("/login");
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.error("Change Password Error: ", error);
+        if (error.response) {
+          // The server responded with a status code outside the 2xx range
+          console.log("Response data:", error.response.data);
+          console.log("Response status:", error.response.status);
+          alert("Error changing password: " + JSON.stringify(error.response.data));
+        } else {
+          alert("Error changing password: " + error.message);
+        }
+        window.location.reload();
+      });
+  };
 
   return (
     <div className="baseBG border border-black px-4 pt-3 grid grid-rows-[5rem_1fr] flex-1 h-screen">
@@ -89,6 +114,7 @@ function ChangePasswordPage() {
                 type="email"
                 name="email"
                 placeholder={translations.email}
+                onChange={handleEmailChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
                 autocomplete="email"
@@ -100,6 +126,7 @@ function ChangePasswordPage() {
                 type="password"
                 name="password2"
                 placeholder={translations.passwordOld}
+                onChange={handleOldPasswordChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />
@@ -110,6 +137,7 @@ function ChangePasswordPage() {
                 type="password"
                 name="password1"
                 placeholder={translations.password}
+                onChange={handleNewPasswordChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />
@@ -120,15 +148,16 @@ function ChangePasswordPage() {
                 type="password"
                 name="password2"
                 placeholder={translations.confirm_password}
+                onChange={handleConfirmPasswordChange}
                 required
                 className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
               />
             </div>
 
             <button
-              type="button"
+              type="submit"
               className="button1 bg-blue-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
-              onClick={handleButtonClick}
+              // onClick={handleButtonClick}
             >
               {translations.reset}
             </button>
