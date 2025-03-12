@@ -7,6 +7,7 @@
 
 
 
-// public interface DeviceRepo extends JpaRepository <Device, Long> {
-//      Device findbyDeviceName (String device);
-// }
+public interface DeviceRepo extends JpaRepository <Device, Long> {
+
+     Device findByDeviceName (String device);
+}
