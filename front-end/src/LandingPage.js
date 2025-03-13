@@ -49,7 +49,7 @@ function LandingPage() {
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
       {/* Header Section */}
-      <header className="relative w-full flex items-center bg-black shadow-md px-6 py-1 md:px-10">
+      <header className="fixed z-50 w-full flex items-center bg-black shadow-md px-6 py-1 md:px-10">
         <div className="grid grid-cols-3 w-full items-center">
           {/* Logo */}
           <div className="flex">
@@ -73,18 +73,23 @@ function LandingPage() {
           {/* Buttons */}
           {/* Buttons */}
           <div className="hidden md:flex space-x-3 ml-auto text-[1.2rem]">
-            {!localStorage.getItem('token') ? (
+            {!localStorage.getItem("token") ? (
               <>
-                <a href="/login" className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full">
+                <a
+                  href="/login"
+                  className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
+                >
                   Login
                 </a>
-                <a href="/register" className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full">
+                <a
+                  href="/register"
+                  className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
+                >
                   Sign up
                 </a>
               </>
             ) : (
-              <>                 
-              </>
+              <></>
             )}
           </div>
         </div>
@@ -128,21 +133,23 @@ function LandingPage() {
               animate ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            IOT Smart Home
+            Net Zero Technology
           </h1>
           <p
-            className={`mt-4 text-sm md:text-base transition-opacity ${
+            className={`text-sm md:text-base transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-            quae ab illo inventore veritatis et quasi architecto.
+            Experience the next generation of smart living with NZ Home, a
+            cutting-edge Net Zero Smart Home designed to revolutionize the way
+            you live. Our advanced technology seamlessly integrates energy
+            efficiency, automation, and sustainability to create a home that’s
+            intelligent, eco-friendly, and cost-effective.
           </p>
           <div className="flex justify-center">
             <button
               onClick={handleGetStarted}
-              className={`hover:bg-gray-800 font-bold bg-orange-500 mt-4 rounded-full px-6 py-2 border border-white text-white w-full md:w-[40%] transition-opacity ${
+              className={`hover:bg-gray-800 font-bold bg-orange-500 mt-10 rounded-full px-6 py-2 border border-white text-white w-full h-[50%] md:w-[40%] transition-opacity ${
                 animate ? "opacity-100" : "opacity-0"
               }`}
             >
@@ -153,86 +160,169 @@ function LandingPage() {
       </main>
 
       {/* New Section with Text Animation */}
-      <section className="grid grid-cols-3 relative w-full min-h-screen px-6 py-16 text-white flex items-center text-center">
+      <section className="grid md:grid-cols-2 lg:grid-cols-3 relative w-full min-h-screen px-6 py-16 text-white flex items-center text-center">
+        <div className="absolute top-6 w-full text-center z-20">
+          <h1 className="text-4xl font-bold text-orange-500">
+            Why Choose NZ Home?
+          </h1>
+        </div>
+
         {/* Background Overlay */}
         <div className="absolute inset-0 bg-gray-800 opacity-80"></div>
 
         {/* Content with Higher z-index */}
-        <div className="relative w-full md:w-2/3 mx-auto z-10">
+        <div className="relative w-full md:w-2/3 mx-auto mt-5 z-10">
           <h2
             className={`text-3xl font-bold mb-4 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Explore the Future of Smart Living
+            Net Zero Energy Efficiency
           </h2>
           <p
             className={`text-lg mb-6 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Seamlessly connect and control your home appliances with our IoT
-            solutions, all in one platform.
+            NZ Home is designed to produce as much energy as it consumes, using
+            advanced solar panels, smart energy storage, and AI-driven energy
+            optimization.
           </p>
-          <button
+          {/* <button
             className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
             Learn More
-          </button>
+          </button> */}
         </div>
         {/* 2nd */}
-        <div className="relative w-full md:w-2/3 mx-auto z-10">
+        <div className="relative w-full md:w-2/3 mx-auto mt-5 z-10">
           <h2
             className={`text-3xl font-bold mb-4 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Explore the Future of Smart Living
+            Smart Automation
           </h2>
           <p
             className={`text-lg mb-6 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Seamlessly connect and control your home appliances with our IoT
-            solutions, all in one platform.
+            Control your lighting, heating, cooling, and appliances remotely
+            with our intuitive NZ Home App. Our AI-driven system learns your
+            habits and optimizes energy use to save costs and reduce waste.
           </p>
-          <button
+          {/* <button
             className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
             Learn More
-          </button>
+          </button> */}
         </div>
         {/* 3rd */}
-        <div className="relative w-full md:w-2/3 mx-auto z-10">
+        <div className="relative w-full md:w-2/3 mx-auto mt-5 z-10">
           <h2
             className={`text-3xl font-bold mb-4 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Explore the Future of Smart Living
+            Sustainable Energy Management
           </h2>
           <p
             className={`text-lg mb-6 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Seamlessly connect and control your home appliances with our IoT
-            solutions, all in one platform.
+            Monitor and manage your energy production and consumption in real
+            time. NZ Home adapts to your lifestyle, ensuring efficiency without
+            compromising comfort.
           </p>
-          <button
+          {/* <button
             className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
             Learn More
-          </button>
+          </button> */}
+        </div>
+
+        {/* 4th */}
+        <div className="relative w-full md:w-2/3 mx-auto mt-5 z-10">
+          <h2
+            className={`text-3xl font-bold mb-4 transition-opacity ${
+              animate ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Security & Connectivity
+          </h2>
+          <p
+            className={`text-lg mb-6 transition-opacity ${
+              animate ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Stay connected and secure with advanced IoT sensors, smart locks,
+            AI-powered surveillance, and voice-controlled automation that keep
+            your home safe and responsive.
+          </p>
+          {/* <button
+            className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
+              animate ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Learn More
+          </button> */}
+        </div>
+
+        {/* 5th */}
+        <div className="relative w-full md:w-2/3 mx-auto mt-5 z-10">
+          <h2
+            className={`text-3xl font-bold mb-4 transition-opacity ${
+              animate ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Real-Time Data & Insights
+          </h2>
+          <p
+            className={`text-lg mb-6 transition-opacity ${
+              animate ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Get detailed reports on your energy usage, appliance efficiency, and
+            environmental impact to make informed decisions for a greener
+            lifestyle.
+          </p>
+          {/* <button
+            className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
+              animate ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Learn More
+          </button> */}
         </div>
       </section>
+
+      <footer className="relative w-full bg-black text-white py-6 text-center">
+        <div className="container mx-auto">
+          <p className="text-sm md:text-base">
+            © {new Date().getFullYear()} Net Zero Technology. All Rights
+            Reserved.
+          </p>
+          <div className="flex justify-center space-x-4 mt-2">
+            <a href="#" className="hover:text-orange-500">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:text-orange-500">
+              Terms of Service
+            </a>
+            <a href="#" className="hover:text-orange-500">
+              Contact Us
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

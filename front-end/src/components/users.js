@@ -1,21 +1,69 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import translationsMap from "../components/locales/translationsMap";
+import axios from "axios";
 
 function Users() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [animationClass, setAnimationClass] = useState(""); // Track animation
   const [tempIndex, setTempIndex] = useState(currentIndex); // Temporary index for animation
 
-  const users = [
-    { status: "Offline", name: "Daughter" },
-    { status: "Offline", name: "Mom" },
-    { status: "Offline", name: "Dad" },
-    { status: "Offline", name: "Brother" },
-    { status: "Offline", name: "Sister" },
-    { status: "Offline", name: "Grandpa" },
-    { status: "Offline", name: "Grandma" },
-  ];
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  // Handle error
+  const handleApiError = (err) => {
+    console.error("API Error:", err);
+  
+    if (err.response) {
+      setError(err.response.data.message);
+      
+      if (err.response.status === 401) {
+        console.log("Session expired!");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    } 
+  };
+
+  // Get users in family
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("Authorization token missing.");
+          setLoading(false);
+          navigate("/login");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:8080/api/getUserFam", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const sortedUsers = response.data.sort((a, b) => {
+          if (a.role === "Owner" && b.role !== "Owner") return -1;
+          if (a.role !== "Owner" && b.role === "Owner") return 1;
+          return 0;
+        });
+
+        setUsers(response.data);
+      } catch (err) {
+        handleApiError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, [navigate]);
+
 
   const prevItems = () => {
     if (currentIndex === 0) return; // Prevent unnecessary actions
@@ -52,7 +100,42 @@ function Users() {
             <h2 className="text-2xl font-bold text-white">{translations.allUsers}</h2>
           </div>
 
-          <div className="transition-all duration-500 ease-in-out">
+          {loading ? (
+            <p className="text-white text-center">Loading...</p>
+          ) : error ? (
+            <p className="text-red-500 text-center">{error}</p>
+          ) : users.length === 0 ? (
+            <p className="text-white text-center">No users found.</p>
+          ) : (
+            <div className="transition-all duration-500 ease-in-out">
+              <div
+                className={`grid sm:grid-cols-3 gap-4 transition-all duration-500 ease-in-out ${animationClass}`}
+                onAnimationEnd={handleAnimationEnd}
+              >
+                {users.slice(tempIndex, tempIndex + 3).map((user, index) => (
+                  <div
+                    key={user.id} // Use unique key from database
+                    className="flex flex-col items-center bg-white p-3 rounded-lg"
+                  >
+                    <Link to={`/user/${user.id}`}>
+                      <div className="text-center bg-white p-3 rounded-lg w-full sm:w-auto">
+                        <div className="text-xl sm:text-2xl teal-text">{user.username}</div>
+                        <span
+                          className={`text-xs rounded-full px-2 inline-block ${
+                            user.status === "Online" ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                          }`}
+                        >
+                          {user.status}
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* <div className="transition-all duration-500 ease-in-out">
             <div
               className={`grid sm:grid-cols-3 gap-4 transition-all duration-500 ease-in-out ${animationClass}`}
               onAnimationEnd={handleAnimationEnd}
@@ -75,7 +158,7 @@ function Users() {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Pagination */}
           <div className="flex justify-center mt-4 space-x-2">
