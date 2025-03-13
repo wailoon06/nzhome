@@ -1,6 +1,7 @@
 package com.nz.backend.dto;
 
 import java.time.LocalDateTime;
+
 import com.nz.backend.entities.Brand;
 import com.nz.backend.entities.User;
 
@@ -9,14 +10,16 @@ public class AddNewDeviceDTO {
     private Brand brand;
     private User createdBy;
     private LocalDateTime warrantyExp;
+    private String picture;
 
     public AddNewDeviceDTO() {}
 
-    public AddNewDeviceDTO(String deviceName, Brand brand, User createdBy, LocalDateTime warrantyExp){
+    public AddNewDeviceDTO(String deviceName, Brand brand, User createdBy, LocalDateTime warrantyExp, String picture){
         this.deviceName = deviceName;
         this.brand = brand;
         this.createdBy = createdBy;
         this.warrantyExp = warrantyExp;
+        this.picture = picture;
     }
 
     public String getDeviceName(){
@@ -49,5 +52,13 @@ public class AddNewDeviceDTO {
 
     public void setWarrantyExp(LocalDateTime warrantyExp){
         this.warrantyExp = warrantyExp;
+    }
+
+    public String getPicture(){
+        return picture;
+    }
+
+    public void setPicture(String picture){
+        this.picture = picture;
     }
 }

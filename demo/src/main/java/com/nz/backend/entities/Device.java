@@ -56,14 +56,19 @@ public class Device {
     @Column
     private String picture;
 
+    @ManyToOne
+    @JoinColumn(name = "family")
+    private Family family;
+
     // Constructors
     public Device() {}
 
-    public Device(String deviceName, Brand brand, User createdBy, LocalDateTime warrantyExp) {
+    public Device(String deviceName, Brand brand, User createdBy, LocalDateTime warrantyExp, String picture) {
         this.deviceName = deviceName;
         this.brand = brand;
         this.createdBy = createdBy;
         this.warrantyExp = warrantyExp;
+        this.picture = picture;
         
     }
 
@@ -123,6 +128,10 @@ public class Device {
     public String getPicture() { return picture; }
 
     public void setPicture(String picture) { this.picture = picture; }
+
+    public Family getFamily(){
+        return family;
+    }
 
 
 }
