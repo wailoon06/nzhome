@@ -117,7 +117,7 @@ function RoomsRobots() {
       {/* Track Robot Section */}
       <div className="baseGreen2 rounded-lg mb-4 p-4 flex flex-col justify-center">
         <img
-          src="https://wallpapers.com/images/featured/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg"
+          src="/image/robot.jpg"
           alt="Robot"
           className="rounded-lg mb-4"
           style={{ height: "300px" }}

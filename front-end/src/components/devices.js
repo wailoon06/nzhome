@@ -20,14 +20,12 @@ function Devices() {
   const previousStateRef = useRef(devicesState);
 
   const devices = [
-    { img: "room1.jpg", name: "Samsung TV", type: "TV" },
-    { img: "room2.jpg", name: "Philips Hue", type: "TV" },
-    { img: "room2.jpg", name: "LG Speaker", type: "Speaker" },
-    { img: "room2.jpg", name: "Nest Thermostat", type: "Eg" },
-    { img: "room2.jpg", name: "Nest Thermostat", type: "Eg" },
-    { img: "room2.jpg", name: "Nest Thermostat", type: "Eg" },
-    { img: "room2.jpg", name: "Nest Thermostat", type: "Eg" },
-    { img: "room2.jpg", name: "Nest Thermostat", type: "Eg" },
+    { img: "/image/samsung.jpeg", name: "Samsung TV", type: "TV" },
+    { img: "/image/light.jpeg", name: "Philips Hue", type: "Light" },
+    { img: "/image/speaker.jpeg", name: "LG Speaker", type: "Speaker" },
+    { img: "/image/thermostats.jpeg", name: "Nest Thermostat", type: "Thermostat" },
+    { img: "/image/xiaomi.jpeg", name: "Vacuum", type: "Vacuum" },
+  
   ];
 
   const filteredDevices = devices.filter((device) => {
