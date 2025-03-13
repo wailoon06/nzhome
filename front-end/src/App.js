@@ -49,10 +49,11 @@ function App() {
   };
   const navigate = useNavigate();
 
+
+  // Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
   const translations = translationsMap[language] || translationsMap["en"];
 
   // const handleReturnGetStarted = () => {
@@ -60,7 +61,7 @@ function App() {
   //   window.location.reload();
   // };
 
-  //back
+  // Handle log out
   const logOut = async () => {
     const token = localStorage.getItem('token')
 

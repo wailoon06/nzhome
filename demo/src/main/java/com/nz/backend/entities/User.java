@@ -1,7 +1,6 @@
 package com.nz.backend.entities;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import com.nz.backend.enums.Role;
 
@@ -20,6 +19,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User {
+
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
@@ -50,15 +51,22 @@ public class User {
         createddate = LocalDate.now();
     }  
 
+    @Column
+    private String picture;
+
+
+    // Constructors
     public User() {}
 
-    public User(String username, String email, String password, Role role, Family family) {
+    public User(String username, String email, String password, Role role, Family family, String picture) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
         this.family = family;
+        this.picture = picture;
     }   
+    
     
     // Getters and Setters
     public Long getUserId() { return userid; }
@@ -88,5 +96,10 @@ public class User {
     public LocalDate getCreatedDate() {
         return createddate;
     }
+
+    public String getPicture() { return picture; }
+
+    public void setPicture(String picture) { this.picture = picture; }
+    
 }
 
