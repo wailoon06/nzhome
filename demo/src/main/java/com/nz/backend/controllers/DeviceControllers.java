@@ -1,6 +1,8 @@
 package com.nz.backend.controllers;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.nz.backend.dto.DeviceNameDTO;
 import com.nz.backend.dto.DeviceOnOffDTO;
 import com.nz.backend.dto.EmailDTO;
 import com.nz.backend.entities.Device;
+import com.nz.backend.entities.Family;
 import com.nz.backend.entities.User;
 import com.nz.backend.enums.OnOff;
 import com.nz.backend.enums.Role;
@@ -187,6 +190,22 @@ public class DeviceControllers {
     public ResponseEntity<?> setAction(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO){
         return null;
         //what should set action do
+    }
+
+    @GetMapping("/getAllDevice")
+    public ResponseEntity<?> getAllDevice(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody DeviceNameDTO devicenameDTO){
+        
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
+
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+        User owner = usersRepository.findByEmail(email);
+
+        return null;
+        
+        
     }
 }
 
