@@ -1,6 +1,5 @@
 package com.nz.backend.controllers;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import com.nz.backend.dto.AddNewDeviceDTO;
 import com.nz.backend.dto.DeviceNameDTO;
 import com.nz.backend.dto.DeviceOnOffDTO;
 import com.nz.backend.dto.EmailDTO;
+import com.nz.backend.dto.UpdateDeviceDTO;
 import com.nz.backend.entities.Device;
 import com.nz.backend.entities.Family;
 import com.nz.backend.entities.User;
@@ -184,7 +184,7 @@ public class DeviceControllers {
         //what should set action do
     }
 
-    @GetMapping("/getAllDevice")
+    @GetMapping("/getAllDevice") //done
     public ResponseEntity<?> getAllDevice(@RequestHeader("Authorization") String token){
         
         if (token == null){
@@ -207,7 +207,7 @@ public class DeviceControllers {
         
     }
 
-     @DeleteMapping("/deleteDevice")
+    @DeleteMapping("/deleteDevice") //done
     public ResponseEntity<?> deleteDevice(@RequestHeader("Authorization") String token, @RequestBody DeviceNameDTO devicenameDTO){
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
@@ -227,11 +227,53 @@ public class DeviceControllers {
             return ResponseEntity.badRequest().body("Device not available!");
         }
 
-        
+        deviceRepo.delete(dltDevice);
+
+        return ResponseEntity.ok("Device deleted successfully!");
+    }
+
+    @PutMapping("updateDevice") //done
+    public ResponseEntity<?> updateDevice(@RequestHeader("Authorization") String token, @RequestBody DeviceNameDTO devicenameDTO, @RequestBody UpdateDeviceDTO updatedeviceDTO){
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
+
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+        User owner = usersRepository.findByEmail(email);
+
+        Device device = deviceRepo.findByDeviceName(devicenameDTO.getDeviceName());
 
 
+        if (owner == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found!");
+        }
 
-        return null;
+        if (device.getDeviceName() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Device not found!");
+        }
+
+        if (!device.getFamily().equals(owner.getFamily())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission!");
+        }
+
+        else {
+            if(updatedeviceDTO.getDeviceName() != null){
+                device.setDeviceName(updatedeviceDTO.getDeviceName());
+            }
+
+            if(updatedeviceDTO.getOnOff() != null){
+                device.setOnOff(updatedeviceDTO.getOnOff());
+            }
+
+            if(updatedeviceDTO.getPicture() != null){
+                device.setPicture(updatedeviceDTO.getPicture());
+            }
+        }
+
+        deviceRepo.save(device);
+
+        return ResponseEntity.ok("Device updated successfully!");
     }
 }
 
