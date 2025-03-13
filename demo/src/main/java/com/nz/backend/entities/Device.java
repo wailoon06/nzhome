@@ -57,7 +57,7 @@ public class Device {
     private String picture;
 
     @ManyToOne
-    @JoinColumn(name = "family")
+    @JoinColumn(name = "Familyid")
     private Family family;
 
     // Constructors

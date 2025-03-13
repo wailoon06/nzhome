@@ -201,7 +201,7 @@ public class DeviceControllers {
         return ResponseEntity.badRequest().body("User does not belong to any family!");
         }
 
-        List<Device> devices = deviceRepo.findByFamily(userFamily.getFamilyName());
+        List<Device> devices = deviceRepo.findByFamilyFamilyName(userFamily.getFamilyName());
 
         return ResponseEntity.ok(devices);
         
