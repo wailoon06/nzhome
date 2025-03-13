@@ -20,6 +20,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "device")
 public class Device {
+
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Deviceid")
@@ -51,6 +53,8 @@ public class Device {
     @Column(name = "onOff", nullable = false)
     private OnOff onOff;
 
+    @Column
+    private String picture;
 
     // Constructors
     public Device() {}
@@ -115,6 +119,10 @@ public class Device {
     public void setOnOff(OnOff onOff){
         this.onOff = onOff;
     }
+
+    public String getPicture() { return picture; }
+
+    public void setPicture(String picture) { this.picture = picture; }
 
 
 }

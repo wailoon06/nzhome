@@ -22,7 +22,6 @@ import com.nz.backend.dto.EmailDTO;
 import com.nz.backend.entities.Device;
 import com.nz.backend.entities.User;
 import com.nz.backend.enums.OnOff;
-import com.nz.backend.enums.Role;
 import com.nz.backend.repo.DeviceRepo;
 import com.nz.backend.repo.UsersRepository;
 import com.nz.backend.services.JwtService;
