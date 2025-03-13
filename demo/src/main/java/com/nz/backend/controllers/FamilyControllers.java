@@ -10,16 +10,15 @@ import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.nz.backend.dto.ChangeRoleDTO;
 import com.nz.backend.dto.EmailDTO;
@@ -44,11 +43,9 @@ public class FamilyControllers {
 
     @DeleteMapping("/deleteUserFam")
     public ResponseEntity<?> dltUser_Fam(@RequestBody EmailDTO emailDTO, @RequestHeader("Authorization") String token) {
-        Map<String, String> response = new HashMap<>();
 
         if (token == null) {
-            response.put("message", "Invalid token!");
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body("Invalid token!");
         }
 
         String jwtToken = token.substring(7);
@@ -56,36 +53,31 @@ public class FamilyControllers {
         User owner = usersRepository.findByEmail(email);
 
         if (owner.getRole().name().equals("User") || owner.getRole().name().equals("Admin")) {
-            response.put("message", "You don't have access!");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            return ResponseEntity.badRequest().body("You don't have access!");
         }
 
         String targetEmail = emailDTO.getEmail();
         User matchUser = usersRepository.findByEmail(targetEmail);
 
         if (matchUser == null) {
-            response.put("message", "User not found!");
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body("User not found!");
         }
 
         if (!owner.getFamily().equals((matchUser.getFamily()))) {
-            response.put("message", "The user is not in your family!");
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body("The user is not in your family!");
         }
 
         if (matchUser.getEmail().equals(owner.getEmail())) {
-            response.put("message", "You are not allowed to delete yourself!");
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body("You are not allowed to delete yourself!");
         }
 
         if (matchUser.getRole().name().equals("Owner")) {
-            response.put("message", "You are not allowed to delete the owner!");
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body("You are not allowed to delete the owner!");
         }
 
         usersRepository.delete(matchUser);
-        response.put("message", matchUser.getUsername() + " has been deleted from the family!");
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(matchUser.getUsername() + " has been deleted from the family!");
 
         /* Single User */
         // if (emailDTO.getEmail() != null && emailDTO.getEmails() == null) {
@@ -174,7 +166,7 @@ public class FamilyControllers {
 
     @PutMapping("/changeRoleFam")
     public ResponseEntity<?> changeRole_Fam(@RequestBody ChangeRoleDTO changeRoleDTO, @RequestHeader("Authorization") String token) {
-
+        
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }

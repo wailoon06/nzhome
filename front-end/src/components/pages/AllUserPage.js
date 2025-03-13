@@ -19,56 +19,47 @@ function AllUserPage() {
     navigate(path);
   };
 
-  // translation
+  // Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
   const translations = translationsMap[language] || translationsMap["en"];
 
 
   const [userDetails, setUserDetails] = useState(null);
 
+  // Handle error
   const handleApiError = (err) => {
     console.error("API Error:", err);
   
     if (err.response) {
-      // Extract error message from backend response
-      setError(err.response.data.message || "An error occurred");
+      setError(err.response.data.message);
       
-      // Handle token expiration or authentication issues
       if (err.response.status === 401) {
         console.log("Session expired!");
         localStorage.removeItem("token");
         navigate("/login");
-      } else if (err.response.status === 403) {
-        alert("Access Denied: You don't have permission.");
       }
-    } else {
-      // Generic error message
-      setError("Network error or server is unreachable.");
-    }
+    } 
   };
 
+  // Get users in family
   useEffect(() => {
     const fetchUserDetails = async () => {
       setLoading(true);
       setError(null);
-      
+
       try {
-        const token = localStorage.getItem('token');
-        
-        const response = await axios.get('http://localhost:8080/api/getUserFam', 
-          {headers: {'Authorization': `Bearer ${token}`}}
-        );
-        
-        // Store user details in state
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:8080/api/getUserFam", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
         setUserDetails(response.data);
-        
       } catch (err) {
         handleApiError(err);
       } finally {
-          setLoading(false);
+        setLoading(false);
       }
     };
 
@@ -76,17 +67,20 @@ function AllUserPage() {
   }, [navigate]);
 
 
+  // Handle delete submission
   const handleDelete = async (email) => {
+    // Double confirm
     if (!window.confirm('Are you sure you want to delete this user?')) {
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
+      // Get token
       const token = localStorage.getItem('token');
       
+      // Delete user
       const response = await axios
                               .delete(`http://localhost:8080/api/deleteUserFam`, {
                                   headers: { Authorization: `Bearer ${token}` },
@@ -99,8 +93,9 @@ function AllUserPage() {
       alert(response.data.message);
 
     } catch (err) {
-      console.error("Delete error:", err); // Debugging
+      console.error("Delete error:", err);
       handleApiError(err);
+      window.location.reload();
     } finally {
       setLoading(false);
     }

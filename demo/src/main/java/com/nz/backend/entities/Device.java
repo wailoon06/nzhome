@@ -2,8 +2,12 @@ package com.nz.backend.entities;
 
 import java.time.LocalDateTime;
 
+import com.nz.backend.enums.OnOff;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +20,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "device")
 public class Device {
+
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Deviceid")
@@ -38,20 +44,32 @@ public class Device {
     @PrePersist
     protected void onCreate() {
         createdTime = LocalDateTime.now();
-    }  
+    } 
 
     @Column(nullable = false)
     private LocalDateTime warrantyExp;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "onOff", nullable = false)
+    private OnOff onOff;
+
+    @Column
+    private String picture;
+
+    @ManyToOne
+    @JoinColumn(name = "Familyid")
+    private Family family;
 
     // Constructors
     public Device() {}
 
-    public Device(String deviceName, Brand brand, User createdBy, LocalDateTime warrantyExp) {
+    public Device(String deviceName, Brand brand, User createdBy, LocalDateTime warrantyExp, String picture) {
         this.deviceName = deviceName;
         this.brand = brand;
         this.createdBy = createdBy;
         this.warrantyExp = warrantyExp;
+        this.picture = picture;
+        
     }
 
     // Getters and Setters
@@ -98,4 +116,22 @@ public class Device {
     public void setWarrantyExp(LocalDateTime warrantyExp) {
         this.warrantyExp = warrantyExp;
     }
+
+    public OnOff getOnOff(){
+        return onOff;
+    }
+
+    public void setOnOff(OnOff onOff){
+        this.onOff = onOff;
+    }
+
+    public String getPicture() { return picture; }
+
+    public void setPicture(String picture) { this.picture = picture; }
+
+    public Family getFamily(){
+        return family;
+    }
+
+
 }

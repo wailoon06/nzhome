@@ -12,47 +12,50 @@ function RegisterPage() {
   const [code, setCode] = useState("");
   const [familyName, sethandlefamilyNameChange] = useState("");
   
-
   const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleCodeChange = (e) => setCode(e.target.value);
   const handlefamilyNameChange = (e) => sethandlefamilyNameChange(e.target.value);
 
+
+  // Language
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+  const translations = translationsMap[language] || translationsMap["en"];
+
+
+  // Handle submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Post details to register
     axios
       .post("http://localhost:8080/api/registerOwner", { username, email, password, familyName, code})
       .then((response) => {
         console.log(response.data);
         alert(response.data);
-        navigate("/login"); // Redirect after successful registration
+
+        // Navigate to login page after succesful registration
+        navigate("/login");
+
       })
       .catch((error) => {
         console.error("Registration error:", error);
         if (error.response) {
-          // The server responded with a status code outside the 2xx range
           console.log("Response data:", error.response.data);
           console.log("Response status:", error.response.status);
-          alert(
-            "Error registering user: " + JSON.stringify(error.response.data)
-          );
+          alert(error.response.data.toString());
         } else {
           alert("Error registering user: " + error.message);
         }
+
+        // Reload when there is error
+        window.location.reload();
+
       });
   };
-
-  const handleButtonClick = (event) => {
-    event.preventDefault(); // Prevent default form submission
-    navigate("/");
-  };
-
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem("language") || "en";
-  });
-
-  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG border border-black px-4 pt-3 grid grid-rows-[5rem_1fr] flex-1 h-screen">
@@ -162,3 +165,8 @@ function RegisterPage() {
 }
 
 export default RegisterPage;
+
+// const handleButtonClick = (event) => {
+  //   event.preventDefault(); // Prevent default form submission
+  //   navigate("/");
+  // };

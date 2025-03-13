@@ -34,7 +34,7 @@ public class SecurityConfig {
         return http
                     .csrf(customizer -> customizer.disable())
                     .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/login", "/api/register", "/api/registerOwner", "/api/forgetPassword").permitAll()
+                        .requestMatchers("/api/login", "/api/register", "/api/registerOwner", "/api/forgetPassword", "/api/upload").permitAll()
                         .anyRequest().authenticated())
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

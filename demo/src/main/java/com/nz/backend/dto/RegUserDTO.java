@@ -4,13 +4,15 @@ public class RegUserDTO {
     private String username;
     private String email;
     private String password;
+    private String profilePic;
 
     public RegUserDTO () {}
 
-    public RegUserDTO (String username, String email, String password) {
+    public RegUserDTO (String username, String email, String password, String profilePic) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.profilePic = profilePic;
     }
 
     // Getters and Setters
@@ -22,4 +24,9 @@ public class RegUserDTO {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public String getProfilePic() { return profilePic; }
+
+    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
+
 }
