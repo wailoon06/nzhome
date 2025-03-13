@@ -27,6 +27,7 @@ import com.nz.backend.repo.DeviceRepo;
 import com.nz.backend.repo.UsersRepository;
 import com.nz.backend.services.JwtService;
 
+
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -44,6 +45,7 @@ public class DeviceControllers {
     @Value("${jwt.secret.key}")
     private String secretKey;
 
+
     @GetMapping("/getDevice")
     public ResponseEntity<?> getDevicesByRoom(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO) {
         if (token == null){
@@ -60,17 +62,21 @@ public class DeviceControllers {
         if (!owner.getFamily().equals(matchUser.getFamily())) {
             return ResponseEntity.badRequest().body("You don't have access!");
         }
+        if (!owner.getFamily().equals(matchUser.getFamily())) {
+            return ResponseEntity.badRequest().body("You don't have access!");
+        }
 
         else {
             //continue later
         }
+
 
         return null;
     }
 
     @GetMapping("/getDeviceDetails")
     public ResponseEntity<?> getDevicesDetails(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody DeviceNameDTO devicenameDTO) {
-        
+
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }
@@ -81,7 +87,6 @@ public class DeviceControllers {
 
         String targetEmail = emailDTO.getEmail();
         User matchUser = usersRepository.findByEmail(targetEmail);
-
 
         Device matchDevice = deviceRepo.findByDeviceName(devicenameDTO.getDeviceName());
 
@@ -102,7 +107,6 @@ public class DeviceControllers {
             "warranty_expiration", matchDevice.getWarrantyExp()
         ));
       
-        
         return ResponseEntity.ok(response);
     }
 

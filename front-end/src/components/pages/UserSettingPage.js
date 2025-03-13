@@ -5,33 +5,32 @@ import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
 
 function UserSettingPage() {
-  //front
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
-
-  // const { name } = useParams();
-
   const navigate = useNavigate();
+
 
   const handleNavigation = (path) => {
     navigate(path);
   };
 
+
+   //Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
   const translations = translationsMap[language] || translationsMap["en"];
 
-  //back
 
-  /* Log Out */
+  // Handle log out
   const logOut = async () => {
     localStorage.removeItem('token');
-    alert("Logout Successfully!")
-    navigate('/#')
+    alert("Logout Successfully!");
+    navigate('/');
+    localStorage.setItem("started", "false");
+    window.location.reload();
   }
 
   return (

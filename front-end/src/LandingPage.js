@@ -71,13 +71,21 @@ function LandingPage() {
           </nav>
 
           {/* Buttons */}
+          {/* Buttons */}
           <div className="hidden md:flex space-x-3 ml-auto text-[1.2rem]">
-            <a href="/login" className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full">
-              Login
-            </a>
-            <a href="/register" className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full">
-              Sign up
-            </a>
+            {!localStorage.getItem('token') ? (
+              <>
+                <a href="/login" className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full">
+                  Login
+                </a>
+                <a href="/register" className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full">
+                  Sign up
+                </a>
+              </>
+            ) : (
+              <>                 
+              </>
+            )}
           </div>
         </div>
 

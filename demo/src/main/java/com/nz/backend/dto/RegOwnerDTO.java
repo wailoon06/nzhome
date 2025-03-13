@@ -6,15 +6,17 @@ public class RegOwnerDTO {
     private String password;
     private String familyName;
     private String code;
+    private String profilePic;
 
     public RegOwnerDTO() {}
 
-    public RegOwnerDTO(String username, String email, String password, String familyName, String code) {
+    public RegOwnerDTO(String username, String email, String password, String familyName, String code, String profilePic) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.familyName = familyName;
         this.code = code;
+        this.profilePic = profilePic;
     }
 
     public String getUsername() { return username; }
@@ -31,5 +33,9 @@ public class RegOwnerDTO {
 
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
+
+    public String getProfilePic() { return profilePic; }
+
+    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
 }
 

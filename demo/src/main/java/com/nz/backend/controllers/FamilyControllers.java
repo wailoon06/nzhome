@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.nz.backend.dto.ChangeRoleDTO;
 import com.nz.backend.dto.EmailDTO;
@@ -43,7 +43,8 @@ public class FamilyControllers {
 
     @DeleteMapping("/deleteUserFam")
     public ResponseEntity<?> dltUser_Fam(@RequestBody EmailDTO emailDTO, @RequestHeader("Authorization") String token) {
-        if (token == null){
+
+        if (token == null) {
             return ResponseEntity.badRequest().body("Invalid token!");
         }
 
@@ -54,58 +55,88 @@ public class FamilyControllers {
         if (owner.getRole().name().equals("User") || owner.getRole().name().equals("Admin")) {
             return ResponseEntity.badRequest().body("You don't have access!");
         }
-        
-        /* Single User */
-        if (emailDTO.getEmail() != null && emailDTO.getEmails() == null) {
-            String targetEmail = emailDTO.getEmail();
-            User matchUser = usersRepository.findByEmail(targetEmail);
 
-            if (matchUser == null) {
-                return ResponseEntity.badRequest().body("User not found!");
-            }
+        String targetEmail = emailDTO.getEmail();
+        User matchUser = usersRepository.findByEmail(targetEmail);
 
-            if (!owner.getFamily().equals((matchUser.getFamily()))) {
-                return ResponseEntity.badRequest().body("The user is not in your family!");
-            }
-
-            if(matchUser.getRole().name().equals("owner")) {
-                return ResponseEntity.badRequest().body("You are not allow to delete owner!");
-            }
-
-            usersRepository.delete(matchUser);
-
-            return ResponseEntity.ok(matchUser.getUsername() + " has been deleted from the family!");
+        if (matchUser == null) {
+            return ResponseEntity.badRequest().body("User not found!");
         }
 
+        if (!owner.getFamily().equals((matchUser.getFamily()))) {
+            return ResponseEntity.badRequest().body("The user is not in your family!");
+        }
+
+        if (matchUser.getEmail().equals(owner.getEmail())) {
+            return ResponseEntity.badRequest().body("You are not allowed to delete yourself!");
+        }
+
+        if (matchUser.getRole().name().equals("Owner")) {
+            return ResponseEntity.badRequest().body("You are not allowed to delete the owner!");
+        }
+
+        usersRepository.delete(matchUser);
+
+        return ResponseEntity.ok(matchUser.getUsername() + " has been deleted from the family!");
+
+        /* Single User */
+        // if (emailDTO.getEmail() != null && emailDTO.getEmails() == null) {
+        //     String targetEmail = emailDTO.getEmail();
+        //     User matchUser = usersRepository.findByEmail(targetEmail);
+
+        //     if (matchUser == null) {
+        //         return ResponseEntity.badRequest().body("User not found!");
+        //     }
+
+        //     if (!owner.getFamily().equals((matchUser.getFamily()))) {
+        //         return ResponseEntity.badRequest().body("The user is not in your family!");
+        //     }
+
+        //     if (matchUser.getEmail().equals(owner.getEmail())) {
+        //         return ResponseEntity.badRequest().body("You are not allow to delete yourselves!");
+        //     }
+
+        //     if (matchUser.getRole().name().equals("Owner")) {
+        //         return ResponseEntity.badRequest().body("You are not allow to delete owner!");
+        //     }
+
+        //     usersRepository.delete(matchUser);
+
+        //     return ResponseEntity.ok(matchUser.getUsername() + " has been deleted from the family!");
+        // }
+
         /* Multiple Users */
-        List<String> results = new ArrayList<>();
+        // List<String> results = new ArrayList<>();
 
-        for (EmailDTO.UserEmail userEmail : emailDTO.getUsers()) {
-            User matchUser = usersRepository.findByEmail(userEmail.getEmail());
+        // for (EmailDTO.UserEmail userEmail : emailDTO.getUsers()) {
+        //     User matchUser = usersRepository.findByEmail(userEmail.getEmail());
 
-            if (matchUser == null) {
-                results.add("User not found!");
-                continue;
-            }
+        //     if (matchUser == null) {
+        //         results.add("User not found!");
+        //         continue;
+        //     }
     
-            if (!owner.getFamily().equals((matchUser.getFamily()))) {
-                results.add("The user is not in your family!");
-                continue;
-            }
-    
-            if(matchUser.getRole().name().equals("owner")) {
-                results.add("You are not allow to delete owner!");
-                continue;
-            }
-    
-            usersRepository.delete(matchUser);
-            results.add(matchUser.getUsername() + " has been deleted from the family!");
-        }   
+        //     if (!owner.getFamily().equals((matchUser.getFamily()))) {
+        //         results.add("The user is not in your family!");
+        //         continue;
+        //     }
 
-        
+        //     if (matchUser.getEmail().equals(owner.getEmail())) {
+        //         results.add("You are not allow to delete yourselves!");
+        //         continue;
+        //     }
+    
+        //     if (matchUser.getRole().name().equals("Owner")) {
+        //         results.add("You are not allow to delete owner!");
+        //         continue;
+        //     }
+    
+        //     usersRepository.delete(matchUser);
 
-        return ResponseEntity.ok(results);
-        
+        //     results.add(matchUser.getUsername() + " has been deleted from the family!");
+        // }   
+
+        // return ResponseEntity.ok(results);
     }
 
     @GetMapping("/getUserFam")
@@ -135,7 +166,7 @@ public class FamilyControllers {
 
     @PutMapping("/changeRoleFam")
     public ResponseEntity<?> changeRole_Fam(@RequestBody ChangeRoleDTO changeRoleDTO, @RequestHeader("Authorization") String token) {
-
+        
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }

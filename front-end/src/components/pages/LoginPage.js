@@ -6,71 +6,61 @@ import translationsMap from "../locales/translationsMap";
 function LoginPage() {
   const navigate = useNavigate();
   const emailRef = useRef(null);
+  const [loading, setLoading] = useState(false);
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
+  
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
+
+  // Language
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "en";
+  });
+  const translations = translationsMap[language] || translationsMap["en"];
+
+
+  // Handle submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
+    // Post email and password from user for verification
     axios
       .post("http://localhost:8080/api/login", { email, password })
       .then((response) => {
         console.log(response.data);
         alert("Login Sucessfully!");
 
+        // Store token in local storage
         localStorage.setItem("token", response.data.token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
 
+        // Navigate to landing page
         navigate("/");
+        localStorage.setItem("started", "false");
+        window.location.reload();
+
       })
       .catch((error) => {
-        console.error("Registration error:", error);
+        console.error("Login error:", error);
         if (error.response) {
-          // The server responded with a status code outside the 2xx range
           console.log("Response data:", error.response.data);
           console.log("Response status:", error.response.status);
-          alert(
-            "Error registering user: " + JSON.stringify(error.response.data)
-          );
+          alert(error.response.data.toString());
         } else {
-          alert("Error registering user: " + error.message);
+          alert("Error logging in: " + error.message);
         }
+
+        // Reload when there is error
+        window.location.reload();
+        
       });
 
       setLoading(false);
   }
-
-  // email check
-  // const handleButtonClick = async (event) => {
-  //   event.preventDefault(); // Prevent default form submission
-  //   const theEmail = emailRef.current.value; // Get this from input field
-
-  //   try {
-  //     const { data: exists } = await axios.get(`/api/users/exists`, {
-  //       params: { theEmail },
-  //     });
-
-  //     if (exists) {
-  //       alert("Email already exists!");
-  //     } else {
-  //       navigate("/");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error checking email:", error);
-  //   }
-  // };
-
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem("language") || "en";
-  });
-
-  const translations = translationsMap[language] || translationsMap["en"];
 
   return (
     <div className="baseBG border border-black px-4 pt-3 grid grid-rows-[5rem_1fr] flex-1 h-screen">
@@ -93,16 +83,6 @@ function LoginPage() {
           <h2 className="mb-4 subtitle text-white">Sign In</h2>
 
           <form onSubmit={handleSubmit}>
-            {/* <div className="mb-4">
-              <input
-                type="text"
-                name="username"
-                placeholder="Username"
-                required
-                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-              />
-            </div> */}
-
             <div className="mb-4">
               <input
                 type="email"
@@ -167,3 +147,33 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+// email check
+  // const handleButtonClick = async (event) => {
+  //   event.preventDefault(); // Prevent default form submission
+  //   const theEmail = emailRef.current.value; // Get this from input field
+
+  //   try {
+  //     const { data: exists } = await axios.get(`/api/users/exists`, {
+  //       params: { theEmail },
+  //     });
+
+  //     if (exists) {
+  //       alert("Email already exists!");
+  //     } else {
+  //       navigate("/");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error checking email:", error);
+  //   }
+  // };
+
+  {/* <div className="mb-4">
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                required
+                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+              />
+            </div> */}

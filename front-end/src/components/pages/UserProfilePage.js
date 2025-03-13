@@ -12,78 +12,123 @@ function UserProfilePage() {
   };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState(null);
+  const navigate = useNavigate("");
 
-  //Front
+
+  // Language 
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-  
   const translations = translationsMap[language] || translationsMap["en"];
 
-  const [profileImage, setProfileImage] = useState(null);
 
-  const handleImageUpload = (event) => {
+  // Handle profile picture
+  const [profileImage, setProfileImage] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+
+  const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+    
+    // No file given
+    if (!file) return ;
+
+    // Check file type
+    if (!file.type.match('image.*')) {
+      alert("Please select an image file");
+      return;
+    }
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size should not exceed 5MB");
+      return;
+    }
+
+    setUploadLoading(true);
+    setError(null);
+    setUploadStatus(null);
+    
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    try {
+      //Get token
+      const token = localStorage.getItem('token');
+
+      // Post picture
+      const response = await axios.post("http://localhost:8080/api/upload", formData, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        }
+      });
+
+      // Handle successful response
+      if (response.status === 200) {
+        // Preview image
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProfileImage(reader.result);
+        };
+        reader.readAsDataURL(file);
+        setUploadStatus("Profile picture updated successfully!");
+
+        fetchUserDetails();
+      }
+
+    } catch (error) {
+       console.error("Error uploading image: ", error);
+       if (error.response) {
+        console.log("Response data:", error.response.data);
+        console.log("Response status:", error.response.status);
+        alert("Error uploading image" + error.response.data.toString());
+       }
+    }      
+  }
+
+
+  // Handle getting user details
+  const [userDetails, setUserDetails] = useState(null);
+
+  const fetchUserDetails = async () => {
+    setLoading(true);
+    
+    try {
+      // Get token
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:8080/api/getUserDetails', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      setUserDetails(response.data);
+      setProfileImage(response.data.picture || null);
+  
+    } catch (err) {
+      console.error('Error fetching user details:', err);
+      setError(err.message || 'Failed to load user details');
+      
+      // Handle token expiration or authentication issues
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        // Token expired or invalid - redirect to login
+        console.log("Session expired!");
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    } finally {
+        setLoading(false);
     }
   };
 
-  //Back
-  const navigate = useNavigate("");
-
-  const [userDetails, setUserDetails] = useState(null);
-
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      setLoading(true);
-      
-      try {
-        const token = localStorage.getItem('token');
-        
-        const response = await axios.get('http://localhost:8080/api/getUserDetails', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        // Store user details in state
-        setUserDetails(response.data);
-        
-      } catch (err) {
-        console.error('Error fetching user details:', err);
-        setError(err.message || 'Failed to load user details');
-        
-        // Handle token expiration or authentication issues
-        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          // Token expired or invalid - redirect to login
-          console.log("Session expired!");
-          localStorage.removeItem('token');
-          navigate('/login');
-        }
-      } finally {
-          setLoading(false);
-      }
-    };
-
     fetchUserDetails();
   }, []);
 
   // Display user details
-  // if (loading) return <div>Loading user details...</div>;
+  if (loading) return <div>Loading user details...</div>;
   if (error) return <div>Error: {error}</div>;
-
-  // const { name } = useParams();
-
-  // useEffect(() => {
-  //   const now = new Date();
-  //   const dateOnly = now.toLocaleDateString();
-  //   document.getElementById("datetime").innerHTML = dateOnly;
-  // }, []);
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -139,7 +184,9 @@ function UserProfilePage() {
                   ) : (
                     <i className="fas fa-user-circle text-gray-400 text-6xl mr-5"></i>
                   )}
-                </label><div className="flex flex-col">
+                </label>
+
+                <div className="flex flex-col">
                     {userDetails ? (
                       <>
                         <h3 className="font-bold">{userDetails.username}</h3>
@@ -153,19 +200,6 @@ function UserProfilePage() {
                     )}
                   </div></>
                 } 
-                {/* Login and register
-                <a
-                  href="/login"
-                  className="button2 bg-green-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
-                >
-                  {translations.sign_in}
-                </a>{" "}
-                <a
-                  href="/register"
-                  className="button2 bg-blue-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
-                >
-                  {translations.register}
-                </a> */}
               </div>
 
               {/* Navigation Options */}
@@ -178,8 +212,9 @@ function UserProfilePage() {
                   {translations.generalSettingsDescription}
                 </div>
               </a>
-
-              <a
+              
+              {userDetails.role !== "User" && (
+                <a
                 href="/profile/AddUser"
                 className="grid grid-cols-2 rounded-lg border border-gray-500 bg-white p-5 my-2.5 w-full max-w-full"
               >
@@ -188,7 +223,8 @@ function UserProfilePage() {
                   {translations.addUserDescription}
                 </div>
               </a>
-
+              )}
+              
               <a
                 href="/users"
                 className="grid grid-cols-2 rounded-lg border border-gray-500 bg-white p-5 my-2.5 w-full max-w-full"
@@ -217,3 +253,17 @@ function UserProfilePage() {
 }
 
 export default UserProfilePage;
+
+{/* Login and register
+                <a
+                  href="/login"
+                  className="button2 bg-green-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
+                >
+                  {translations.sign_in}
+                </a>{" "}
+                <a
+                  href="/register"
+                  className="button2 bg-blue-500 text-white text-center text-2xl w-[20%] h-[110%] rounded-[1rem] mx-auto"
+                >
+                  {translations.register}
+                </a> */}

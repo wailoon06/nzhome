@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./App.css";
 
 import WidgetsEnergy from "./components/widgetsEnergy";
@@ -46,17 +47,33 @@ function App() {
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+  const navigate = useNavigate();
 
+
+  // Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
   const translations = translationsMap[language] || translationsMap["en"];
 
-  const handleReturnGetStarted = () => {
-    localStorage.setItem("started", "false"); // Save flag
+  // const handleReturnGetStarted = () => {
+  //   localStorage.setItem("started", "false"); // Save flag
+  //   window.location.reload();
+  // };
+
+  // Handle log out
+  const logOut = async () => {
+    const token = localStorage.getItem('token')
+
+    if (token) {
+      localStorage.removeItem('token');
+      alert("Logout Successfully!");
+      localStorage.setItem("started", "false");
+    } else {
+      localStorage.setItem("started", "false"); // Save flag
+    }
     window.location.reload();
-  };
+  }
 
   return (
     <Routes>
@@ -141,7 +158,7 @@ function App() {
                 </a>
 
                 <button
-                  onClick={handleReturnGetStarted}
+                  onClick={logOut}
                   className="mt-auto mb-[20%]"
                 >
                   <div className="flex flex-col items-center justify-center px-4 py-2">

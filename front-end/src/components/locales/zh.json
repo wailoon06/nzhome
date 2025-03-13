@@ -33,6 +33,7 @@
   "televisionBrand": "电视品牌",
 
   "addUser": "添加用户",
+  "enterUserNameForRow": "用户名",
   "enterEmailForRow": "电子邮件",
   "enterPasswordForRow": "输入密码",
   "familyName": "姓氏",
