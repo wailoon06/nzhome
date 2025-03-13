@@ -11,6 +11,15 @@ function DeviceDetailsPage() {
   };
 
   const { name, type } = useParams();
+  const deviceImages = {
+    "Xiaomi Vacuum": "/image/xiaomi.jpeg",
+    "Samsung TV": "/image/samsung.jpeg",
+    "Philips Hue": "/image/light.jpeg",
+    "LG Speaker": "/image/speaker.jpeg",
+    "Nest Thermostat": "/image/thermostats.jpeg"
+  };
+  const deviceImage = deviceImages[name];
+
 
   // translation
   const [language, setLanguage] = useState(() => {
@@ -55,7 +64,7 @@ function DeviceDetailsPage() {
                       <div className=" flex flex-cols justify-center items-center p-3">
                         <div className="grid sm:grid-cols-1 items-center gap-4 p-4">
                           <img
-                            src=""
+                            src= {deviceImage}
                             alt=""
                             className="border border-black rounded-lg mb-4 mx-auto"
                             style={{ height: "100px", width: "100px" }}
