@@ -27,10 +27,10 @@ function LandingPage() {
     return () => clearTimeout(timeout);
   }, []);
 
-  const handleGetStarted = () => {
-    localStorage.setItem("started", "true"); // Save flag
-    window.location.reload();
-  };
+  // const handleGetStarted = () => {
+  //   localStorage.setItem("started", "true"); // Save flag
+  //   window.location.reload();
+  // };
 
   return (
     <div className="relative min-h-screen flex flex-col items-center bg-white">
@@ -129,14 +129,14 @@ function LandingPage() {
         {/* Left Side - Text */}
         <div className="w-full md:w-1/2 grid grid-rows-3">
           <h1
-            className={`text-3xl md:text-4xl font-bold transition-transform transform ${
+            className={`text-[3rem] md:text-[4rem] font-bold transition-transform transform ${
               animate ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            Net Zero Technology
+            Net Zero Home
           </h1>
           <p
-            className={`text-sm md:text-base transition-opacity ${
+            className={`text-1xl md:text-[1.2rem] transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
@@ -147,14 +147,15 @@ function LandingPage() {
             intelligent, eco-friendly, and cost-effective.
           </p>
           <div className="flex justify-center">
-            <button
-              onClick={handleGetStarted}
-              className={`hover:bg-gray-800 font-bold bg-orange-500 mt-10 rounded-full px-6 py-2 border border-white text-white w-full h-[50%] md:w-[40%] transition-opacity ${
+            <a
+              href="/login"
+              // onClick={handleGetStarted}
+              className={`hover:bg-gray-800 flex justify-center items-center font-bold bg-orange-500 mt-10 rounded-full px-6 py-2 border border-white text-white w-full h-[50%] md:w-[40%] transition-opacity ${
                 animate ? "opacity-100" : "opacity-0"
               }`}
             >
               Get Started
-            </button>
+            </a>
           </div>
         </div>
       </main>
@@ -307,8 +308,7 @@ function LandingPage() {
       <footer className="relative w-full bg-black text-white py-6 text-center">
         <div className="container mx-auto">
           <p className="text-sm md:text-base">
-            © {new Date().getFullYear()} Net Zero Technology. All Rights
-            Reserved.
+            © {new Date().getFullYear()} NZ Home (Group 1). All Rights Reserved.
           </p>
           <div className="flex justify-center space-x-4 mt-2">
             <a href="#" className="hover:text-orange-500">

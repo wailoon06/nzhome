@@ -42,7 +42,8 @@ function LoginPage() {
       // Start redirect animation, then navigate to login page
       setTimeout(() => {
         navigate("/");
-      }, 2000); 
+        localStorage.setItem("started", "true");
+        window.location.reload();
 
     } catch (error) {
       console.error("Login error:", error);
