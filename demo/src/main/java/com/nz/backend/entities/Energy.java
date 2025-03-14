@@ -39,13 +39,18 @@ public class Energy {
         date = LocalDate.now();
     }
 
+    @ManyToOne
+    @JoinColumn(name = "Familyid") 
+    private Family family;
+
     // Constructors
     public Energy() {}
 
-    public Energy(Device device, int energyConsumption, int energyUsage) {
+    public Energy(Device device, int energyConsumption, int energyUsage, Family family) {
         this.device = device;
         this.energyConsumption = energyConsumption;
         this.energyUsage = energyUsage;
+        this.family = family;
     }
 
     // Getters and Setters
@@ -87,5 +92,13 @@ public class Energy {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Family getFamily() { 
+        return family; 
+    }
+
+    public void setFamily(Family family) { 
+        this.family = family; 
     }
 }

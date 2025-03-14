@@ -61,6 +61,7 @@ function UserProfilePage() {
                 )
                 .then((response) => {
                   console.log("Registered successfuly", response);
+                  alert(response.data.data.toString());
                 })
                 .catch((error) => {
                   console.error("Login error:", error);

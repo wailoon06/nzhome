@@ -54,7 +54,8 @@ public class UsersControllers {
     @Value("${jwt.secret.key}")
     private String secretKey;
     
-    private String famPass = "567890";
+    @Value("$(fam.pass)")
+    private String code;
 
     @PostMapping("/registerOwner")
     public ResponseEntity<?> register_owner(@RequestBody RegOwnerDTO regOwnerDTO) {
@@ -64,7 +65,7 @@ public class UsersControllers {
             return ResponseEntity.badRequest().body("All fields are required!");
         }
 
-        if (!regOwnerDTO.getCode().equals(famPass)){
+        if (!regOwnerDTO.getCode().equals(code)){
             return ResponseEntity.badRequest().body("Invalid Activation Code!");
         }
 
@@ -116,7 +117,7 @@ public class UsersControllers {
             return ResponseEntity.badRequest().body("You don't have access!");
         }
 
-        if (regUserDTO.getUsername() == null || regUserDTO.getEmail() == null || regUserDTO.getPassword() == null) {
+        if (regUserDTO.getUsername() == null || regUserDTO.getEmail() == null) {
             return ResponseEntity.badRequest().body("All fields are required!");
         }
 
@@ -134,7 +135,7 @@ public class UsersControllers {
         User newUser = new User(
             regUserDTO.getUsername(),
             regUserDTO.getEmail(),
-            passwordEncoder.encode(regUserDTO.getPassword()),
+            passwordEncoder.encode(regUserDTO.getUsername()),
             Role.User,
             family,
             null     
@@ -144,7 +145,7 @@ public class UsersControllers {
 
         return ResponseEntity.ok("Successfully Registered");
     }
-
+    
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         
