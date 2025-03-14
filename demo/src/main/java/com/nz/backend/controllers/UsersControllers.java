@@ -4,7 +4,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -55,8 +54,7 @@ public class UsersControllers {
     @Value("${jwt.secret.key}")
     private String secretKey;
     
-    @Value("$(fam.pass)")
-    private String famPass;
+    private String famPass = "567890";
 
     @PostMapping("/registerOwner")
     public ResponseEntity<?> register_owner(@RequestBody RegOwnerDTO regOwnerDTO) {

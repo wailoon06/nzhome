@@ -60,16 +60,22 @@ public class Device {
     @JoinColumn(name = "Familyid")
     private Family family;
 
+    @ManyToOne
+    @JoinColumn(name = "roomid")
+    private Room room;
+
     // Constructors
     public Device() {}
 
-    public Device(String deviceName, Brand brand, User createdBy, LocalDateTime warrantyExp, String picture) {
+    public Device(String deviceName, Brand brand, User createdBy, 
+                LocalDateTime warrantyExp, String picture, Family family, Room room) {
         this.deviceName = deviceName;
         this.brand = brand;
         this.createdBy = createdBy;
         this.warrantyExp = warrantyExp;
         this.picture = picture;
-        
+        this.family = family;
+        this.room = room;
     }
 
     // Getters and Setters
@@ -125,13 +131,23 @@ public class Device {
         this.onOff = onOff;
     }
 
-    public String getPicture() { return picture; }
+    public String getPicture() { 
+        return picture; 
+    }
 
-    public void setPicture(String picture) { this.picture = picture; }
+    public void setPicture(String picture) { 
+        this.picture = picture; 
+    }
 
     public Family getFamily(){
         return family;
     }
 
+    public Room getRoom() {
+        return room;
+    }
 
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 }

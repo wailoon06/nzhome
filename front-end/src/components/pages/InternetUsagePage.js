@@ -123,7 +123,7 @@ function InternetUsagePage() {
 
       const interval = setInterval(() => {
         // Generate a random speed between 500 and 7000 MB/s
-        const newSpeed = Math.floor(Math.random() * (700 - 500 + 1)) + 500;
+        const newSpeed = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
         setNetworkSpeed(newSpeed);
       }, 1000); // Update every second
   
@@ -175,7 +175,7 @@ function InternetUsagePage() {
                     {translations.network}
                   </div>
                   <div className="teal-text text-2xl sm:text-3xl lg:text-4xl w-full text-center mb-2">
-                    {networkSpeed} MB/s
+                    {networkSpeed} Mbps
                   </div>
                 </div>
 
@@ -237,7 +237,7 @@ function InternetUsagePage() {
                 <h2 className="text-center text-2xl mb-4">{translations.internetUsageChart}</h2>
                   {/* Title */}
                     <h2 className="text-center text-2xl font-bold mb-4">
-                      Average Internet Usage (MB)
+                      Annual Internet Usage (MB)
                     </h2>
                   {loading ? (
                     <p className="text-center">Loading...</p>

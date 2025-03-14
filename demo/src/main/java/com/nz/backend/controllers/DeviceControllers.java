@@ -165,11 +165,11 @@ public class DeviceControllers {
         }
 
         Device newDevice = new Device(
-            addNewDeviceDTO.getDeviceName(),
-            addNewDeviceDTO.getBrand(),
-            addNewDeviceDTO.getCreatedBy(),
-            addNewDeviceDTO.getWarrantyExp(),
-            addNewDeviceDTO.getPicture()
+            // addNewDeviceDTO.getDeviceName(),
+            // addNewDeviceDTO.getBrand(),
+            // addNewDeviceDTO.getCreatedBy(),
+            // addNewDeviceDTO.getWarrantyExp(),
+            // addNewDeviceDTO.getPicture()
         );
 
         deviceRepo.save(newDevice);

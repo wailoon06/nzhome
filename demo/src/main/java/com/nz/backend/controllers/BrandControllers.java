@@ -55,9 +55,7 @@ public class BrandControllers {
 
         List<Map<String, Object>> brandList = brands.stream().map(brand -> {
             Map<String, Object> response = new HashMap<>();
-            response.put("brandname", brand.getBrandName());
-            response.put("picture", brand.getPicture());
-            response.put("devicetype", brand.getDeviceType());
+            response.put("brandName", brand.getBrandName());
             return response;
         }).toList();
 

@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -40,18 +39,17 @@ public class Room {
     @JoinColumn(name = "familyid")
     private Family family;
 
-    @ManyToOne
-    @JoinColumn(name = "deviceid")
-    private Device devices;
+    @Column
+    private String picture;
 
     // Constructors
     public Room() {}
 
-    public Room(String roomName, User createdBy, Family family, Device devices) {
+    public Room(String roomName, User createdBy, Family family, String picture) {
         this.roomName = roomName;
         this.createdBy = createdBy;
         this.family = family;
-        this.devices = devices;
+        this.picture = picture;
     }
 
     // Getters and Setters
@@ -91,11 +89,8 @@ public class Room {
         this.family = family;
     }
 
-    public Device getDevices() {
-        return devices;
-    }
+    public String getPicture() { return picture; }
 
-    public void setDevices(Device devices) {
-        this.devices = devices;
-    }
+    public void setPicture(String picture) { this.picture = picture; }
+
 }

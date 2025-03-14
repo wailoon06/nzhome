@@ -1,12 +1,7 @@
 package com.nz.backend.entities;
 
-import com.nz.backend.enums.DeviceType;
-import com.nz.backend.enums.Role;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,21 +19,12 @@ public class Brand {
 
     @Column(nullable = false)
     private String brandname;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "devicetype", nullable = false)
-    private DeviceType devicetype;
     
-    @Column(nullable = false)
-    private String picture;
-
     // Constructors
     public Brand() {}
 
-    public Brand(String brandname, String picture, DeviceType devicetype) {
+    public Brand(String brandname) {
         this.brandname = brandname;
-        this.devicetype = devicetype;
-        this.picture = picture;
     }
 
     // Getters and Setters
@@ -57,16 +43,4 @@ public class Brand {
     public void setBrandName(String brandname) {
         this.brandname = brandname;
     }
-
-    public DeviceType getDeviceType() {
-        return devicetype;
-    }
-
-    public void setDeviceType(DeviceType devicetype) {
-        this.devicetype = devicetype;
-    }
-
-    public String getPicture() { return picture; }
-
-    public void setPicture(String picture) { this.picture = picture; }
 }
