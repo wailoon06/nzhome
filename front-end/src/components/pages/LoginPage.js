@@ -44,6 +44,7 @@ function LoginPage() {
         navigate("/");
         localStorage.setItem("started", "true");
         window.location.reload();
+      }, 2000); // Added missing closing bracket here
 
     } catch (error) {
       console.error("Login error:", error);
@@ -60,7 +61,7 @@ function LoginPage() {
     }
     
     setLoading(false);
-  }
+  };
 
   return (
     <div className="baseBG border border-black px-4 pt-3 grid grid-rows-[5rem_1fr] flex-1 h-screen">
@@ -182,12 +183,12 @@ export default LoginPage;
   //   }
   // };
 
-  {/* <div className="mb-4">
-              <input
-                type="text"
-                name="username"
-                placeholder="Username"
-                required
-                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-              />
-            </div> */}
+  // {/* <div className="mb-4">
+  //             <input
+  //               type="text"
+  //               name="username"
+  //               placeholder="Username"
+  //               required
+  //               className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+  //             />
+  //           </div> */}
