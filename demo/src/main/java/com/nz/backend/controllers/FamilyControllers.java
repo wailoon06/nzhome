@@ -24,7 +24,7 @@ import com.nz.backend.dto.ChangeRoleDTO;
 import com.nz.backend.dto.EmailDTO;
 import com.nz.backend.entities.User;
 import com.nz.backend.enums.Role;
-import com.nz.backend.repo.UsersRepository;
+import com.nz.backend.repo.UserRepo;
 import com.nz.backend.services.JwtService;
 
 @RestController
@@ -33,7 +33,7 @@ import com.nz.backend.services.JwtService;
 public class FamilyControllers {
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepo usersRepository;
 
     @Autowired
     private JwtService jwtService;

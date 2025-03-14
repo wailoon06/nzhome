@@ -126,9 +126,37 @@ function UserProfilePage() {
     fetchUserDetails();
   }, []);
 
-  // Display user details
-  if (loading) return <div>Loading user details...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return (<div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75">
+                        <div className="flex flex-col items-center">
+                          <svg
+                            className="animate-spin h-10 w-10 text-blue-600 mb-2"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 0116 0h-2a6 6 0 00-12 0H4z"
+                            ></path>
+                          </svg>
+                          <p className="text-gray-700 text-lg font-semibold">
+                            Loading user details...
+                          </p>
+                        </div>
+                      </div>)
+
+  if (error) return (<div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text-lg font-semibold px-6 py-3 rounded-lg shadow-lg animate-bounce">
+                      <span className="mr-2">⚠️</span> Error: {error}
+                    </div>)
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">

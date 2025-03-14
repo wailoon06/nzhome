@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.nz.backend.entities.User;
 
-public interface UsersRepository extends JpaRepository<User, Long> {
+public interface UserRepo extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
 

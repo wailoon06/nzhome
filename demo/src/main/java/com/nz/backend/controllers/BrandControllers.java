@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nz.backend.entities.Brand;
 import com.nz.backend.entities.User;
 import com.nz.backend.repo.BrandRepo;
-import com.nz.backend.repo.UsersRepository;
+import com.nz.backend.repo.UserRepo;
 import com.nz.backend.services.JwtService;
 
 @RestController
@@ -29,7 +29,7 @@ public class BrandControllers {
     private JwtService jwtService;
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepo usersRepository;
 
     @Autowired
     private BrandRepo brandRepo;

@@ -11,6 +11,8 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [familyName, sethandlefamilyNameChange] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   
   const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
@@ -27,34 +29,34 @@ function RegisterPage() {
 
 
   // Handle submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setError("");
 
-    // Post details to register
-    axios
-      .post("http://localhost:8080/api/registerOwner", { username, email, password, familyName, code})
-      .then((response) => {
-        console.log(response.data);
-        alert(response.data);
+    try {
+      const response = await axios.post("http://localhost:8080/api/registerOwner", { username, email, password, familyName, code})
+      console.log(response.data);
+      setMessage(response.data.message || "Registration Successful! Redirecting...");
 
-        // Navigate to login page after succesful registration
+      setTimeout(() => {
         navigate("/login");
+      }, 2000);
 
-      })
-      .catch((error) => {
-        console.error("Registration error:", error);
-        if (error.response) {
-          console.log("Response data:", error.response.data);
-          console.log("Response status:", error.response.status);
-          alert(error.response.data.toString());
-        } else {
-          alert("Error registering user: " + error.message);
-        }
+    } catch (error) {
+      console.error("Registration error:", error);
 
-        // Reload when there is error
+      if (error.response) {
+        setError(error.response.data.toString() || "Registration failed. Please try again.");
+      } else {
+        setError("Error registering user: " + error.message);
+      }
+      
+      setTimeout(() => {
         window.location.reload();
-
-      });
+      }, 1000);
+  
+    }
   };
 
   return (
@@ -67,6 +69,20 @@ function RegisterPage() {
           </h1>
         </div>
       </div>
+
+      {/* Success Message */}
+      {message && (
+        <div className="absolute top-24 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-sm px-3 py-2 rounded-md">
+          {message}
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="absolute top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-sm px-3 py-2 rounded-md">
+          {error}
+        </div>
+      )}
 
       <div className="baseGreen rounded-lg w-[30%] mt-10 mb-12 mx-auto">
         <div className="text-center">

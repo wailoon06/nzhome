@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.nz.backend.entities.Brand;
 
 public interface BrandRepo extends JpaRepository<Brand, Long> {
-    
+    Brand findByBrandname(String brandname);
 }

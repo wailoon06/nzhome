@@ -1,5 +1,6 @@
 package com.nz.backend.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.nz.backend.enums.OnOff;
@@ -35,19 +36,19 @@ public class Device {
     private Brand brand;
 
     @OneToOne
-    @JoinColumn(name = "username")
+    @JoinColumn(name = "Userid")
     private User createdBy;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdTime;
+    private LocalDate createdTime;
 
     @PrePersist
     protected void onCreate() {
-        createdTime = LocalDateTime.now();
+        createdTime = LocalDate.now();
     } 
 
     @Column(nullable = false)
-    private LocalDateTime warrantyExp;
+    private LocalDate warrantyExp;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "onOff", nullable = false)
@@ -68,7 +69,7 @@ public class Device {
     public Device() {}
 
     public Device(String deviceName, Brand brand, User createdBy, 
-                LocalDateTime warrantyExp, String picture, Family family, Room room) {
+                LocalDate warrantyExp, String picture, Family family, Room room) {
         this.deviceName = deviceName;
         this.brand = brand;
         this.createdBy = createdBy;
@@ -111,15 +112,15 @@ public class Device {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedTime() {
+    public LocalDate getCreatedTime() {
         return createdTime;
     }
 
-    public LocalDateTime getWarrantyExp() {
+    public LocalDate getWarrantyExp() {
         return warrantyExp;
     }
 
-    public void setWarrantyExp(LocalDateTime warrantyExp) {
+    public void setWarrantyExp(LocalDate warrantyExp) {
         this.warrantyExp = warrantyExp;
     }
 

@@ -43,6 +43,7 @@ public class Energy {
     @JoinColumn(name = "Familyid") 
     private Family family;
 
+
     // Constructors
     public Energy() {}
 

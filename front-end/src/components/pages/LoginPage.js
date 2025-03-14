@@ -7,13 +7,13 @@ function LoginPage() {
   const navigate = useNavigate();
   const emailRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+  const [redirectMessage, setRedirectMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); 
+
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
-
 
   // Language
   const [language, setLanguage] = useState(() => {
@@ -21,45 +21,44 @@ function LoginPage() {
   });
   const translations = translationsMap[language] || translationsMap["en"];
 
-
   // Handle submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    // Post email and password from user for verification
-    axios
-      .post("http://localhost:8080/api/login", { email, password })
-      .then((response) => {
-        console.log(response.data);
-        alert("Login Sucessfully!");
+    setErrorMessage("");
 
-        // Store token in local storage
-        localStorage.setItem("token", response.data.token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+    try {
+      // Post email and password from user for verification
+      const response = await axios.post("http://localhost:8080/api/login", { email, password })
 
-        // Navigate to landing page
+      // Message for redirecting
+      console.log(response.data);
+      setRedirectMessage(response.data.message || "Login Successful! Redirecting...");
+
+      // Store token
+      localStorage.setItem("token", response.data.token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+      // Start redirect animation, then navigate to login page
+      setTimeout(() => {
         navigate("/");
-        localStorage.setItem("started", "false");
+      }, 2000); 
+
+    } catch (error) {
+      console.error("Login error:", error);
+
+      if (error.response) {
+        setErrorMessage(error.response.data || "Invalid credentials. Please try again.");
+      } else {
+        setErrorMessage("Error logging in: " + error.message);
+      }
+
+      setTimeout(() => {
         window.location.reload();
-
-      })
-      .catch((error) => {
-        console.error("Login error:", error);
-        if (error.response) {
-          console.log("Response data:", error.response.data);
-          console.log("Response status:", error.response.status);
-          alert(error.response.data.toString());
-        } else {
-          alert("Error logging in: " + error.message);
-        }
-
-        // Reload when there is error
-        window.location.reload();
-        
-      });
-
-      setLoading(false);
+      }, 1000); 
+    }
+    
+    setLoading(false);
   }
 
   return (
@@ -73,6 +72,20 @@ function LoginPage() {
         </div>
       </div>
 
+      {/* Show redirect message with animation */}
+      {redirectMessage && (
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out">
+          {redirectMessage}
+        </div>
+      )}
+
+      {/* Error Message Display */}
+      {errorMessage && (
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text- p-2 rounded-md shadow-md mt-2">
+          {errorMessage}
+        </div>
+      )}
+          
       <div className="baseGreen rounded-lg w-[30%] mt-10 mb-12 mx-auto">
         <div className="text-center">
           <img
@@ -122,7 +135,7 @@ function LoginPage() {
               // onClick={handleButtonClick}
               disabled={loading}
             >
-              {translations.sign_in}
+              {loading ? "Loading..." : translations.sign_in}
             </button>
 
             <div className="flex items-center my-4">

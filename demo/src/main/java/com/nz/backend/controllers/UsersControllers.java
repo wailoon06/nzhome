@@ -29,7 +29,7 @@ import com.nz.backend.entities.Family;
 import com.nz.backend.entities.User;
 import com.nz.backend.enums.Role;
 import com.nz.backend.repo.FamilyRepo;
-import com.nz.backend.repo.UsersRepository;
+import com.nz.backend.repo.UserRepo;
 import com.nz.backend.services.JwtService;
 
 import io.jsonwebtoken.io.IOException;
@@ -40,7 +40,7 @@ import io.jsonwebtoken.io.IOException;
 public class UsersControllers {
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepo usersRepository;
     
     @Autowired
     private FamilyRepo familyRepo;
@@ -54,8 +54,8 @@ public class UsersControllers {
     @Value("${jwt.secret.key}")
     private String secretKey;
     
-    @Value("$(fam.pass)")
-    private String code;
+    // @Value("$(fam.pass)")
+    private String code = "567890";
 
     @PostMapping("/registerOwner")
     public ResponseEntity<?> register_owner(@RequestBody RegOwnerDTO regOwnerDTO) {

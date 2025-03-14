@@ -1,5 +1,6 @@
 package com.nz.backend.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +24,19 @@ import com.nz.backend.dto.DeviceNameDTO;
 import com.nz.backend.dto.DeviceOnOffDTO;
 import com.nz.backend.dto.EmailDTO;
 import com.nz.backend.dto.UpdateDeviceDTO;
+import com.nz.backend.entities.Brand;
 import com.nz.backend.entities.Device;
+import com.nz.backend.entities.Energy;
 import com.nz.backend.entities.Family;
+import com.nz.backend.entities.Room;
 import com.nz.backend.entities.User;
 import com.nz.backend.enums.OnOff;
+import com.nz.backend.repo.BrandRepo;
 import com.nz.backend.repo.DeviceRepo;
-import com.nz.backend.repo.UsersRepository;
+import com.nz.backend.repo.EnergyRepo;
+import com.nz.backend.repo.FamilyRepo;
+import com.nz.backend.repo.RoomRepo;
+import com.nz.backend.repo.UserRepo;
 import com.nz.backend.services.JwtService;
 
 
@@ -38,17 +46,28 @@ import com.nz.backend.services.JwtService;
 public class DeviceControllers {
 
     @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
     private DeviceRepo deviceRepo;
 
+    @Autowired
+    private EnergyRepo energyRepo;
+
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private BrandRepo brandRepo;
+
+    @Autowired
+    private FamilyRepo familyRepo;
+
+    @Autowired
+    private RoomRepo roomRepo;
+    
     @Autowired
     private JwtService jwtService;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
-
 
     @GetMapping("/getDevice")
     public ResponseEntity<?> getDevicesByRoom(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO) {
@@ -58,18 +77,14 @@ public class DeviceControllers {
 
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
-        User owner = usersRepository.findByEmail(email);
+        User owner = userRepo.findByEmail(email);
 
         String targetEmail = emailDTO.getEmail();
-        User matchUser = usersRepository.findByEmail(targetEmail);
+        User matchUser = userRepo.findByEmail(targetEmail);
 
         if (!owner.getFamily().equals(matchUser.getFamily())) {
             return ResponseEntity.badRequest().body("You don't have access!");
         }
-        if (!owner.getFamily().equals(matchUser.getFamily())) {
-            return ResponseEntity.badRequest().body("You don't have access!");
-        }
-
         else {
             //continue later
         }
@@ -78,9 +93,11 @@ public class DeviceControllers {
         return null;
     }
 
-    @GetMapping("/getDeviceDetails") //done
+    // DONE
+    @GetMapping("/getDeviceDetails")
     public ResponseEntity<?> getDevicesDetails(@RequestHeader("Authorization") String token, @RequestBody DeviceNameDTO deviceNameDTO) {
 
+        // Token verification
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }
@@ -88,88 +105,115 @@ public class DeviceControllers {
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
         
-        User owner = usersRepository.findByEmail(email); 
-        if (owner == null) {
-            return ResponseEntity.badRequest().body("User not found");
+        // Find the user object
+        User user = userRepo.findByEmail(email); 
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
         }
 
-        Device matchDevice = deviceRepo.findByDeviceName(deviceNameDTO.getDeviceName());
+        /*Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
+        Device matchDevice = deviceRepo.findByDeviceNameAndFamily(deviceNameDTO.getDeviceName(), user.getFamily());
+        if (matchDevice == null) {
+            return ResponseEntity.badRequest().body("Device not found in the family!");
+        }
 
+        /* Return the energy statistics, with the matched device's deviceid */
+        List<Energy> energyList = energyRepo.findByDeviceDeviceid(matchDevice.getDeviceid());
+        if (energyList.isEmpty()) {
+            return ResponseEntity.badRequest().body("No energy data found for this device.");
+        }
+
+        List<Map<String, Object>> energyDataList = new ArrayList<>();
+        for (Energy energy : energyList) {
+            Map<String, Object> energyData = new HashMap<>();
+            energyData.put("energyConsumption", energy.getEnergyConsumption());
+            energyData.put("energyUsage", energy.getEnergyUsage());
+            energyData.put("date", energy.getDate());
+            energyDataList.add(energyData);
+        }
+        
         Map<String, Object> response = new HashMap<>();
-        response.put("device_name", matchDevice.getDeviceName());
-        response.put("created_by", matchDevice.getCreatedBy());
-        response.put("created_time", matchDevice.getCreatedTime());
-        response.put("warranty_expiration", matchDevice.getWarrantyExp());
+        response.put("deviceName", matchDevice.getDeviceName());
+        response.put("picture", matchDevice.getPicture());
+        response.put("onOff", matchDevice.getOnOff());
+        response.put("energyData", energyDataList);
       
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/OnOff") //done
-    public ResponseEntity<?> turnOnOff (@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody DeviceNameDTO devicenameDTO, @RequestBody DeviceOnOffDTO deviceonoffDTO){
+    // DONE
+    @PutMapping("/OnOff") 
+    public ResponseEntity<?> turnOnOff (@RequestHeader("Authorization") String token, @RequestBody DeviceOnOffDTO deviceOnOffDTO){
+        
+        // Token Verification
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }
 
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
-        User owner = usersRepository.findByEmail(email);
 
-        String targetEmail = emailDTO.getEmail();
-        User matchUser = usersRepository.findByEmail(targetEmail);
-
-        Device deviceStatus = deviceRepo.findByDeviceName(devicenameDTO.getDeviceName());
-
-        if (owner == null) {
-            return ResponseEntity.badRequest().body("User not found");
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
         }
 
-        if (!owner.getFamily().equals(matchUser.getFamily())) {
-            return ResponseEntity.badRequest().body("You don't have access!");
+        /* Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
+        Device matchDevice = deviceRepo.findByDeviceNameAndFamily(deviceOnOffDTO.getDeviceName(), user.getFamily());
+        if (matchDevice == null) {
+            return ResponseEntity.badRequest().body("Device not found in the family!");
+        }
+
+        // Get the status (on/off) of the selected device
+        String deviceStatus = matchDevice.getOnOff().name();
+
+        if (deviceStatus == "On") {
+            matchDevice.setOnOff(OnOff.Off);
+        } else {
+            matchDevice.setOnOff(OnOff.On);
         }
         
-        if(deviceStatus.getOnOff() == OnOff.On){
-            deviceStatus.setOnOff(OnOff.Off);
-        }
+        deviceRepo.save(matchDevice);
 
-        else {
-            deviceStatus.setOnOff(OnOff.On);
-        }
-
-        deviceRepo.save(deviceStatus);
-        
-        return ResponseEntity.ok("Status Changed.");
+        return ResponseEntity.ok("Status Changed!");
     }
 
-    @PostMapping("/addDevice") //done
-    public ResponseEntity<?> addNewDevices(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO, @RequestBody AddNewDeviceDTO addNewDeviceDTO){
+    // DONE
+    @PostMapping("/addDevice") 
+    public ResponseEntity<?> addNewDevices(@RequestHeader("Authorization") String token, @RequestBody AddNewDeviceDTO addNewDeviceDTO){
         
+        // Token Verification
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }
 
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
-        User owner = usersRepository.findByEmail(email);
 
-        String targetEmail = emailDTO.getEmail();
-        User matchUser = usersRepository.findByEmail(targetEmail);
-
-        
-        if (!owner.getFamily().equals(matchUser.getFamily())) {
-            return ResponseEntity.badRequest().body("You don't have access!");
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
         }
 
-        if(addNewDeviceDTO.getDeviceName() == null || addNewDeviceDTO.getBrand() == null 
-            || addNewDeviceDTO.getCreatedBy() == null || addNewDeviceDTO.getWarrantyExp() == null){
-            return ResponseEntity.badRequest().body("All fields are required!");
+        // Access denied for normal user
+        if (user.getRole().name().equals("User")) {
+            return ResponseEntity.badRequest().body("Access Denied!");
         }
+
+        Brand brand = brandRepo.findByBrandname(addNewDeviceDTO.getBrandName());
+        Room room = roomRepo.findByRoomName(addNewDeviceDTO.getRoomName());
+        Family family = user.getFamily();
 
         Device newDevice = new Device(
-            // addNewDeviceDTO.getDeviceName(),
-            // addNewDeviceDTO.getBrand(),
-            // addNewDeviceDTO.getCreatedBy(),
-            // addNewDeviceDTO.getWarrantyExp(),
-            // addNewDeviceDTO.getPicture()
+            addNewDeviceDTO.getDeviceName(),
+            brand,
+            user,
+            null,
+            addNewDeviceDTO.getPicture(),
+            family,
+            room            
         );
 
         deviceRepo.save(newDevice);
@@ -178,102 +222,117 @@ public class DeviceControllers {
 
     }
 
-    @PostMapping("/setAction")
-    public ResponseEntity<?> setAction(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO){
-        return null;
-        //what should set action do
-    }
-
-    @GetMapping("/getAllDevice") //done
+    // DONE
+    @GetMapping("/getAllDevice") 
     public ResponseEntity<?> getAllDevice(@RequestHeader("Authorization") String token){
         
+        // Token Verification
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }
 
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
-        User owner = usersRepository.findByEmail(email);
 
-        Family userFamily = owner.getFamily();
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
+        }
 
-        if (userFamily == null) {
+        // Get the user's family
+        Long userFamilyID = user.getFamily().getFamilyid();
+        if (userFamilyID == null) {
         return ResponseEntity.badRequest().body("User does not belong to any family!");
         }
 
-        List<Device> devices = deviceRepo.findByFamilyFamilyName(userFamily.getFamilyName());
+        List<Device> devices = deviceRepo.findByFamilyFamilyid(userFamilyID);
 
         return ResponseEntity.ok(devices);
-        
     }
 
-    @DeleteMapping("/deleteDevice") //done
-    public ResponseEntity<?> deleteDevice(@RequestHeader("Authorization") String token, @RequestBody DeviceNameDTO devicenameDTO){
+    // DONE
+    @DeleteMapping("/deleteDevice") 
+    public ResponseEntity<?> deleteDevice(@RequestHeader("Authorization") String token, @RequestBody DeviceNameDTO deviceNameDTO){
+        
+        // Token Verification
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }
 
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
-        User owner = usersRepository.findByEmail(email);
 
-        Device dltDevice = deviceRepo.findByDeviceName(devicenameDTO.getDeviceName());
-
-        if(owner.getEmail() == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found!");
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
         }
 
-        if(dltDevice == null){
-            return ResponseEntity.badRequest().body("Device not available!");
+        if (user.getRole().name().equals("User")) {
+            return ResponseEntity.badRequest().body("Access Denied!");
         }
 
-        deviceRepo.delete(dltDevice);
+        /* Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
+        Device matchDevice = deviceRepo.findByDeviceNameAndFamily(deviceNameDTO.getDeviceName(), user.getFamily());
+        if (matchDevice == null) {
+            return ResponseEntity.badRequest().body("Device not found in the family!");
+        }
+
+        deviceRepo.delete(matchDevice);
 
         return ResponseEntity.ok("Device deleted successfully!");
     }
 
-    @PutMapping("updateDevice") //done
-    public ResponseEntity<?> updateDevice(@RequestHeader("Authorization") String token, @RequestBody DeviceNameDTO devicenameDTO, @RequestBody UpdateDeviceDTO updatedeviceDTO){
+    // DONE
+    @PutMapping("updateDevice")
+    public ResponseEntity<?> updateDevice(@RequestHeader("Authorization") String token, @RequestBody UpdateDeviceDTO updateDeviceDTO){
+        
+        // Token Verification
         if (token == null){
             return ResponseEntity.badRequest().body("Invalid token!");
         }
 
         String jwtToken = token.substring(7);
         String email = jwtService.extractEmail(jwtToken);
-        User owner = usersRepository.findByEmail(email);
 
-        Device device = deviceRepo.findByDeviceName(devicenameDTO.getDeviceName());
-
-
-        if (owner == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found!");
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
         }
 
-        if (device.getDeviceName() == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Device not found!");
+        /* Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
+        Device matchDevice = deviceRepo.findByDeviceNameAndFamily(updateDeviceDTO.getDeviceName(), user.getFamily());
+        if (matchDevice == null) {
+            return ResponseEntity.badRequest().body("Device not found in the family!");
         }
 
-        if (!device.getFamily().equals(owner.getFamily())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission!");
+        if (user.getRole().name().equals("User")) {
+            return ResponseEntity.badRequest().body("Access Denied!");
         }
 
-        else {
-            if(updatedeviceDTO.getDeviceName() != null){
-                device.setDeviceName(updatedeviceDTO.getDeviceName());
-            }
-
-            if(updatedeviceDTO.getOnOff() != null){
-                device.setOnOff(updatedeviceDTO.getOnOff());
-            }
-
-            if(updatedeviceDTO.getPicture() != null){
-                device.setPicture(updatedeviceDTO.getPicture());
-            }
+        if (updateDeviceDTO.getDeviceName() != null) {
+            matchDevice.setDeviceName(updateDeviceDTO.getDeviceName());
         }
 
-        deviceRepo.save(device);
+        if (updateDeviceDTO.getOnOff() != null) {
+            matchDevice.setOnOff(updateDeviceDTO.getOnOff());
+        }
+
+        if (updateDeviceDTO.getPicture() != null) {
+            matchDevice.setPicture(updateDeviceDTO.getPicture());
+        }
+
+        deviceRepo.save(matchDevice);
 
         return ResponseEntity.ok("Device updated successfully!");
+    }
+
+    @PostMapping("/setAction")
+    public ResponseEntity<?> setAction(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO){
+        return null;
+        //what should set action do
     }
 }
 
