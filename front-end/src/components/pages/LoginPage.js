@@ -40,7 +40,7 @@ function LoginPage() {
 
         // Navigate to landing page
         navigate("/");
-        localStorage.setItem("started", "false");
+        localStorage.setItem("started", "true");
         window.location.reload();
 
       })
