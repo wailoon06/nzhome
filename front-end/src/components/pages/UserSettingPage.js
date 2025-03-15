@@ -11,33 +11,50 @@ function UserSettingPage() {
   };
   const navigate = useNavigate();
 
-
   const handleNavigation = (path) => {
     navigate(path);
   };
 
-
-   //Language
+  //Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
   const translations = translationsMap[language] || translationsMap["en"];
 
+  const [selectedLang, setSelectedLang] = useState("");
+  const handleLanguageChange = (event) => {
+    const lang = event.target.value;
+    setSelectedLang(lang);
+    setLanguage(lang);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
 
   // Handle log out
   const logOut = async () => {
-    localStorage.removeItem('token');
-    alert("Logout Successfully!");
-    navigate('/');
-    localStorage.setItem("started", "false");
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      localStorage.removeItem("token");
+      alert("Logout Successfully!");
+      localStorage.setItem("started", "false");
+    } else {
+      localStorage.setItem("started", "false"); // Save flag
+    }
     window.location.reload();
-  }
+  };
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
         </div>
 
         {/* Main Content */}
@@ -46,7 +63,11 @@ function UserSettingPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* Main Content */}
             <div className="flex flex-col flex-1">
@@ -61,13 +82,38 @@ function UserSettingPage() {
               </div>
 
               {/* Main Content Section */}
+              <div className="flex flex-col flex-1">
+                {/* Language Dropdown */}
+                <div className="mt-4 p-4 border border-gray-300 rounded-lg bg-white">
+                  <label htmlFor="language" className="block font-bold mb-2">
+                    {translations.switchLanguage}:
+                  </label>
+                  <select
+                    id="language"
+                    value={selectedLang}
+                    onChange={handleLanguageChange}
+                    className="w-full p-2 border rounded-lg"
+                  >
+                    <option value="" disabled>
+                      {translations.selectLanguage}{" "}
+                      {/* Add this key in your translations */}
+                    </option>
+                    <option value="zh">{translations.zh}</option>
+                    <option value="ja">{translations.ja}</option>
+                    <option value="en">{translations.en}</option>
+                    <option value="ko">{translations.ko}</option>
+                    <option value="ms">{translations.ms}</option>
+                  </select>
+                </div>
+              </div>
+
               <div className="flex flex-col items-center justify-center">
-                <a
+                {/* <a
                   href="/profile/languages"
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
                   <span className="font-bold">{translations.languages}</span>
-                </a>
+                </a> */}
 
                 <div
                   onClick={() => handleNavigation("#")}

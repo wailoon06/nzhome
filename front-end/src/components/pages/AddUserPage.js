@@ -170,23 +170,7 @@ function UserProfilePage() {
                           setRows(newRows);
                         }}
                       />
-                      <input
-                        className="text-center rounded-lg border border-gray-500 bg-white p-4 w-full max-w-[400px]"
-                        type="password"
-                        placeholder={translations.enterPasswordForRow.replace(
-                          "{index}",
-                          index + 1
-                        )}
-                        value={row.password}
-                        onChange={(e) => {
-                          const newRows = [...rows];
-                          newRows[index] = {
-                            ...newRows[index],
-                            password: e.target.value,
-                          };
-                          setRows(newRows);
-                        }}
-                      />
+             
                     </div>
                   ))}
 
@@ -201,6 +185,7 @@ function UserProfilePage() {
                 <div className="flex justify-center mt-4">
                   <button
                     type="submit"
+                    onClick={() => navigate("/users")}
                     className="bg-blue-500 text-white p-4 rounded-lg"
                   >
                     Submit
