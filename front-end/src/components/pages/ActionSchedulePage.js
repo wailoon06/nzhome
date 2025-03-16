@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
-import MainContentHeader from "./MainContentHeader"; 
+import MainContentHeader from "./MainContentHeader";
 
 function ActionSchedulePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -14,6 +14,11 @@ function ActionSchedulePage() {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [temperature, setTemperature] = useState(""); // Initialize temperature state
   const [activeButton, setActiveButton] = useState(null);
+  const [volume, setVolume] = useState(50); // Initialize volume at 50%
+
+  const handleVolumeChange = (e) => {
+    setVolume(e.target.value);
+  };
 
   const toggleSwitch = () => {
     setIsSwitchOn((prevState) => !prevState);
@@ -56,7 +61,11 @@ function ActionSchedulePage() {
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         {/* Sidebar Component */}
         <div className="relative flex">
-        <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
         </div>
         {/* Main Content */}
         <div
@@ -64,7 +73,11 @@ function ActionSchedulePage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
             <div className="flex flex-col flex-1">
               <div className="flex flex-col flex-1 gap-4">
                 <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
@@ -84,28 +97,52 @@ function ActionSchedulePage() {
                     {name} ({type})
                   </h1>
 
-                  <div className="border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-between">
-                    <span className="text-lg font-medium text-gray-700">
-                      {translations.temperature}
-                    </span>
+                  {!["TV", "Light", "vacuum", "Speaker"].includes(type) && (
+                    <div className="border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-between">
+                      <span className="text-lg font-medium text-gray-700">
+                        {translations.temperature}
+                      </span>
 
-                    <select
-                      className="border border-gray-300 rounded-lg p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      value={temperature}
-                      onChange={handleTemperatureChange}
-                    >
-                      <option value="" disabled>
-                        {translations.select}
-                      </option>
-                      {Array.from({ length: 100 }, (_, i) => i + 1).map(
-                        (temp) => (
-                          <option key={temp} value={temp}>
-                            {temp}°C
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
+                      <select
+                        className="border border-gray-300 rounded-lg p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={temperature}
+                        onChange={handleTemperatureChange}
+                      >
+                        <option value="" disabled>
+                          {translations.select}
+                        </option>
+                        {Array.from({ length: 100 }, (_, i) => i + 1).map(
+                          (temp) => (
+                            <option key={temp} value={temp}>
+                              {temp}°C
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </div>
+                  )}
+
+                  {["TV", "Speaker"].includes(type) && (
+                    <div className="border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-center">
+                      <div className="volume-adjuster">
+                        <label
+                          htmlFor="volume"
+                          className="block text-lg font-medium"
+                        >
+                          Volume: {volume}%
+                        </label>
+                        <input
+                          id="volume"
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={volume}
+                          onChange={handleVolumeChange}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-6 p-5">
                     <div
