@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import translationsMap from "../components/locales/translationsMap";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Devices() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -16,26 +18,63 @@ function Devices() {
     "LG Speaker": false,
     "Nest Thermostat": false,
   });
+  const navigate = useNavigate();
+  const [deviceDetails, setDeviceDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // const devices = [
+  //   { img: "/image/samsung.jpeg", name: "Samsung TV", type: "TV" },
+  //   { img: "/image/light.jpeg", name: "Philips Hue", type: "Light" },
+  //   { img: "/image/speaker.jpeg", name: "LG Speaker", type: "Speaker" },
+  //   { img: "/image/thermostats.jpeg", name: "Nest Thermostat", type: "Thermostat" },
+  //   { img: "/image/xiaomi.jpeg", name: "Vacuum", type: "Vacuum" },
+
+  // ];
 
   const previousStateRef = useRef(devicesState);
 
-  const devices = [
-    { img: "/image/samsung.jpeg", name: "Samsung TV", type: "TV" },
-    { img: "/image/light.jpeg", name: "Philips Hue", type: "Light" },
-    { img: "/image/speaker.jpeg", name: "LG Speaker", type: "Speaker" },
-    { img: "/image/thermostats.jpeg", name: "Nest Thermostat", type: "Thermostat" },
-    { img: "/image/xiaomi.jpeg", name: "Vacuum", type: "Vacuum" },
-  
-  ];
+  // Get device
+  const fetchDeviceDetails = async () => {
+    setLoading(true);
+    setError(null);
 
-  const filteredDevices = devices.filter((device) => {
-    const matchesSearch = device.name
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/getAllDevice",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setDeviceDetails(response.data);
+    } catch (err) {
+      if (err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDeviceDetails();
+  }, [navigate]);
+
+  const filteredDevices = deviceDetails.filter((device) => {
+    const matchesSearch = device.deviceName
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const matchesFilter =
       filter === "all" ||
-      (filter === "active" && devicesState[device.name]) ||
-      (filter === "inactive" && !devicesState[device.name]);
+      (filter === "active" && device.onOff === "On") ||
+      (filter === "inactive" && device.onOff === "Off");
 
     return matchesSearch && matchesFilter;
   });
@@ -57,19 +96,96 @@ function Devices() {
   const totalPages = Math.ceil(filteredDevices.length / 3);
   const currentPage = Math.floor(currentIndex / 3);
 
-  const handleSwitchToggle = (deviceName) => {
-    setDevicesState((prevState) => ({
-      ...prevState,
-      [deviceName]: !prevState[deviceName],
-    }));
+  // const handleSwitchToggle = (deviceName) => {
+  //   setDevicesState((prevState) => ({
+  //     ...prevState,
+  //     [deviceName]: !prevState[deviceName],
+  //   }));
+  // };
+  const handleSwitchToggle = async (deviceName) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        "http://localhost:8080/api/OnOff",
+        { deviceName: deviceName },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      // Refresh device list after toggling
+      fetchDeviceDetails();
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      } else {
+        console.error("Error toggling device:", err);
+        alert("Failed to toggle device");
+      }
+    }
   };
 
-  const handleToggleAll = (state) => {
-    const newDevicesState = {};
-    Object.keys(devicesState).forEach((device) => {
-      newDevicesState[device] = state;
-    });
-    setDevicesState(newDevicesState);
+  // const handleToggleAll = (state) => {
+  //   const newDevicesState = {};
+  //   Object.keys(devicesState).forEach((device) => {
+  //     newDevicesState[device] = state;
+  //   });
+  //   setDevicesState(newDevicesState);
+  // };
+  const handleToggleAll = async (targetState) => {
+    setLoading(true);
+    console.log("Starting toggle all, target state:", targetState);
+    
+    try {
+      const token = localStorage.getItem("token");
+      
+      // Find devices that need to be changed
+      const devicesToToggle = filteredDevices.filter(device => 
+        (targetState && device.onOff === "Off") || 
+        (!targetState && device.onOff === "On")
+      );
+      
+      console.log(`Found ${devicesToToggle.length} devices to toggle`);
+      
+      if (devicesToToggle.length === 0) {
+        console.log("No devices need changing");
+        setLoading(false);
+        return;
+      }
+      
+      // Toggle each device one by one
+      for (const device of devicesToToggle) {
+        console.log(`Toggling device: ${device.deviceName}`);
+        await axios.put(
+          "http://localhost:8080/api/OnOff",
+          { deviceName: device.deviceName },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+      
+      // Refresh device list after toggling all devices
+      await fetchDeviceDetails();
+      
+    } catch (err) {
+      console.error("Error in handleToggleAll:", err);
+      
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      } else {
+        console.error("Error toggling all devices:", err);
+        alert("Failed to toggle all devices");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAnimationEnd = () => {
@@ -90,7 +206,7 @@ function Devices() {
     Object.keys(devicesState).forEach((deviceName) => {
       if (previousStateRef.current[deviceName] !== devicesState[deviceName]) {
         console.log(
-          `${deviceName} turned ${devicesState[deviceName] ? "on" : "off"}`
+          `${deviceName} turned ${devicesState[deviceName] ? "On" : "Off"}`
         );
       }
     });
@@ -117,14 +233,22 @@ function Devices() {
               <button
                 onClick={() => handleToggleAll(true)}
                 className="text-white font-bold"
+                disabled={loading}
               >
-                {translations.turnAllOn}
+                {loading ? 
+                  <span className="flex items-center"><i className="fas fa-spinner fa-spin mr-2"></i>{translations.processing}</span> : 
+                  translations.turnAllOn}
+                {/* {translations.turnAllOn} */}
               </button>
               <button
                 onClick={() => handleToggleAll(false)}
                 className="text-white font-bold"
+                disabled={loading}
               >
-                {translations.turnAllOff}
+                {/* {translations.turnAllOff} */}
+                {loading ? 
+                  <span className="flex items-center"><i className="fas fa-spinner fa-spin mr-2"></i>{translations.processing}</span> : 
+                  translations.turnAllOff}
               </button>
             </div>
           </div>
@@ -161,23 +285,23 @@ function Devices() {
                     className="flex flex-col items-center bg-white p-3 rounded-lg"
                   >
                     <img
-                      src={device.img}
-                      alt={device.name}
+                      src={device.picture}
+                      alt={device.deviceName}
                       className="rounded-lg mb-4"
                       style={{ height: "170px" }}
                       onClick={() => openModal(device)}
                     />
-                    <Link to={`/devices/${device.type}/${device.name}/details`}>
+                    <Link to={`/devices/${device.category.categoryName}/${device.deviceName}/details`}>
                       <div className="teal-text text-sm sm:text-base w-full text-center mb-2">
-                        {device.name}
+                        {device.deviceName}
                       </div>
                     </Link>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         className="sr-only peer"
-                        checked={devicesState[device.name]}
-                        onChange={() => handleSwitchToggle(device.name)}
+                        checked={device.onOff === "On"}
+                        onChange={() => handleSwitchToggle(device.deviceName)}
                       />
                       <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-teal-500 peer-focus:ring-2 peer-focus:ring-teal-300"></div>
                       <span className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full peer-checked:translate-x-5 transition-transform"></span>

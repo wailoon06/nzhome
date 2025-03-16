@@ -32,8 +32,8 @@ public class Device {
     private String deviceName;
 
     @ManyToOne
-    @JoinColumn(name = "BrandID") 
-    private Brand brand;
+    @JoinColumn(name = "categoryid") 
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "Userid")
@@ -68,10 +68,10 @@ public class Device {
     // Constructors
     public Device() {}
 
-    public Device(String deviceName, Brand brand, User createdBy, 
+    public Device(String deviceName, Category category, User createdBy, 
                 LocalDate warrantyExp, OnOff onOff, String picture, Family family, Room room) {
         this.deviceName = deviceName;
-        this.brand = brand;
+        this.category = category;
         this.createdBy = createdBy;
         this.warrantyExp = warrantyExp;
         this.onOff = onOff;
@@ -97,12 +97,12 @@ public class Device {
         this.deviceName = deviceName;
     }
 
-    public Brand getBrand() {
-        return brand;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setBrand(Brand brand) {
-        this.brand = brand;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public User getCreatedBy() {
