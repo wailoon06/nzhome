@@ -8,5 +8,5 @@ import com.nz.backend.entities.Room;
 public interface RoomRepo extends JpaRepository<Room, Long>{
     Room findByRoomName (String roomName);
 
-    Room findByRoomNameAndFamilyName (String roomName, Family familyName);
+    Room findByRoomNameAndFamily (String roomName, Family familyid);
 }

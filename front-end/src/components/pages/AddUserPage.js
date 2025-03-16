@@ -78,7 +78,7 @@ function UserProfilePage() {
       window.location.reload();
 
     } catch (err) {
-      console.error("Error uploading image: ", error);
+      console.error("Error uploading image: ", err);
        if (error.response) {
          if (error.response.status === 401) {
            alert("Session expired. Please log in again.");

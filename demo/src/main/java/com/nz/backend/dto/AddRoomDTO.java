@@ -2,13 +2,11 @@ package com.nz.backend.dto;
 
 public class AddRoomDTO {
     private String roomName;
-    private String image;
 
     public AddRoomDTO(){}
 
-    public AddRoomDTO(String roomName, String image){
+    public AddRoomDTO(String roomName){
         this.roomName = roomName;
-        this.image = image;
     }
 
     public String getRoomName(){
@@ -17,14 +15,6 @@ public class AddRoomDTO {
 
     public void setRoomName(String roomName){
         this.roomName = roomName;
-    }
-
-    public String getImage(){
-        return image;
-    }
-
-    public void setImage(String image){
-        this.image = image;
     }
 
 }

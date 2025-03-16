@@ -35,7 +35,7 @@ public class Device {
     @JoinColumn(name = "BrandID") 
     private Brand brand;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "Userid")
     private User createdBy;
 
@@ -69,11 +69,12 @@ public class Device {
     public Device() {}
 
     public Device(String deviceName, Brand brand, User createdBy, 
-                LocalDate warrantyExp, String picture, Family family, Room room) {
+                LocalDate warrantyExp, OnOff onOff, String picture, Family family, Room room) {
         this.deviceName = deviceName;
         this.brand = brand;
         this.createdBy = createdBy;
         this.warrantyExp = warrantyExp;
+        this.onOff = onOff;
         this.picture = picture;
         this.family = family;
         this.room = room;
@@ -142,6 +143,10 @@ public class Device {
 
     public Family getFamily(){
         return family;
+    }
+
+    public void setFamily(Family family) { 
+        this.family = family; 
     }
 
     public Room getRoom() {

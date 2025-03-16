@@ -1,29 +1,29 @@
 package com.nz.backend.dto;
 
 public class UpdateRoomDTO {
-    private String roomName;
-    private String image;
+    private String oldName;
+    private String newName;
 
-    public UpdateRoomDTO (){}
+    public UpdateRoomDTO() {}
 
-    public UpdateRoomDTO (String roomName, String image){
-        this.roomName = roomName;
-        this.image = image;
+    public UpdateRoomDTO(String oldName, String newName) {
+        this.oldName = oldName;
+        this.newName = newName;
     }
 
-    public String getRoomName (){
-        return roomName;
+    public String getOldName() {
+        return oldName;
     }
 
-    public void setRoomName (String roomName){
-        this.roomName = roomName;
+    public void setOldName(String oldName) {
+        this.oldName = oldName;
     }
 
-    public String getImage (){
-        return image;
+    public String getNewName() {
+        return newName;
     }
 
-    public void setImage (String image){
-        this.image = image;
+    public void setNewName(String newName) {
+        this.newName = newName;
     }
 }

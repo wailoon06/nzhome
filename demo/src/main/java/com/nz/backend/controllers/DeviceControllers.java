@@ -1,9 +1,13 @@
 package com.nz.backend.controllers;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nz.backend.dto.AddNewDeviceDTO;
 import com.nz.backend.dto.DeviceNameDTO;
 import com.nz.backend.dto.DeviceOnOffDTO;
+import com.nz.backend.dto.DeviceRoomDTO;
 import com.nz.backend.dto.EmailDTO;
 import com.nz.backend.dto.UpdateDeviceDTO;
 import com.nz.backend.entities.Brand;
@@ -69,30 +74,6 @@ public class DeviceControllers {
     @Value("${jwt.secret.key}")
     private String secretKey;
 
-    @GetMapping("/getDevice")
-    public ResponseEntity<?> getDevicesByRoom(@RequestHeader("Authorization") String token, @RequestBody EmailDTO emailDTO) {
-        if (token == null){
-            return ResponseEntity.badRequest().body("Invalid token!");
-        }
-
-        String jwtToken = token.substring(7);
-        String email = jwtService.extractEmail(jwtToken);
-        User owner = userRepo.findByEmail(email);
-
-        String targetEmail = emailDTO.getEmail();
-        User matchUser = userRepo.findByEmail(targetEmail);
-
-        if (!owner.getFamily().equals(matchUser.getFamily())) {
-            return ResponseEntity.badRequest().body("You don't have access!");
-        }
-        else {
-            //continue later
-        }
-
-
-        return null;
-    }
-
     // DONE
     @GetMapping("/getDeviceDetails")
     public ResponseEntity<?> getDevicesDetails(@RequestHeader("Authorization") String token, @RequestBody DeviceNameDTO deviceNameDTO) {
@@ -111,7 +92,7 @@ public class DeviceControllers {
             return ResponseEntity.badRequest().body("User not found!");
         }
 
-        /*Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
+        /* Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
         Device matchDevice = deviceRepo.findByDeviceNameAndFamily(deviceNameDTO.getDeviceName(), user.getFamily());
         if (matchDevice == null) {
             return ResponseEntity.badRequest().body("Device not found in the family!");
@@ -166,11 +147,13 @@ public class DeviceControllers {
         }
 
         // Get the status (on/off) of the selected device
-        String deviceStatus = matchDevice.getOnOff().name();
+        OnOff deviceStatus = matchDevice.getOnOff();
 
-        if (deviceStatus == "On") {
+        if (deviceStatus == OnOff.On) {
             matchDevice.setOnOff(OnOff.Off);
-        } else {
+        }
+
+        if (deviceStatus == OnOff.Off) {
             matchDevice.setOnOff(OnOff.On);
         }
         
@@ -205,21 +188,61 @@ public class DeviceControllers {
         Brand brand = brandRepo.findByBrandname(addNewDeviceDTO.getBrandName());
         Room room = roomRepo.findByRoomName(addNewDeviceDTO.getRoomName());
         Family family = user.getFamily();
+        
+        // Warranty Expiration Date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate customDate = LocalDate.parse("2026-03-15", formatter);
 
         Device newDevice = new Device(
             addNewDeviceDTO.getDeviceName(),
             brand,
             user,
-            null,
-            addNewDeviceDTO.getPicture(),
+            customDate,
+            OnOff.Off,   
+            null, // addNewDeviceDTO.getPicture(),
             family,
-            room            
+            room        
         );
 
         deviceRepo.save(newDevice);
 
         return ResponseEntity.ok("Successfully Added!");
+    }
+    
+    // DONE
+    @GetMapping("/getDeviceRoom")
+    public ResponseEntity<?> getDevicesByRoom(@RequestHeader("Authorization") String token, @RequestBody AddNewDeviceDTO addNewDeviceDTO) {
+        
+        // Token Verification
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
 
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
+        }
+        
+        // Get the user's family
+        Family userFamily = user.getFamily();
+        if (userFamily == null) {
+        return ResponseEntity.badRequest().body("User does not belong to any family!");
+        }
+
+        // Get the room
+        Room room = roomRepo.findByRoomName(addNewDeviceDTO.getRoomName());
+        
+        List<Device> matchDevices = deviceRepo.findByFamilyAndRoom(userFamily, room);
+
+        List<DeviceRoomDTO> deviceList = matchDevices.stream()
+            .map(DeviceRoomDTO::new)
+            .collect(Collectors.toList());
+        
+        return ResponseEntity.ok(deviceList);
     }
 
     // DONE
@@ -241,13 +264,13 @@ public class DeviceControllers {
         }
 
         // Get the user's family
-        Long userFamilyID = user.getFamily().getFamilyid();
-        if (userFamilyID == null) {
+        Family userFamily = user.getFamily();
+        if (userFamily == null) {
         return ResponseEntity.badRequest().body("User does not belong to any family!");
         }
 
-        List<Device> devices = deviceRepo.findByFamilyFamilyid(userFamilyID);
-
+        List<Device> devices = deviceRepo.findByFamily(userFamily);
+        
         return ResponseEntity.ok(devices);
     }
 
