@@ -116,7 +116,7 @@ function RoomsNewAccessPage() {
 
                     {/* Next Button */}
                     <Link
-                      to={`/rooms/access`} // Use the input value in the link
+                      to={`/rooms/devices/${roomTitle}`} // Use the input value in the link
                       className={`w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 block text-center ${
                         selectedDevices.length === 0
                           ? "pointer-events-none opacity-50"
