@@ -12,7 +12,7 @@ function NewDeviceDetailsPage() {
 
   const navigate = useNavigate();
   const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const [temperature, setTemperature] = useState(""); // Initialize temperature state
+  const [RoomList, setRoomList] = useState(""); // Initialize RoomList state
 
   const toggleSwitch = () => {
     setIsSwitchOn((prevState) => !prevState);
@@ -20,9 +20,9 @@ function NewDeviceDetailsPage() {
 
   const { name, type } = useParams();
 
-  // Handle temperature change (for the dropdown)
-  const handleTemperatureChange = (e) => {
-    setTemperature(e.target.value);
+  // Handle RoomList change (for the dropdown)
+  const handleRoomListChange = (e) => {
+    setRoomList(e.target.value);
   };
 
   // Handle the form submission
@@ -30,7 +30,7 @@ function NewDeviceDetailsPage() {
     e.preventDefault();
     // Submit logic here (e.g., sending data to DB)
     console.log("Form submitted with data:", {
-      temperature,
+      RoomList,
       isSwitchOn,
     });
 
@@ -107,8 +107,8 @@ function NewDeviceDetailsPage() {
                     {/* Dropdown */}
                     <select
                       className="ml-5 border border-gray-300 rounded-lg p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      value={temperature}
-                      onChange={handleTemperatureChange}
+                      value={RoomList}
+                      onChange={handleRoomListChange}
                     >
                       <option value="" disabled>
                         {translations.select}
