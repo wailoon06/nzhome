@@ -48,9 +48,15 @@ function Devices() {
         }
       );
 
+      // console.log("API Response:", response);
+
+      // if (!response.data) {
+      //   throw new Error("Invalid API response: No data found");
+      // }
+
       setDeviceDetails(response.data);
     } catch (err) {
-      if (err.response.status === 403) {
+      if (err.response && err.response.status === 403) {
         console.log("Session expired!");
         alert("Session expired!");
         localStorage.removeItem("token");
@@ -102,12 +108,12 @@ function Devices() {
   //     [deviceName]: !prevState[deviceName],
   //   }));
   // };
-  const handleSwitchToggle = async (deviceName) => {
+  const handleSwitchToggle = async (deviceid) => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
         "http://localhost:8080/api/OnOff",
-        { deviceName: deviceName },
+        { deviceid: deviceid },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -159,10 +165,10 @@ function Devices() {
       
       // Toggle each device one by one
       for (const device of devicesToToggle) {
-        console.log(`Toggling device: ${device.deviceName}`);
+        console.log(`Toggling device: ${device.deviceid}`);
         await axios.put(
           "http://localhost:8080/api/OnOff",
-          { deviceName: device.deviceName },
+          { deviceid: device.deviceid },
           { headers: { Authorization: `Bearer ${token}` } }
         );
       }
@@ -203,10 +209,10 @@ function Devices() {
 
   useEffect(() => {
     // Compare the previous state with the current state
-    Object.keys(devicesState).forEach((deviceName) => {
-      if (previousStateRef.current[deviceName] !== devicesState[deviceName]) {
+    Object.keys(devicesState).forEach((deviceid) => {
+      if (previousStateRef.current[deviceid] !== devicesState[deviceid]) {
         console.log(
-          `${deviceName} turned ${devicesState[deviceName] ? "On" : "Off"}`
+          `${deviceid} turned ${devicesState[deviceid] ? "On" : "Off"}`
         );
       }
     });
@@ -301,7 +307,7 @@ function Devices() {
                         type="checkbox"
                         className="sr-only peer"
                         checked={device.onOff === "On"}
-                        onChange={() => handleSwitchToggle(device.deviceName)}
+                        onChange={() => handleSwitchToggle(device.deviceid)}
                       />
                       <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-teal-500 peer-focus:ring-2 peer-focus:ring-teal-300"></div>
                       <span className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full peer-checked:translate-x-5 transition-transform"></span>

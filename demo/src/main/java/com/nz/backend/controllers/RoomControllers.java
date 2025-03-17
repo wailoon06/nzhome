@@ -56,7 +56,9 @@ public class RoomControllers {
 
     // DONE
     @PostMapping("/createRoom")
-    public ResponseEntity<?> createRoom(@RequestHeader("Authorization") String token, @RequestBody AddRoomDTO addroomdto, @RequestParam("file") MultipartFile file) throws IOException{
+    public ResponseEntity<?> createRoom(@RequestHeader("Authorization") String token,
+            @RequestParam("roomName") String roomName, @RequestParam(value = "deviceID", required = false) List<Long> deviceid, 
+            @RequestParam("file") MultipartFile file) throws IOException {
 
         // Token Verification
         if (token == null){
@@ -81,12 +83,13 @@ public class RoomControllers {
         if (file.getSize() > 5 * 1024 * 1024) {
             return ResponseEntity.badRequest().body("File size should not exceed 5MB!");
         }
+
         String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
 
         Family family = user.getFamily();
-
+        
         Room newRoom = new Room(
-            addroomdto.getRoomName(),
+            roomName,
             user,
             family,
             base64Image
@@ -94,6 +97,14 @@ public class RoomControllers {
 
         roomRepo.save(newRoom);
 
+        if (deviceid != null && !deviceid.isEmpty()) {
+            List<Device> devices = deviceRepo.findAllById(deviceid);
+            for (Device device : devices) {
+                device.setRoom(newRoom);
+            }
+            deviceRepo.saveAll(devices);
+        }
+        
         return ResponseEntity.ok("Room successfully created!");
     }
 

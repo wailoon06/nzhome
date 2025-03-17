@@ -6,6 +6,7 @@ import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function RoomsNewPage() {
   const navigate = useNavigate();
@@ -14,136 +15,173 @@ function RoomsNewPage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  // Devices
-  const devices = [
-    {
-      name: "xiaomi",
-      type: "vacuum",
-    },
-    { name: "Daikin", type: "aircon" },
-  ];
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false); // Modal state
   const [favorites, setFavorites] = useState([]); // Favorite devices
   const [selectedDevices, setSelectedDevices] = useState([]); // Selected devices
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Modal Handlers
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
-
-  // Toggle Favorite
-  const toggleFavorite = (deviceName) => {
-    setFavorites(
-      (prevFavorites) =>
-        prevFavorites.includes(deviceName)
-          ? prevFavorites.filter((name) => name !== deviceName) // Remove from favorites
-          : [...prevFavorites, deviceName] // Add to favorites
-    );
-  };
-
-  // Toggle Selected State for Modal
-  const toggleSelected = (deviceName) => {
-    setSelectedDevices(
-      (prevSelected) =>
-        prevSelected.includes(deviceName)
-          ? prevSelected.filter((name) => name !== deviceName) // Remove from selected
-          : [...prevSelected, deviceName] // Add to selected
-    );
-  };
-
-  // Upload picture
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
-    }
-  };
-
-  // Get title
-  const [roomTitle, setRoomTitle] = useState("");
-  const getTitle = (e) => {setRoomTitle(e.target.value)};
 
   // Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
   const translations = translationsMap[language] || translationsMap["en"];
-  
-  // Handle submission
+
+  // Modal Handlers
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
+
+  // Toggle Favorite
+  const toggleFavorite = (deviceid) => {
+    setFavorites(
+      (prevFavorites) =>
+        prevFavorites.includes(deviceid)
+          ? prevFavorites.filter((id) => id !== deviceid) // Remove from favorites
+          : [...prevFavorites, deviceid] // Add to favorites
+    );
+  };
+
+  // Toggle Selected State for Modal
+  const toggleSelected = (deviceid) => {
+    setSelectedDevices(
+      (prevSelected) =>
+        prevSelected.includes(deviceid)
+          ? prevSelected.filter((id) => id !== deviceid) // Remove from selected
+          : [...prevSelected, deviceid] // Add to selected
+    );
+  };
+
+  // Fetch Device Details
+  const [deviceDetails, setDeviceDetails] = useState([]);
+
+  const fetchDeviceDetails = async (e) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(
+        "http://localhost:8080/api/getDeviceNoRoom",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setDeviceDetails(response.data);
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      } else {
+        setError("An unexpected error occurs");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDeviceDetails();
+  }, []);
+
+
+  const [imageFile, setImageFile] = useState(null);
+  const [roomName, setRoomName] = useState("");
+  const [uploadStatus, setUploadStatus] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+
+  // Handle image upload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+
+    // No file selected
+    if (!file) return;
+
+    // Check file type
+    if (!file.type.match("image.*")) {
+      alert("Please select an image file!");
+      return;
+    }
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size should not exceed 5MB!");
+      return;
+    }
+
+    // Store the file for submission
+    setImageFile(file);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+
+  // Handle submission for room title, picture and selected device
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!roomTitle) {
+    if (!roomName) {
       // alert(translations.pleaseEnterRoomTitle || "Please enter a room title");
-      alert("Please enter a room title")
+      alert("Please enter a room title!");
       return;
     }
 
     if (!imageFile) {
-      // alert(translations.pleaseUploadImage || "Please upload an image");
-      alert("Please upload an image")
+      alert("Please upload an image for the room!");
       return;
     }
 
     setLoading(true);
     setError(null);
 
+    const formData = new FormData();
+    formData.append("file", imageFile);
+    formData.append("roomName", roomName);
+    selectedDevices.forEach(deviceid => {
+      formData.append("deviceID", deviceid);
+    })
+
     try {
-      // Get token
       const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Please log in");
-        navigate("/login");
-        return;
+
+      const response = await axios.post(
+        "http://localhost:8080/api/createRoom",
+        formData,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Handle successful response
+      if (response.status === 200) {
+        setUploadStatus("Image updated successfully!");
+        alert("Room successfully created!")
+        navigate(`/rooms/${roomName}/access`);
       }
 
-      // Create form data for multipart/form-data
-      const formData = new FormData();
-      formData.append("file", imageFile);
-
-      // Create JSON data
-      const roomData = {roomName: roomTitle};
-
-      // Append JSON data as a blob
-      formData.append(
-        "addroomdto",
-        new Blob([JSON.stringify(roomData)], {
-          type: "application/json",
-        })
-      );
-
-      // Make API call
-      const response = await axios
-                              .post("http://localhost:8080/api/createRoom",
-                                     formData,
-                                      {
-                                        headers: {
-                                          Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data",
-                                        },
-                                      }
-      );
-      alert(response.data || "Room created successfully!");
-      navigate("/rooms"); 
-      
     } catch (err) {
-      console.error("Error creating room:", err);
-      if (err.response) {
-        if (err.response.status === 401) {
-          alert("Session expired. Please log in again.");
-          localStorage.removeItem("token");
-          navigate("/login");
-        } else {
-          setError(err.response.data);
-          alert(err.response.data);
-        }
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
       } else {
-        setError("An unexpected error occurred");
-        alert("An unexpected error occurred");
+        setError("An unexpected error occurs");
       }
     } finally {
       setLoading(false);
@@ -154,7 +192,11 @@ function RoomsNewPage() {
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
         </div>
 
         {/* Main Content */}
@@ -163,7 +205,11 @@ function RoomsNewPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* <!-- Main Content --> */}
             <div class="flex flex-col flex-1">
@@ -181,8 +227,17 @@ function RoomsNewPage() {
 
                 {/* ==================== */}
                 <div className="wrapper p-4">
+                  {/* Error Message */}
+                  {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                      {error}
+                    </div>
+                  )}
                   {/* Event Form */}
-                  <form onSubmit={handleSubmit} className="event-form bg-gray-100 p-4 mt-4 rounded-lg shadow-md grid grid-rows-[auto] gap-4">
+                  <form
+                    onSubmit={handleSubmit}
+                    className="event-form bg-gray-100 p-4 mt-4 rounded-lg shadow-md grid grid-rows-[auto] gap-4"
+                  >
                     <div className="grid grid-cols-2 gap-4">
                       <div className="w-full border border-gray-300 rounded p-4">
                         {/* Upload Button */}
@@ -212,12 +267,12 @@ function RoomsNewPage() {
                         )}
                       </div>
 
-                      {/* ======================== */}
+                      {/* Room Title Input*/}
                       <input
                         type="text"
                         placeholder={translations.roomTitle}
-                        value={roomTitle}
-                        onChange={getTitle}
+                        value={roomName}
+                        onChange={(e) => setRoomName(e.target.value)}
                         className="w-full border border-gray-300 rounded p-2 mb-4"
                       />
                     </div>
@@ -233,6 +288,7 @@ function RoomsNewPage() {
                         <div className="p-4 flex justify-end items-center">
                           {/* Trigger Button */}
                           <button
+                            type="button"
                             className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors"
                             onClick={openModal}
                           >
@@ -249,6 +305,7 @@ function RoomsNewPage() {
                                     {translations.view_all}
                                   </h2>
                                   <button
+
                                     className="text-gray-500 hover:text-gray-700 transition"
                                     onClick={closeModal}
                                   >
@@ -259,19 +316,20 @@ function RoomsNewPage() {
                                 {/* Content */}
                                 <div className="overflow-y-auto max-h-96">
                                   <ul className="space-y-4">
-                                    {devices.map((device) => (
+                                    {deviceDetails.map((device) => (
                                       <li
-                                        key={device.name}
+                                        key={device.deviceid}
                                         className="p-4 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition flex justify-between items-center"
                                       >
                                         <div className="relative w-full">
                                           <span>
-                                            {device.name} ({device.type})
+                                            {device.deviceName} (
+                                            {device.category.categoryName})
                                           </span>
 
                                           {/* Green Check Mark for Selected Devices */}
                                           {selectedDevices.includes(
-                                            device.name
+                                            device.deviceid
                                           ) && (
                                             <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
                                               <i className="fas fa-check"></i>
@@ -280,27 +338,33 @@ function RoomsNewPage() {
                                         </div>
 
                                         <button
+                                          type="button"
                                           onClick={() =>
-                                            toggleFavorite(device.name)
+                                            toggleFavorite(device.deviceid)
                                           }
                                           className={`text-sm px-3 py-1 rounded-md ${
-                                            favorites.includes(device.name)
+                                            favorites.includes(
+                                              device.deviceid
+                                            )
                                               ? "bg-green-500 text-white"
                                               : "bg-gray-300 text-black"
                                           }`}
                                         >
-                                          {favorites.includes(device.name)
+                                          {favorites.includes(device.deviceid)
                                             ? `${translations.favorited}`
                                             : `${translations.favorite}`}
                                         </button>
 
                                         <button
+                                          type="button"
                                           onClick={() =>
-                                            toggleSelected(device.name)
+                                            toggleSelected(device.deviceid)
                                           }
                                           className="text-sm px-3 py-1 rounded-md ml-2"
                                         >
-                                          {selectedDevices.includes(device.name)
+                                          {selectedDevices.includes(
+                                            device.deviceid
+                                          )
                                             ? `${translations.deselect}`
                                             : `${translations.select}`}
                                         </button>
@@ -353,15 +417,24 @@ function RoomsNewPage() {
                         )}
                       </div>
                     </div>
-                    
-                    <Link
-                      to={`/rooms/${roomTitle}/access`} // Use the input value in the link
+
+                    {/* <Link
+                      to={`/rooms/${roomName}/access`} // Use the input value in the link
                       className={`w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 block text-center ${
-                        roomTitle ? "" : "pointer-events-none opacity-50"
+                        roomName ? "" : "pointer-events-none opacity-50"
                       }`}
                     >
                       {translations.nextStep}
-                    </Link>
+                    </Link> */}
+                    {/* Replace the Link with a submit button */}
+                    <button
+                      type="submit"
+                      className={`w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 block text-center ${
+                        roomName ? "" : "pointer-events-none opacity-50"
+                      }`}
+                    >
+                      {translations.nextStep}
+                    </button>
                     {/* ===================================== */}
                   </form>
                 </div>
@@ -375,3 +448,12 @@ function RoomsNewPage() {
 }
 
 export default RoomsNewPage;
+
+  // Devices
+  // const devices = [
+  //   {
+  //     name: "xiaomi",
+  //     type: "vacuum",
+  //   },
+  //   { name: "Daikin", type: "aircon" },
+  // ];

@@ -242,7 +242,7 @@ function App() {
       {/* Routes that display a blank page */}
       <Route path="/room/:name" element={<RoomPage />} />
       <Route
-        path="/devices/:type/:name/details"
+        path="/devices/:type/:deviceid/:name/details"
         element={<DeviceDetailsPage />}
       />
       <Route path="/user/:name" element={<UserPage />} />

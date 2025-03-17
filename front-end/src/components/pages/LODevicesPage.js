@@ -16,33 +16,69 @@ function LODevicesPage() {
   const [deviceDetails, setDeviceDetails] = useState([]);
   const [deviceStates, setDeviceStates] = useState({});
 
+  // Get device
+  const fetchDeviceDetails = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(
+        "http://localhost:8080/api/getAllDevice",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setDeviceDetails(response.data);
+
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDeviceDetails();
+  }, [navigate]);
+  
+
   // Toggle function (On/Off)
   useEffect(() => {
     if (deviceDetails.length > 0) {
       // Initialize device states based on data from the backend
       const initialStates = {};
       deviceDetails.forEach(device => {
-        initialStates[device.deviceName] = device.onOff === "On";
+        initialStates[device.deviceid] = device.onOff === "On";
       });
       setDeviceStates(initialStates);
     }
   }, [deviceDetails]);
 
-  const toggleSwitch = async (deviceName) => {
+  const toggleSwitch = async (deviceid) => {
     try {
-      const currentState = deviceStates[deviceName];
+      const currentState = deviceStates[deviceid];
       const newState = !currentState;
 
       setDeviceStates((prevState) => ({
         ...prevState,
-        [deviceName]: !prevState[deviceName] // Toggle device state
+        [deviceid]: !prevState[deviceid] // Toggle device state
       }));
 
       const token = localStorage.getItem("token");
       await axios.put(
         "http://localhost:8080/api/OnOff",
         {
-          deviceName: deviceName,
+          deviceid: deviceid,
           state: newState ? "On" : "Off"
         },
         {
@@ -58,7 +94,7 @@ function LODevicesPage() {
       console.error("Failed to update device state:", err);
       setDeviceStates(prevState => ({
         ...prevState,
-        [deviceName]: !prevState[deviceName]
+        [deviceid]: !prevState[deviceid]
       }));
 
       if (err.response.status === 403) {
@@ -76,40 +112,7 @@ function LODevicesPage() {
   const [language, setLanguage] = useState(() => localStorage.getItem("language") || "en");
   const translations = translationsMap[language] || translationsMap["en"];
 
-  // Get device
-  const fetchDeviceDetails = async () => {
-    setLoading(true);
-    setError(null);
 
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "http://localhost:8080/api/getAllDevice",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      setDeviceDetails(response.data);
-
-    } catch (err) {
-      if (err.response.status === 403) {
-        console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
-      }
-      setError("An unexpected error occurs");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDeviceDetails();
-  }, [navigate]);
-  
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -169,7 +172,7 @@ function LODevicesPage() {
                     className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col items-center p-4"
                   >
                     <Link
-                      to={`/devices/${device.category.categoryName}/${device.deviceName}/details`}
+                      to={`/devices/${device.category.categoryName}/${device.deviceid}/${device.deviceName}/details`}
                       className="w-full text-center"
                     >
                       {/* Displaying Image */}
@@ -206,17 +209,17 @@ function LODevicesPage() {
                       <div
                         onClick={(e) => {
                           e.preventDefault(); // Prevent navigation when toggling
-                          toggleSwitch(device.deviceName);
+                          toggleSwitch(device.deviceid);
                         }}
                         className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer transition-all ${
-                          deviceStates[device.deviceName]
+                          deviceStates[device.deviceid]
                             ? "bg-green-500"
                             : "bg-gray-300"
                         }`}
                       >
                         <div
                           className={`w-6 h-6 rounded-full bg-white shadow-md transform transition-transform ${
-                            deviceStates[device.deviceName]
+                            deviceStates[device.deviceid]
                               ? "translate-x-8"
                               : "translate-x-0"
                           }`}

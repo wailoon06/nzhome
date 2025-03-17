@@ -15,8 +15,10 @@ import com.nz.backend.entities.Room;
 public interface DeviceRepo extends JpaRepository <Device, Long> {
 
      Device findByDeviceName (String device);
-
+     
      Device findByDeviceNameAndFamily(String deviceName, Family family);
+
+     List<Device> findByDeviceid (Long Deviceid);
 
      List<Device> findByFamilyFamilyName(String familyName);
 

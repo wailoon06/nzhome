@@ -66,7 +66,7 @@ const Root = () => {
         <Route path="/register" element={<RegisterPage />} /> */}
         <Route path="/room/:name" element={<RoomPage />} />
         <Route
-          path="/devices/:type/:name/details"
+          path="/devices/:type/:deviceid/:name/details"
           element={<DeviceDetailsPage />}
         />
         <Route path="/user/:name" element={<UserPage />} />

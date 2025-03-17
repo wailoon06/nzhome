@@ -8,6 +8,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,17 +137,20 @@ public class DeviceControllers {
         }
 
         /* Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
-        Device matchDevice = deviceRepo.findByDeviceNameAndFamily(deviceNameDTO.getDeviceName(), user.getFamily());
+        Optional<Device> matchDevice = deviceRepo.findById(deviceNameDTO.getDeviceid());
         if (matchDevice == null) {
             return ResponseEntity.badRequest().body("Device not found in the family!");
         }
 
+        Device device = matchDevice.get();
+
         /* Return the energy statistics, with the matched device's deviceid */
-        List<Energy> energyList = energyRepo.findByDeviceDeviceid(matchDevice.getDeviceid());
-        // if (energyList.isEmpty()) {
-        //     return ResponseEntity.badRequest().body("No energy data found for this device.");
+        List<Energy> energyList = energyRepo.findByDeviceDeviceid(device.getDeviceid());
+        // if (matchDevice.isEmpty()) {  // Use isEmpty() instead of null
+        //     return ResponseEntity.badRequest().body("Device not found in the family!");
         // }
 
+    
         List<Map<String, Object>> energyDataList = new ArrayList<>();
         for (Energy energy : energyList) {
             Map<String, Object> energyData = new HashMap<>();
@@ -157,21 +161,23 @@ public class DeviceControllers {
         }
         
         Map<String, Object> response = new HashMap<>();
-        response.put("deviceName", matchDevice.getDeviceName());
-        response.put("category", matchDevice.getCategory());
-        response.put("picture", matchDevice.getPicture());
-        response.put("onOff", matchDevice.getOnOff());
+        response.put("deviceid", device.getDeviceid());
+        response.put("deviceName", device.getDeviceName());
+        response.put("category", device.getCategory());
+        response.put("picture", device.getPicture());
+        response.put("onOff", device.getOnOff());
         response.put("energyData", energyDataList);
       
         return ResponseEntity.ok(response);
     }
 
     // DONE
-    @PutMapping("/OnOff") 
-    public ResponseEntity<?> turnOnOff (@RequestHeader("Authorization") String token, @RequestBody DeviceOnOffDTO deviceOnOffDTO){
-        
+    @PutMapping("/OnOff")
+    public ResponseEntity<?> turnOnOff(@RequestHeader("Authorization") String token, 
+                                    @RequestBody DeviceOnOffDTO deviceOnOffDTO) {
+
         // Token Verification
-        if (token == null){
+        if (token == null || !token.startsWith("Bearer ")) {
             return ResponseEntity.badRequest().body("Invalid token!");
         }
 
@@ -184,63 +190,25 @@ public class DeviceControllers {
             return ResponseEntity.badRequest().body("User not found!");
         }
 
-        /* Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
-        Device matchDevice = deviceRepo.findByDeviceNameAndFamily(deviceOnOffDTO.getDeviceName(), user.getFamily());
-        if (matchDevice == null) {
+        // Find the device
+        Optional<Device> matchDevice = deviceRepo.findById(deviceOnOffDTO.getDeviceid());
+        if (!matchDevice.isPresent()) {
             return ResponseEntity.badRequest().body("Device not found in the family!");
         }
 
-        // Get the status (on/off) of the selected device
-        OnOff deviceStatus = matchDevice.getOnOff();
+        // Toggle the device status
+        Device device = matchDevice.get();
+        device.setOnOff(device.getOnOff() == OnOff.On ? OnOff.Off : OnOff.On);
 
-        if (deviceStatus == OnOff.On) {
-            matchDevice.setOnOff(OnOff.Off);
-        }
-
-        if (deviceStatus == OnOff.Off) {
-            matchDevice.setOnOff(OnOff.On);
-        }
-        
-        deviceRepo.save(matchDevice);
+        // Save the updated device state
+        deviceRepo.save(device);
 
         return ResponseEntity.ok("Status Changed!");
     }
 
-    // DONE
-    // @PutMapping("/OnOffAll") 
-    // public ResponseEntity<?> turnOnOffAll (@RequestHeader("Authorization") String token, @RequestBody DeviceOnOffDTO deviceOnOffDTO){
-        
-    //     // Token Verification
-    //     if (token == null){
-    //         return ResponseEntity.badRequest().body("Invalid token!");
-    //     }
-
-    //     String jwtToken = token.substring(7);
-    //     String email = jwtService.extractEmail(jwtToken);
-
-    //     // Find the user object
-    //     User user = userRepo.findByEmail(email);
-    //     if (user == null) {
-    //         return ResponseEntity.badRequest().body("User not found!");
-    //     }
-
-    //     /* Match device in database, with the device name given and user's family, make sure return the device in the user's family, because may have duplicate device name */
-    //     List<Device> matchDevices = deviceRepo.findByDeviceNameAndFamily(deviceOnOffDTO.getDeviceName(), user.getFamily());
-    //     if (matchDevices == null || matchDevices.isEmpty()) {
-    //         return ResponseEntity.badRequest().body("Device not found in the family!");
-    //     }
-
-    //     for (Device device : matchDevices) {
-    //         device.setOnOff(device.getOnOff() == OnOff.On ? OnOff.Off : OnOff.On);
-    //     }
-        
-    //     deviceRepo.saveAll(matchDevices);
-
-    //     return ResponseEntity.ok("Status Changed!");
-    // }
     
     // DONE
-    @GetMapping("/getDeviceRoom")
+    @PostMapping("/getDeviceRoom")
     public ResponseEntity<?> getDevicesByRoom(@RequestHeader("Authorization") String token, @RequestBody AddNewDeviceDTO addNewDeviceDTO) {
         
         // Token Verification
@@ -302,6 +270,39 @@ public class DeviceControllers {
         List<Device> devices = deviceRepo.findByFamily(userFamily);
         
         return ResponseEntity.ok(devices);
+    }
+
+    
+    @GetMapping("/getDeviceNoRoom") 
+    public ResponseEntity<?> getDeviceNoRoom(@RequestHeader("Authorization") String token){
+        
+        // Token Verification
+        if (token == null){
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
+
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
+        }
+
+        // Get the user's family
+        Family userFamily = user.getFamily();
+        if (userFamily == null) {
+        return ResponseEntity.badRequest().body("User does not belong to any family!");
+        }   
+
+        List<Device> devices = deviceRepo.findByFamily(userFamily);
+        
+        List<Device> filteredDevices = devices.stream()
+            .filter(device -> device.getRoom() == null)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(filteredDevices);
     }
 
     // DONE

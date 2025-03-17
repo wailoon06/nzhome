@@ -1,23 +1,59 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import translationsMap from "../components/locales/translationsMap";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function RoomsRobots() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Fetch room list
+  const [roomList, setRoomList] = useState([]);
+
+  const fetchRoomList = async (e) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(
+        "http://localhost:8080/api/getAllRooms",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const updatedRoomList = [...response.data, { roomName: "Add Room", picture: "/image/plus.png" }];
+      setRoomList(updatedRoomList);
+
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      } else {
+        setError("An unexpected error occurs");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoomList();
+  }, []);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [animationClass, setAnimationClass] = useState(""); // Track animation
   const [tempIndex, setTempIndex] = useState(currentIndex); // Temporary index for animation
-  const [rooms, setRooms] = useState([
-    { img: "/image/living_room.jpg", name: "Living Room" },
-    { img: "/image/kitchen.jpg", name: "Kitchen" },
-    { img: "/image/bathroom.jpg", name: "Bathroom" },
-    { img: "/image/master.jpg", name: "Master" },
-    { img: "/image/guest.jpeg", name: "Guest Room" },
-    { img: "/image/study.jpg", name: "Study" },
-    { img: "/image/garage.jpg", name: "Garage" },
-    { img: "/image/plus.png", name: "Add Room" },
-  ]);
 
-  const totalPages = Math.ceil(rooms.length / 4);
+  const totalPages = Math.ceil(roomList.length / 4);
   const currentPage = Math.floor(currentIndex / 4);
 
   const prevItems = () => {
@@ -27,7 +63,7 @@ function RoomsRobots() {
   };
 
   const nextItems = () => {
-    if (currentIndex + 4 >= rooms.length) return;
+    if (currentIndex + 4 >= roomList.length) return;
     setAnimationClass("animate-slide-in-next");
     setTempIndex(currentIndex + 4);
   };
@@ -40,8 +76,8 @@ function RoomsRobots() {
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
   const translations = translationsMap[language] || translationsMap["en"];
+
 
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[3fr,1.2fr] p-4 gap-4">
@@ -58,24 +94,24 @@ function RoomsRobots() {
             className={`grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 transition-all duration-500 ease-in-out ${animationClass}`}
             onAnimationEnd={handleAnimationEnd}
           >
-            {rooms.slice(tempIndex, tempIndex + 4).map((room, index) => (
+            {roomList.slice(tempIndex, tempIndex + 4).map((room, index) => (
               <div
                 key={index}
                 className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end"
               >
                 <div className="flex justify-center items-center mb-4 h-[170px]">
-                  <Link to={room.name === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.name}`}>
+                  <Link to={room.roomName === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.roomName}`}>
                     <img
-                      src={room.img}
-                      alt={room.name}
+                      src={room.roomName === "Add Room" ? room.picture : `data:image/png;base64,${room.picture}`}
+                      alt={room.roomName}
                       className="rounded-lg object-contain cursor-pointer"
-                      style={{ maxHeight: "100%" }}
+                      style={{ maxWidth: "100%", maxHeight: "170px" }}
                     />
                   </Link>
                 </div>
-                <Link to={room.name === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.name}`}>
+                <Link to={room.roomName === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.roomName}`}>
                   <div className="relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center cursor-pointer">
-                    {room.name}
+                    {room.roomName}
                   </div>
                 </Link>
               </div>
@@ -106,7 +142,7 @@ function RoomsRobots() {
           </button>
           <button
             onClick={nextItems}
-            disabled={currentIndex + 4 >= rooms.length}
+            disabled={currentIndex + 4 >= roomList.length}
             className="bg-white text-gray-800 p-2 rounded-full"
           >
             <i className={"fas fa-chevron-right"}></i>

@@ -3,14 +3,14 @@ package com.nz.backend.dto;
 public class DeviceOnOffDTO {
     private String onOff;
     private String deviceName;
-    private String email;
+    private Long deviceid;
 
     public DeviceOnOffDTO(){}
 
-    public DeviceOnOffDTO(String onOff, String deviceName, String email){
+    public DeviceOnOffDTO(String onOff, String deviceName, Long deviceid){
         this.onOff = onOff;
         this.deviceName = deviceName;
-        this.email = email;
+        this.deviceid = deviceid;
     }
 
     public String getOnOff(){
@@ -25,11 +25,11 @@ public class DeviceOnOffDTO {
         return deviceName;
     }
 
-    public void setDEmail(String email){
-        this.email = email;
+    public Long getDeviceid(){
+        return deviceid;
     }
 
-    public void setEmail(String email){
-        this.email = email;
+    public void setDeviceid(Long deviceid){
+        this.deviceid = deviceid;
     }
 }

@@ -30,8 +30,7 @@ function DeviceDetailsPage() {
   });
   const translations = translationsMap[language] || translationsMap["en"];
 
-  
-  const { name, type } = useParams();
+  const { deviceid, name, type } = useParams();
   const [deviceDetails, setDeviceDetails] = useState([]);
 
   const fetchDeviceDetails = async () => {
@@ -42,7 +41,7 @@ function DeviceDetailsPage() {
       const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://localhost:8080/api/getDeviceDetails",
-        { deviceName: name },
+        { deviceid: deviceid },
         {
           headers: { Authorization: `Bearer ${token}` }
         }
