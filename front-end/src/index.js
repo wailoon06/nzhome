@@ -51,9 +51,10 @@ import translationsMap from "./components/locales/translationsMap";
 const Root = () => {
   const hasStarted = localStorage.getItem("started");
 
+  //ROUTE WRAP
   return (
     <Router>
-      <Routes>
+      <Routes> 
         <Route
           path="/"
           element={hasStarted === "true" ? <App /> : <LandingPage />}
@@ -128,6 +129,6 @@ const Root = () => {
   );
 };
 
-// Use createRoot in React 18
+// Use createRoot in React 18, root file display
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Root />);
