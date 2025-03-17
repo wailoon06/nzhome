@@ -65,8 +65,8 @@ function UserProfilePage() {
             })
             .then((response) => {
               console.log("Registered successfuly", response);
-              alert(response.data.data.toString());
-              navigate("/login");
+              alert(response.data.toString());
+              navigate("/users");
             })
             .catch((error) => {
               console.error("Login error:", error);
@@ -79,8 +79,6 @@ function UserProfilePage() {
             })
         )
       );
-
-      navigate("/login");
     } catch (err) {
       console.error("Error uploading image: ", err);
       if (error.response) {
