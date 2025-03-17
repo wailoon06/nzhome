@@ -1,39 +1,84 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function DeviceDetailsPage() {
+  const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
-
-  const { name, type } = useParams();
-  const deviceImages = {
-    "Xiaomi Vacuum": "/image/xiaomi.jpeg",
-    "Samsung TV": "/image/samsung.jpeg",
-    "Philips Hue": "/image/light.jpeg",
-    "LG Speaker": "/image/speaker.jpeg",
-    "Nest Thermostat": "/image/thermostats.jpeg"
-  };
-  const deviceImage = deviceImages[name];
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // const deviceImages = {
+  //   "Xiaomi Vacuum": "/image/xiaomi.jpeg",
+  //   "Samsung TV": "/image/samsung.jpeg",
+  //   "Philips Hue": "/image/light.jpeg",
+  //   "LG Speaker": "/image/speaker.jpeg",
+  //   "Nest Thermostat": "/image/thermostats.jpeg"
+  // };
+  // const deviceImage = deviceImages[name];
 
   // translation
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
   const translations = translationsMap[language] || translationsMap["en"];
 
+  
+  const { name, type } = useParams();
+  const [deviceDetails, setDeviceDetails] = useState([]);
+
+  const fetchDeviceDetails = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:8080/api/getDeviceDetails",
+        { deviceName: name },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      setDeviceDetails(response.data);
+
+    } catch (err) {
+      if (err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchDeviceDetails();
+  }, []); // Empty dependency array ensures it runs once when the component mounts
+  
+ 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
-         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
-         </div>
+        <div className="relative flex">
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
+        </div>
 
         {/* Main Content */}
         <div
@@ -41,7 +86,11 @@ function DeviceDetailsPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* <!-- Main Content --> */}
             <div class="flex flex-col flex-1">
@@ -64,14 +113,22 @@ function DeviceDetailsPage() {
                       <div className=" flex flex-cols justify-center items-center p-3">
                         <div className="grid sm:grid-cols-1 items-center gap-4 p-4">
                           <img
-                            src= {deviceImage}
-                            alt=""
+                            src={deviceDetails.picture}
+                            alt={deviceDetails.deviceName}
                             className="border border-black rounded-lg mb-4 mx-auto"
                             style={{ height: "100px", width: "100px" }}
                           />
                           <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="text-2xl w-full mb-2 rounded-full text-white inline-block bg-red-500">
-                              {translations.offline}
+                            <div
+                              className={`text-2xl w-full mb-2 rounded-full text-white inline-block ${
+                                deviceDetails.onOff == "On"
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
+                              }`}
+                            >
+                              {deviceDetails.onOff == "On"
+                                ? "Online"
+                                : translations.offline}
                             </div>
                           </div>
                         </div>
@@ -159,3 +216,6 @@ function DeviceDetailsPage() {
 }
 
 export default DeviceDetailsPage;
+
+
+

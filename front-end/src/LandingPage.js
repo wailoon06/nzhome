@@ -62,10 +62,10 @@ function LandingPage() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:space-x-6 lg:space-x-12 justify-center text-[1.2rem] text-white">
-            <a href="#" className="hover:text-orange-500">
+            <a href="/about" className="hover:text-orange-500">
               About Us
             </a>
-            <a href="#" className="hover:text-orange-500">
+            <a href="/contact" className="hover:text-orange-500">
               Contact Us
             </a>
           </nav>

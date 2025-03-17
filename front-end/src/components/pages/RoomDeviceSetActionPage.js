@@ -14,12 +14,17 @@ function RoomDeviceSetActionPage() {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [temperature, setTemperature] = useState(""); // Initialize temperature state
   const [activeButton, setActiveButton] = useState(null);
+  const [volume, setVolume] = useState(50); // Initialize volume at 50%
+
+  const handleVolumeChange = (e) => {
+    setVolume(e.target.value);
+  };
 
   const toggleSwitch = () => {
     setIsSwitchOn((prevState) => !prevState);
   };
 
-  const { roomTitle } = useParams();
+  const { roomTitle, type } = useParams();
 
   // Handle temperature change (for the dropdown)
   const handleTemperatureChange = (e) => {
@@ -53,8 +58,12 @@ function RoomDeviceSetActionPage() {
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
-         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
+        <div className="relative flex">
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
         </div>
         {/* Main Content */}
         <div
@@ -62,7 +71,11 @@ function RoomDeviceSetActionPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* <!-- Main Content --> */}
             <div class="flex flex-col flex-1">
@@ -87,33 +100,55 @@ function RoomDeviceSetActionPage() {
                   className="grid grid-rows-[auto,1fr] p-4 mt-2 gap-4 rounded-lg bg-white"
                 >
                   <h1 className="text-center lg:text-4xl w-full">
-                    {roomTitle}
+                    {roomTitle} {type}
                   </h1>
 
-                  <div className="border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-between">
-                    {/* Label */}
-                    <span className="text-lg font-medium text-gray-700">
-                      {translations.temperature}
-                    </span>
+                  {!["TV", "Light", "vacuum", "Speaker"].includes(type) && (
+                    <div className="border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-between">
+                      <span className="text-lg font-medium text-gray-700">
+                        {translations.temperature}
+                      </span>
 
-                    {/* Dropdown */}
-                    <select
-                      className="border border-gray-300 rounded-lg p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      value={temperature}
-                      onChange={handleTemperatureChange}
-                    >
-                      <option value="" disabled>
-                        {translations.select}
-                      </option>
-                      {Array.from({ length: 100 }, (_, i) => i + 1).map(
-                        (temp) => (
-                          <option key={temp} value={temp}>
-                            {temp}°C
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
+                      <select
+                        className="border border-gray-300 rounded-lg p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={temperature}
+                        onChange={handleTemperatureChange}
+                      >
+                        <option value="" disabled>
+                          {translations.select}
+                        </option>
+                        {Array.from({ length: 100 }, (_, i) => i + 1).map(
+                          (temp) => (
+                            <option key={temp} value={temp}>
+                              {temp}°C
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </div>
+                  )}
+
+                  {["TV", "Speaker"].includes(type) && (
+                    <div className="border border-gray-300 rounded-lg bg-white p-4 flex items-center justify-center">
+                      <div className="volume-adjuster">
+                        <label
+                          htmlFor="volume"
+                          className="block text-lg font-medium"
+                        >
+                          Volume: {volume}%
+                        </label>
+                        <input
+                          id="volume"
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={volume}
+                          onChange={handleVolumeChange}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-6 p-5">
                     {/* Turn On Button */}

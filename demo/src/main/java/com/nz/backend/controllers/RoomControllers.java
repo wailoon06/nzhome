@@ -2,13 +2,17 @@ package com.nz.backend.controllers;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +54,7 @@ public class RoomControllers {
     @Value("${jwt.secret.key}")
     private String secretKey;
 
+    // DONE
     @PostMapping("/createRoom")
     public ResponseEntity<?> createRoom(@RequestHeader("Authorization") String token, @RequestBody AddRoomDTO addroomdto, @RequestParam("file") MultipartFile file) throws IOException{
 
@@ -92,6 +97,7 @@ public class RoomControllers {
         return ResponseEntity.ok("Room successfully created!");
     }
 
+    // DONE
     @DeleteMapping("/deleteRoom")
     public ResponseEntity<?> dltRoom(@RequestHeader("Authorization") String token, @RequestBody RoomNameDTO roomnamedto){
 
@@ -165,5 +171,58 @@ public class RoomControllers {
         return ResponseEntity.ok("Room updated successfully!");
     }
 
+    @GetMapping("/getAllRooms")
+    public ResponseEntity<?> getAllRooms(@RequestHeader("Authorization") String token) {
+        // Token Verification
+        if (token == null) {
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
+
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
+        }
+
+        List<Room> matchRooms = roomRepo.findByFamily(user.getFamily());
+        if (matchRooms == null) {
+            return ResponseEntity.badRequest().body("No room created!");
+        }
+        return ResponseEntity.ok(matchRooms);
+    }
+
+    @GetMapping("/getAllRoomName")
+    public ResponseEntity<?> getAllRoomName(@RequestHeader("Authorization") String token) {
+        // Token Verification
+        if (token == null) {
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
+
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
+        }
+
+        List<Room> matchRooms = roomRepo.findByFamily(user.getFamily());
+        if (matchRooms == null) {
+            return ResponseEntity.badRequest().body("No room created!");
+        }
+
+        List<String> roomNames = matchRooms.stream()
+                                       .map(Room::getRoomName)
+                                       .collect(Collectors.toList());
+                                       
+        Map<String, Object> response = new HashMap<>();
+        response.put("roomName", roomNames);
+
+        return ResponseEntity.ok(response);
+    }
 
 }

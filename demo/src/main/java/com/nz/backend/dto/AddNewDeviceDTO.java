@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class AddNewDeviceDTO {
     private String deviceName;
-    private String brandName;
+    private String categoryName;
     private String createdBy;
     private LocalDate warrantyExp;
     private String picture;
@@ -13,9 +13,9 @@ public class AddNewDeviceDTO {
 
     public AddNewDeviceDTO() {}
 
-    public AddNewDeviceDTO(String deviceName, String brandName, String createdBy, LocalDate warrantyExp, String picture, String roomName){
+    public AddNewDeviceDTO(String deviceName, String categoryName, String createdBy, LocalDate warrantyExp, String picture, String roomName){
         this.deviceName = deviceName;
-        this.brandName = brandName;
+        this.categoryName = categoryName;
         this.createdBy = createdBy;
         this.warrantyExp = warrantyExp;
         this.picture = picture;
@@ -30,12 +30,12 @@ public class AddNewDeviceDTO {
         this.deviceName = deviceName;
     }
 
-    public String getBrandName(){
-        return brandName;
+    public String getCategoryName(){
+        return categoryName;
     }
 
-    public void setBrandName(String brandName){
-        this.brandName = brandName;
+    public void setCategoryName(String categoryName){
+        this.categoryName = categoryName;
     }
 
     public String getCreatedBy(){

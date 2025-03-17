@@ -4,8 +4,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function RoomsNewPage() {
+  const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -23,6 +26,8 @@ function RoomsNewPage() {
   const [isOpen, setIsOpen] = useState(false); // Modal state
   const [favorites, setFavorites] = useState([]); // Favorite devices
   const [selectedDevices, setSelectedDevices] = useState([]); // Selected devices
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Modal Handlers
   const openModal = () => setIsOpen(true);
@@ -50,7 +55,7 @@ function RoomsNewPage() {
 
   // Upload picture
   const [imagePreview, setImagePreview] = useState(null);
-
+  const [imageFile, setImageFile] = useState(null);
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -61,16 +66,89 @@ function RoomsNewPage() {
 
   // Get title
   const [roomTitle, setRoomTitle] = useState("");
+  const getTitle = (e) => {setRoomTitle(e.target.value)};
 
-  const getTitle = (e) => {
-    setRoomTitle(e.target.value);
-  };
-
+  // Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
   const translations = translationsMap[language] || translationsMap["en"];
+  
+  // Handle submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!roomTitle) {
+      // alert(translations.pleaseEnterRoomTitle || "Please enter a room title");
+      alert("Please enter a room title")
+      return;
+    }
+
+    if (!imageFile) {
+      // alert(translations.pleaseUploadImage || "Please upload an image");
+      alert("Please upload an image")
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Get token
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please log in");
+        navigate("/login");
+        return;
+      }
+
+      // Create form data for multipart/form-data
+      const formData = new FormData();
+      formData.append("file", imageFile);
+
+      // Create JSON data
+      const roomData = {roomName: roomTitle};
+
+      // Append JSON data as a blob
+      formData.append(
+        "addroomdto",
+        new Blob([JSON.stringify(roomData)], {
+          type: "application/json",
+        })
+      );
+
+      // Make API call
+      const response = await axios
+                              .post("http://localhost:8080/api/createRoom",
+                                     formData,
+                                      {
+                                        headers: {
+                                          Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data",
+                                        },
+                                      }
+      );
+      alert(response.data || "Room created successfully!");
+      navigate("/rooms"); 
+      
+    } catch (err) {
+      console.error("Error creating room:", err);
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Session expired. Please log in again.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          setError(err.response.data);
+          alert(err.response.data);
+        }
+      } else {
+        setError("An unexpected error occurred");
+        alert("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -104,7 +182,7 @@ function RoomsNewPage() {
                 {/* ==================== */}
                 <div className="wrapper p-4">
                   {/* Event Form */}
-                  <div className="event-form bg-gray-100 p-4 mt-4 rounded-lg shadow-md grid grid-rows-[auto] gap-4">
+                  <form onSubmit={handleSubmit} className="event-form bg-gray-100 p-4 mt-4 rounded-lg shadow-md grid grid-rows-[auto] gap-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="w-full border border-gray-300 rounded p-4">
                         {/* Upload Button */}
@@ -275,7 +353,7 @@ function RoomsNewPage() {
                         )}
                       </div>
                     </div>
-
+                    
                     <Link
                       to={`/rooms/${roomTitle}/access`} // Use the input value in the link
                       className={`w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 block text-center ${
@@ -285,7 +363,7 @@ function RoomsNewPage() {
                       {translations.nextStep}
                     </Link>
                     {/* ===================================== */}
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>

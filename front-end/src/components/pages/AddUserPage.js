@@ -35,62 +35,65 @@ function UserProfilePage() {
   // Handle submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Filter out empty entries
-    const filteredRows = rows.filter(
-      (row) => row.username && row.email && row.password
-    );
-  
+
+    // Set password equal to username for each row and filter out empty entries
+    const filteredRows = rows
+      .map((row) => ({
+        ...row,
+        password: row.username, // Set password equal to username
+      }))
+      .filter((row) => row.username && row.email);
+
     if (filteredRows.length === 0) {
       alert(translations.noValidData || "No valid data to submit");
       return;
     }
-  
+
     setLoading(true);
     setError(null);
-  
+
     try {
       // Get token
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token");
+
       // Submit all users in parallel
       const responses = await Promise.all(
-        filteredRows.map(row => 
-          axios.post("http://localhost:8080/api/registerUser", 
-                  row, { headers: { Authorization: `Bearer ${token}`}}
-                )
-                .then((response) => {
-                  console.log("Registered successfuly", response);
-                  alert(response.data.data.toString());
-                })
-                .catch((error) => {
-                  console.error("Login error:", error);
-                  if (error.response) {
-                    console.log("Response data:", error.response.data);
-                    console.log("Response status:", error.response.status);
-                    alert(error.response.data.toString());
-                  } 
-                  window.location.reload();
-                })
+        filteredRows.map((row) =>
+          axios
+            .post("http://localhost:8080/api/registerUser", row, {
+              headers: { Authorization: `Bearer ${token}` },
+            })
+            .then((response) => {
+              console.log("Registered successfuly", response);
+              alert(response.data.data.toString());
+              navigate("/login");
+            })
+            .catch((error) => {
+              console.error("Login error:", error);
+              if (error.response) {
+                console.log("Response data:", error.response.data);
+                console.log("Response status:", error.response.status);
+                alert(error.response.data.toString());
+              }
+              window.location.reload();
+            })
         )
       );
-      
-      window.location.reload();
 
+      navigate("/login");
     } catch (err) {
       console.error("Error uploading image: ", err);
-       if (error.response) {
-         if (error.response.status === 401) {
-           alert("Session expired. Please log in again.");
-           localStorage.removeItem('token'); 
-           navigate("/login"); 
-         } else {
-           alert(error.response.data.message);
-         }
-       } else {
-         alert("An unexpected error occurred.");
-       }
-
+      if (error.response) {
+        if (error.response.status === 401) {
+          alert("Session expired. Please log in again.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          alert(error.response.data.message);
+        }
+      } else {
+        alert("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }
@@ -185,7 +188,7 @@ function UserProfilePage() {
                 <div className="flex justify-center mt-4">
                   <button
                     type="submit"
-                    onClick={() => navigate("/users")}
+                    // onClick={() => navigate("/users")}
                     className="bg-blue-500 text-white p-4 rounded-lg"
                   >
                     Submit

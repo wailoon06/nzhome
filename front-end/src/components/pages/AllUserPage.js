@@ -25,7 +25,6 @@ function AllUserPage() {
   });
   const translations = translationsMap[language] || translationsMap["en"];
 
-
   const [userDetails, setUserDetails] = useState(null);
 
   // Handle error

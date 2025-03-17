@@ -12,6 +12,8 @@ import RoomsRobots from "./components/roomsRobots";
 import Devices from "./components/devices";
 import Users from "./components/users";
 
+import ContactPage from "./ContactPage";
+import AboutPage from "./AboutPage";
 import RoomPage from "./components/pages/RoomPage";
 import DeviceDetailsPage from "./components/pages/DeviceDetailsPage";
 import UserPage from "./components/pages/UserPage";
@@ -56,6 +58,8 @@ const Root = () => {
           path="/"
           element={hasStarted === "true" ? <App /> : <LandingPage />}
         />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         {/* <Route path="/login" element={<LoginPage />} />

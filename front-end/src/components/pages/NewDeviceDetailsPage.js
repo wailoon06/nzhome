@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
+import axios from "axios";
 
 function NewDeviceDetailsPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
-
-  const navigate = useNavigate();
   const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const [RoomList, setRoomList] = useState(""); // Initialize RoomList state
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [roomList, setRoomList] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const code = ["12345"];
+  const [serialCode, setSerialCode] = useState("");
+  const [isValid, setIsValid] = useState(null); 
 
   const toggleSwitch = () => {
     setIsSwitchOn((prevState) => !prevState);
@@ -20,51 +26,117 @@ function NewDeviceDetailsPage() {
 
   const { name, type } = useParams();
 
-  // Handle RoomList change (for the dropdown)
-  const handleRoomListChange = (e) => {
-    setRoomList(e.target.value);
-  };
-
-  // Handle the form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Submit logic here (e.g., sending data to DB)
-    console.log("Form submitted with data:", {
-      RoomList,
-      isSwitchOn,
-    });
-
-    navigate(`/devices/new/${name}/test`);
-  };
-
   // Handle the check validity button click
   const handleCheckValidity = (e) => {
-    e.preventDefault();
-    // Your custom validity check logic here
-    console.log("Check validity action triggered");
-    // No navigation occurs here
+    e.preventDefault();  
+
+    if (code.includes(serialCode.trim())) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
   };
 
+  // Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
-
   const translations = translationsMap[language] || translationsMap["en"];
+
+  useEffect(() => {
+    const fetchRoomList = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          "http://localhost:8080/api/getAllRoomName",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        setRoomList(response.data.roomName);
+      } catch (err) {
+        if (err.response.status === 403) {
+          console.log("Session expired!");
+          alert("Session expired!");
+          localStorage.removeItem("token");
+          localStorage.removeItem("selectedDevice");
+          navigate("/login");
+        }
+
+        setError("An unexpected error occurs");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoomList();
+  }, [navigate]);
+  
+  // Handle the form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('token');
+      const selectedDevice = JSON.parse(localStorage.getItem('selectedDevice'));
+
+      const response = await axios.post(
+      "http://localhost:8080/api/addDevice",
+      { 
+        deviceName: selectedDevice.name, 
+        categoryName: selectedDevice.category, 
+        roomName: selectedRoom,
+        picture: selectedDevice.img
+      }, 
+      {
+        headers: { Authorization: `Bearer ${token}` }  
+      }
+      );
+      
+      alert("Successfully created!");
+      localStorage.removeItem("selectedDevice");
+      navigate(`/devices/new/${name}/test`);
+
+    } catch (err) {
+      if (err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
-         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
-         </div>
+        <div className="relative flex">
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
+        </div>
         {/* Main Content */}
         <div
           className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
-            
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
+
             {/* <!-- Main Content --> */}
             <div class="flex flex-col flex-1">
               {/* <!-- Main Content --> */}
@@ -79,7 +151,7 @@ function NewDeviceDetailsPage() {
                   </h1>
                 </div>
 
-                {/* ==================== */}
+                {/* Serial code */}
                 <form
                   onSubmit={handleSubmit}
                   className="grid grid-rows-[auto,1fr] p-4 mt-2 gap-4 rounded-lg bg-white"
@@ -95,6 +167,11 @@ function NewDeviceDetailsPage() {
                       type="text"
                       className="border border-gray-300 rounded-lg p-2 ml-5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder={translations.enter_serial_code}
+                      value={serialCode}
+                      onChange={(e) => {
+                        setSerialCode(e.target.value);
+                        setIsValid(code.includes(e.target.value.trim())); // Validate instantly
+                      }}
                     />
                   </div>
 
@@ -107,10 +184,28 @@ function NewDeviceDetailsPage() {
                     {/* Dropdown */}
                     <select
                       className="ml-5 border border-gray-300 rounded-lg p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      value={RoomList}
-                      onChange={handleRoomListChange}
+                      value={selectedRoom}
+                      onChange={(e) => setSelectedRoom(e.target.value)}
                     >
                       <option value="" disabled>
+                        {translationsMap.en.select}
+                      </option>
+                      {loading ? (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      ) : roomList.length > 0 ? (
+                        roomList.map((room) => (
+                          <option key={room} value={room}>
+                            {room}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          No Rooms Found
+                        </option>
+                      )}
+                      {/* <option value="" disabled>
                         {translations.select}
                       </option>
                       {[
@@ -123,7 +218,7 @@ function NewDeviceDetailsPage() {
                         <option key={room} value={room}>
                           {room}
                         </option>
-                      ))}
+                      ))} */}
                     </select>
                   </div>
 
@@ -138,8 +233,23 @@ function NewDeviceDetailsPage() {
                       </button>
 
                       {/* Switch */}
-                      <div className="text-green-700 w-full h-full flex items-center justify-center">
+                      {/* <div className="text-green-700 w-full h-full flex items-center justify-center">
                         {translations.valid}
+                      </div> */}
+                      <div
+                        className={`w-full h-full flex items-center justify-center text-lg font-medium ${
+                          isValid === null
+                            ? "text-gray-500"
+                            : isValid
+                            ? "text-green-700"
+                            : "text-red-700"
+                        }`}
+                      >
+                        {isValid === null
+                          ? ""
+                          : isValid
+                          ? translations.valid
+                          : "Invalid"}
                       </div>
                     </div>
                   </div>
@@ -147,11 +257,12 @@ function NewDeviceDetailsPage() {
                   <div className="p-4 gap-4 flex justify-end">
                     <button
                       type="submit"
-                      className="rounded-lg bg-black text-sm sm:text-base w-full mb-2 text-center sm:w-[15%] md:w-[15%] h-[3rem] flex justify-center items-center"
+                      className={`rounded-lg text-sm sm:text-base w-full mb-2 text-center sm:w-[15%] md:w-[15%] h-[3rem] flex justify-center items-center ${
+                        isValid ? "bg-black text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                      }`}
+                      disabled={!isValid}
                     >
-                      <div className="text-1xl text-white">
-                        {translations.done}
-                      </div>
+                      <div className="text-1xl text-white">{translations.done}</div>
                     </button>
                   </div>
                 </form>
