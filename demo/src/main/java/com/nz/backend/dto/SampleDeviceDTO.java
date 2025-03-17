@@ -2,12 +2,12 @@ package com.nz.backend.dto;
 
 public class SampleDeviceDTO {
     private String sampleName;
-    private String brandName;
+    private String categoryName;
     private String picture;
 
-    public SampleDeviceDTO(String sampleName, String brandName, String picture) {
+    public SampleDeviceDTO(String sampleName, String categoryName, String picture) {
         this.sampleName = sampleName;
-        this.brandName = brandName;
+        this.categoryName = categoryName;
         this.picture = picture;
     }
 
@@ -16,8 +16,8 @@ public class SampleDeviceDTO {
         return sampleName;
     }
 
-    public String getBrandName() {
-        return brandName;
+    public String getCategoryName() {
+        return categoryName;
     }
 
     public String getPicture() {
