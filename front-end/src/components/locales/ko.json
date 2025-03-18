@@ -47,6 +47,7 @@
   "event_title": "이벤트 제목",
   "event_description": "이벤트 설명",
   "select_device": "장치 선택",
+  "no_selected_devices": "선택된 장치 없음",
   "add_event": "이벤트 추가",
   "generate_report": "보고서 생성",
   "view_all": "모두 보기",

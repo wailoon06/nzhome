@@ -47,6 +47,7 @@
   "event_title": "Event Title",
   "event_description": "Event Description",
   "select_device": "Select Device",
+  "no_selected_devices": "No selected devices",
   "add_event": "Add Event",
   "generate_report": "Generate Report",
   "view_all": "View All",

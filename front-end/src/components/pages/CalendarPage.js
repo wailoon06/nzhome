@@ -126,8 +126,12 @@ function CalendarPage() {
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
-         </div>
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
+        </div>
 
         {/* Main Content */}
         <div
@@ -135,7 +139,11 @@ function CalendarPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* <!-- Main Content --> */}
             <div class="flex flex-col flex-1">
@@ -155,6 +163,56 @@ function CalendarPage() {
                 <div className="wrapper p-4">
                   <div className="container-calendar grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Left Section */}
+                    <div
+                      id="right"
+                      className="flex items-center justify-center bg-gray-100 p-4 rounded-lg shadow-md"
+                    >
+                      <div className="calendar-wrapper grid grid-rows-[auto] gap-4">
+                        <DatePicker
+                          selected={eventDate}
+                          onChange={(date) => setEventDate(date)}
+                          inline
+                          dateFormat="yyyy-MM-dd"
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                        />
+
+                        {/* Time Selection */}
+                        <div className="time-selection flex items-center space-x-4 flex items-center justify-center">
+                          <div>
+                            <label className="block text-sm font-medium mb-1">
+                              {translations.hour}:
+                            </label>
+                            <select
+                              value={selectedHour}
+                              onChange={(e) =>
+                                setSelectedHour(parseInt(e.target.value))
+                              }
+                              className="border border-gray-300 rounded p-2"
+                            >
+                              {generateOptions(0, 23)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-1">
+                              {translations.minute}:
+                            </label>
+                            <select
+                              value={selectedMinute}
+                              onChange={(e) =>
+                                setSelectedMinute(parseInt(e.target.value))
+                              }
+                              className="border border-gray-300 rounded p-2"
+                            >
+                              {generateOptions(0, 59)}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Section - DatePicker */}
                     <div
                       id="left"
                       className="bg-gray-100 p-4 rounded-lg shadow-md"
@@ -218,60 +276,10 @@ function CalendarPage() {
                         </ul>
                       </div>
                     </div>
-
-                    {/* Right Section - DatePicker */}
-                    <div
-                      id="right"
-                      className="flex items-center justify-center bg-gray-100 p-4 rounded-lg shadow-md"
-                    >
-                      <div className="calendar-wrapper grid grid-rows-[auto] gap-4">
-                        <DatePicker
-                          selected={eventDate}
-                          onChange={(date) => setEventDate(date)}
-                          inline
-                          dateFormat="yyyy-MM-dd"
-                          showMonthDropdown
-                          showYearDropdown
-                          dropdownMode="select"
-                        />
-
-                        {/* Time Selection */}
-                        <div className="time-selection flex items-center space-x-4 flex items-center justify-center">
-                          <div>
-                            <label className="block text-sm font-medium mb-1">
-                              {translations.hour}:
-                            </label>
-                            <select
-                              value={selectedHour}
-                              onChange={(e) =>
-                                setSelectedHour(parseInt(e.target.value))
-                              }
-                              className="border border-gray-300 rounded p-2"
-                            >
-                              {generateOptions(0, 23)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium mb-1">
-                              {translations.minute}:
-                            </label>
-                            <select
-                              value={selectedMinute}
-                              onChange={(e) =>
-                                setSelectedMinute(parseInt(e.target.value))
-                              }
-                              className="border border-gray-300 rounded p-2"
-                            >
-                              {generateOptions(0, 59)}
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
                   {/* Event Form */}
-                  <div className="event-form bg-gray-100 p-4 mt-4 rounded-lg shadow-md grid grid-cols-2 gap-4">
+                  <div className="event-form bg-gray-100 p-4 mt-4 rounded-lg shadow-md grid grid-cols-[auto, 1fr, auto] gap-4">
                     <div className="grid grid-rows-[auto] space-y-3">
                       <h3 className="text-xl font-semibold mb-3">
                         {translations.add_event}
@@ -354,7 +362,13 @@ function CalendarPage() {
                                       {devices.map((device) => (
                                         <li
                                           key={device.name}
-                                          className="p-4 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition flex justify-between items-center"
+                                          className={`p-4 rounded-lg shadow-sm transition flex justify-between items-center ${
+                                            selectedDevices.includes(
+                                              device.name
+                                            )
+                                              ? "bg-blue-200"
+                                              : "bg-gray-100 hover:bg-gray-200"
+                                          }`}
                                         >
                                           <div className="relative w-full">
                                             <span>
@@ -382,21 +396,27 @@ function CalendarPage() {
                                             }`}
                                           >
                                             {favorites.includes(device.name)
-                                              ? `${translations.favorited}`
-                                              : `${translations.favorite}`}
+                                              ? translations.favorited
+                                              : translations.favorite}
                                           </button>
 
                                           <button
                                             onClick={() =>
                                               toggleSelected(device.name)
                                             }
-                                            className="text-sm px-3 py-1 rounded-md ml-2"
+                                            className={`text-sm px-3 py-1 rounded-md ml-2 ${
+                                              selectedDevices.includes(
+                                                device.name
+                                              )
+                                                ? "bg-blue-500 text-white"
+                                                : "bg-gray-300 text-black"
+                                            }`}
                                           >
                                             {selectedDevices.includes(
                                               device.name
                                             )
-                                              ? `${translations.deselect}`
-                                              : `${translations.select}`}
+                                              ? translations.deselect
+                                              : translations.select}
                                           </button>
                                         </li>
                                       ))}
@@ -409,12 +429,12 @@ function CalendarPage() {
                         </div>
 
                         <div className="grid grid-cols-4 gap-2 justify-center items-center p-3">
-                          {/* Dynamically added blocks for Favorites */}
-                          {favorites.map((favDevice) => (
+                          {/* Dynamically added blocks for Selected Devices */}
+                          {selectedDevices.map((selectedDevice) => (
                             <div
-                              key={favDevice}
+                              key={selectedDevice}
                               className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 cursor-pointer"
-                              onClick={() => toggleSelected(favDevice)} // Toggle selected when clicked
+                              onClick={() => toggleSelected(selectedDevice)} // Toggle selection when clicked
                             >
                               <div className="grid sm:grid-cols-1 items-center gap-4 p-4">
                                 <img
@@ -425,24 +445,22 @@ function CalendarPage() {
                                 />
                                 <div className="relative w-full">
                                   <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                                    <div className="mb-2">{favDevice}</div>
+                                    <div className="mb-2">{selectedDevice}</div>
                                   </div>
 
-                                  {/* Green Check Mark for Selected Devices in Favorites */}
-                                  {selectedDevices.includes(favDevice) && (
-                                    <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
-                                      <i className="fas fa-check"></i>
-                                    </div>
-                                  )}
+                                  {/* Green Check Mark for Selected Devices */}
+                                  <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
+                                    <i className="fas fa-check"></i>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           ))}
 
-                          {/* Message if no favorites */}
-                          {favorites.length === 0 && (
+                          {/* Message if no selected devices */}
+                          {selectedDevices.length === 0 && (
                             <p className="text-gray-500 col-span-4 text-center">
-                              {translations.no_favorites}
+                              {translations.no_selected_devices}
                             </p>
                           )}
                         </div>
@@ -458,7 +476,7 @@ function CalendarPage() {
                       </button>
                     </div>
 
-                    <div className="space-y-3">
+                    {/* <div className="space-y-3">
                       <h3 className="text-xl font-semibold mb-3">
                         {translations.generate_report}
                       </h3>
@@ -473,7 +491,7 @@ function CalendarPage() {
                           </div>
                         </div>
                       </a>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

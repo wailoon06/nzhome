@@ -47,6 +47,7 @@
   "event_title": "Tajuk Acara",
   "event_description": "Penerangan Acara",
   "select_device": "Pilih Peranti",
+  "no_selected_devices": "Tiada peranti yang dipilih",
   "add_event": "Tambah Acara",
   "generate_report": "Jana Laporan",
   "view_all": "Lihat Semua",

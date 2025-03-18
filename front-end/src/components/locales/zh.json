@@ -47,6 +47,7 @@
   "event_title": "事件标题",
   "event_description": "事件描述",
   "select_device": "选择设备",
+  "no_selected_devices": "没有选择的设备",
   "add_event": "添加事件",
   "generate_report": "生成报告",
   "view_all": "查看所有",

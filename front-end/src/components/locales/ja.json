@@ -47,6 +47,7 @@
   "event_title": "イベントタイトル",
   "event_description": "イベント説明",
   "select_device": "デバイスを選択",
+  "no_selected_devices": "選択されたデバイスがありません",
   "add_event": "イベントを追加",
   "generate_report": "レポートを生成",
   "view_all": "すべて表示",
