@@ -309,7 +309,7 @@ function Devices() {
                       onClick={() => openModal(device)}
                     />
                     <Link
-                      to={`/devices/${device.category.categoryName}/${device.deviceName}/details`}
+                      to={`/devices/${device.category.categoryName}/${device.deviceid}/${device.deviceName}/details`}
                     >
                       <div className="teal-text text-sm sm:text-base w-full text-center mb-2">
                         {device.deviceName}
