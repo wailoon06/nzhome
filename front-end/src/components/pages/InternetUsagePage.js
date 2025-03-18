@@ -246,7 +246,7 @@ function InternetUsagePage() {
                 <h2 className="text-center text-2xl mb-4">{translations.internetUsageChart}</h2>
                   {/* Title */}
                     <h2 className="text-center text-2xl font-bold mb-4">
-                      Annual Internet Usage (MB)
+                      Monthly Internet Usage (MB)
                     </h2>
                   {loading ? (
                     <p className="text-center">Loading...</p>
