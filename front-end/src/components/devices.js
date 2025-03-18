@@ -118,7 +118,7 @@ function Devices() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       // Refresh device list after toggling
       fetchDeviceDetails();
     } catch (err) {
@@ -145,24 +145,25 @@ function Devices() {
   const handleToggleAll = async (targetState) => {
     setLoading(true);
     console.log("Starting toggle all, target state:", targetState);
-    
+
     try {
       const token = localStorage.getItem("token");
-      
+
       // Find devices that need to be changed
-      const devicesToToggle = filteredDevices.filter(device => 
-        (targetState && device.onOff === "Off") || 
-        (!targetState && device.onOff === "On")
+      const devicesToToggle = filteredDevices.filter(
+        (device) =>
+          (targetState && device.onOff === "Off") ||
+          (!targetState && device.onOff === "On")
       );
-      
+
       console.log(`Found ${devicesToToggle.length} devices to toggle`);
-      
+
       if (devicesToToggle.length === 0) {
         console.log("No devices need changing");
         setLoading(false);
         return;
       }
-      
+
       // Toggle each device one by one
       for (const device of devicesToToggle) {
         console.log(`Toggling device: ${device.deviceid}`);
@@ -172,13 +173,12 @@ function Devices() {
           { headers: { Authorization: `Bearer ${token}` } }
         );
       }
-      
+
       // Refresh device list after toggling all devices
       await fetchDeviceDetails();
-      
     } catch (err) {
       console.error("Error in handleToggleAll:", err);
-      
+
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
         alert("Session expired!");
@@ -226,6 +226,7 @@ function Devices() {
 
   const translations = translationsMap[language] || translationsMap["en"];
 
+  console.log(filteredDevices);
   return (
     <div className="rounded-lg p-4 teal-text mb-4">
       <div className="grid grid-cols-1 gap-4">
@@ -241,9 +242,14 @@ function Devices() {
                 className="text-white font-bold"
                 disabled={loading}
               >
-                {loading ? 
-                  <span className="flex items-center"><i className="fas fa-spinner fa-spin mr-2"></i>{translations.processing}</span> : 
-                  translations.turnAllOn}
+                {loading ? (
+                  <span className="flex items-center">
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    {translations.processing}
+                  </span>
+                ) : (
+                  translations.turnAllOn
+                )}
                 {/* {translations.turnAllOn} */}
               </button>
               <button
@@ -252,9 +258,14 @@ function Devices() {
                 disabled={loading}
               >
                 {/* {translations.turnAllOff} */}
-                {loading ? 
-                  <span className="flex items-center"><i className="fas fa-spinner fa-spin mr-2"></i>{translations.processing}</span> : 
-                  translations.turnAllOff}
+                {loading ? (
+                  <span className="flex items-center">
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    {translations.processing}
+                  </span>
+                ) : (
+                  translations.turnAllOff
+                )}
               </button>
             </div>
           </div>
@@ -297,7 +308,9 @@ function Devices() {
                       style={{ height: "170px" }}
                       onClick={() => openModal(device)}
                     />
-                    <Link to={`/devices/${device.category.categoryName}/${device.deviceName}/details`}>
+                    <Link
+                      to={`/devices/${device.category.categoryName}/${device.deviceName}/details`}
+                    >
                       <div className="teal-text text-sm sm:text-base w-full text-center mb-2">
                         {device.deviceName}
                       </div>
@@ -330,22 +343,24 @@ function Devices() {
             ))}
           </div>
 
-          <div className="absolute inset-y-1/2 w-[95%] flex justify-between items-center">
-            <button
-              onClick={prevItems}
-              disabled={currentIndex === 0}
-              className="bg-white text-gray-800 p-2 rounded-full"
-            >
-              <i className={"fas fa-chevron-left"}></i>
-            </button>
-            <button
-              onClick={nextItems}
-              disabled={currentIndex + 3 >= filteredDevices.length}
-              className="bg-white text-gray-800 p-2 rounded-full"
-            >
-              <i className={"fas fa-chevron-right"}></i>
-            </button>
-          </div>
+          {filteredDevices.length > 0 && (
+            <div className="absolute inset-y-1/2 w-[95%] flex justify-between items-center">
+              <button
+                onClick={prevItems}
+                disabled={currentIndex === 0}
+                className="bg-white text-gray-800 p-2 rounded-full"
+              >
+                <i className={"fas fa-chevron-left"}></i>
+              </button>
+              <button
+                onClick={nextItems}
+                disabled={currentIndex + 3 >= filteredDevices.length}
+                className="bg-white text-gray-800 p-2 rounded-full"
+              >
+                <i className={"fas fa-chevron-right"}></i>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
