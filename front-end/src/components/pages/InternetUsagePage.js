@@ -5,6 +5,10 @@ import MainContentHeader from "./MainContentHeader";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import LOWWIFI from '../../image/LOWWIFI.png';
+import MIDDLEWIFI from '../../image/MIDDLEWIFI.png';
+import GOODWIFI from '../../image/GOODWIFI.png';
+
 
 function InternetUsagePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -166,12 +170,17 @@ function InternetUsagePage() {
               <div className="grid grid-cols-2 mt-2 gap-4">
                 <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 h-full">
                   <img
-                    src=""
-                    alt=""
+                    src={
+                      networkSpeed < 10
+                        ? LOWWIFI
+                        : networkSpeed < 40
+                        ? MIDDLEWIFI
+                        : GOODWIFI
+                    }
                     className="rounded-lg mb-4"
                     style={{ height: "150px", width: "140px" }}
                   />
-                  <div className="teal-text text-sm sm:text-base w-full text-center mb-2">
+                  <div className="teal-text text-sm sm:text-base w-full font-bold text-center mb-2">
                     {translations.network}
                   </div>
                   <div className="teal-text text-2xl sm:text-3xl lg:text-4xl w-full text-center mb-2">
@@ -190,12 +199,12 @@ function InternetUsagePage() {
                         style={{ height: "100px", width: "100px" }}
                       /> */}
                       <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">{translations.internet_used}</div>
+                        <div className="mb-2 font-bold">{translations.internet_used}</div>
                         <div className="grid grid-cols-2 w-full">
-                          <div className="teal-text text-sm sm:text-base w-full mb-2">
+                          <div className="teal-text text-sm sm:text-base w-full font-bold mb-2">
                             {translations.today}
                           </div>
-                          <div className="teal-text text-sm sm:text-base w-full mb-2">
+                          <div className="teal-text text-sm sm:text-base font-bold w-full mb-2">
                             {translations.monthly}
                           </div>
                         </div>
@@ -222,7 +231,7 @@ function InternetUsagePage() {
                         style={{ height: "100px", width: "100px" }}
                       /> */}
                       <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                        <div className="mb-2">{translations.next_payment_date}</div>
+                        <div className="mb-2 font-bold">{translations.next_payment_date}</div>
                         <div className="teal-text text-2xl w-full mb-2">
                           {nextPaymentDate}
                         </div>
