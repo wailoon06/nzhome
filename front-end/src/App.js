@@ -90,7 +90,7 @@ function App() {
                 } rounded-lg min-h-full flex flex-col overflow-y-auto`}
               >
                 {/* Sidebar Logo */}
-                <div className="h-[100px] flex items-center justify-center">
+                <div className="h-[100px] flex items-center justify-center pt-10">
                   <a href="/">
                     <img
                       src="./image/NZHome2.png"
@@ -101,7 +101,7 @@ function App() {
                 </div>
                 {/* Sidebar Items */}
                 <a href="/devices">
-                  <div className="flex flex-col items-center justify-center px-4 py-2">
+                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
                     <i
                       className={`fas fa-layer-group text-white text-2xl ${
                         isCollapsed ? "hidden" : "block"
@@ -115,7 +115,7 @@ function App() {
                   </div>
                 </a>
                 <a href="/electric">
-                  <div className="flex flex-col items-center justify-center px-4 py-2">
+                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
                     <i
                       className={`fas fa-bolt text-white text-2xl ${
                         isCollapsed ? "hidden" : "block"
@@ -129,7 +129,7 @@ function App() {
                   </div>
                 </a>
                 <a href="/internet">
-                  <div className="flex flex-col items-center justify-center px-4 py-2">
+                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
                     <i
                       className={`fas fa-chart-pie text-white text-2xl ${
                         isCollapsed ? "hidden" : "block"
@@ -143,7 +143,7 @@ function App() {
                   </div>
                 </a>
                 <a href="/calendar">
-                  <div className="flex flex-col items-center justify-center px-4 py-2">
+                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
                     <i
                       className={`fas fa-wind text-white text-2xl ${
                         isCollapsed ? "hidden" : "block"

@@ -16,7 +16,7 @@ function Sidebar({ isCollapsed, toggleSidebar, language }) {
         } rounded-lg min-h-full flex flex-col overflow-y-auto`}
       >
         {/* Sidebar Logo */}
-        <div className="h-[100px] flex items-center justify-center">
+        <div className="h-[100px] flex items-center justify-center pt-10">
           <a href="/">
             <img
               src={NZHome2}
@@ -28,7 +28,7 @@ function Sidebar({ isCollapsed, toggleSidebar, language }) {
 
         {/* Sidebar Items */}
         <Link to="/devices">
-          <div className="flex flex-col items-center justify-center px-4 py-2">
+          <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
             <i
               className={`fas fa-layer-group text-white text-2xl ${
                 isCollapsed ? "hidden" : "block"
@@ -43,7 +43,7 @@ function Sidebar({ isCollapsed, toggleSidebar, language }) {
         </Link>
 
         <Link to="/electric">
-          <div className="flex flex-col items-center justify-center px-4 py-2">
+          <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
             <i
               className={`fas fa-bolt text-white text-2xl ${
                 isCollapsed ? "hidden" : "block"
@@ -57,7 +57,7 @@ function Sidebar({ isCollapsed, toggleSidebar, language }) {
           </div>
         </Link>
         <Link to="/internet">
-              <div className="flex flex-col items-center justify-center px-4 py-2">
+              <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
                 <i
                   className={`fas fa-chart-pie text-white text-2xl ${
                     isCollapsed ? "hidden" : "block"
@@ -71,7 +71,7 @@ function Sidebar({ isCollapsed, toggleSidebar, language }) {
               </div>
             </Link>
             <Link to="/calendar">
-              <div className="flex flex-col items-center justify-center px-4 py-2">
+              <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
                 <i
                   className={`fas fa-wind text-white text-2xl ${
                     isCollapsed ? "hidden" : "block"
