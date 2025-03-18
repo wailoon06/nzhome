@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import translationsMap from "../components/locales/translationsMap";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 function WidgetsEnergy() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -16,6 +19,29 @@ function WidgetsEnergy() {
   });
 
   const translations = translationsMap[language] || translationsMap["en"];
+
+  const [networkSpeed, setNetworkSpeed] = useState(500);
+  const [error, setError] = useState(null); // Add missing state
+  const [loading, setLoading] = useState(false); // Add missing state
+  const navigate = useNavigate(); // Ensure navigate is defined
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Authorization token missing.");
+      setLoading(false);
+      navigate("/login");
+      return;
+    }
+  
+    const interval = setInterval(() => {
+      // Generate a random speed between 20 and 50 Mbps
+      const newSpeed = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
+      setNetworkSpeed(newSpeed);
+    }, 1000); // Update every second
+  
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [navigate]);
 
   return (
     <div className="grid grid-cols-2 p-4 gap-4 mb-4">
@@ -70,13 +96,15 @@ function WidgetsEnergy() {
 
               {/* Network */}
               <div className="bg-white rounded-lg p-2 teal-text flex-1 min-w-[120px] overflow-hidden">
-                <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
-                  {translations.network}
+                <a href="/internet">
+                  <div className="text-sm sm:text-base md:text-lg pb-4 font-bold">
+                    {translations.network}
+                  </div>
+                  <div className="text-2xl sm:text-2xl md:text-3xl truncate">
+                    {networkSpeed} Mbps {/* Use dynamic state */}
+                  </div>
+                </a>
                 </div>
-                <div className="text-2xl sm:text-2xl md:text-3xl truncate">
-                  500 mb/s
-                </div>
-              </div>
             </div>
           </div>
         </a>
