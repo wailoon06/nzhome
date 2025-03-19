@@ -10,6 +10,8 @@ function UserProfilePage() {
   const navigate = useNavigate("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(""); //added
+  const [errorMessage, setErrorMessage] = useState("");     //added
 
   // Toggle sidebar function
   const toggleSidebar = () => {
@@ -35,6 +37,8 @@ function UserProfilePage() {
   // Handle submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");    //added
+    setSuccessMessage("");  //added
 
     // Set password equal to username for each row and filter out empty entries
     const filteredRows = rows
@@ -63,35 +67,71 @@ function UserProfilePage() {
             .post("http://localhost:8080/api/registerUser", row, {
               headers: { Authorization: `Bearer ${token}` },
             })
-            .then((response) => {
-              console.log("Registered successfuly", response);
-              alert(response.data.toString());
-              navigate("/users");
-            })
-            .catch((error) => {
-              console.error("Login error:", error);
-              if (error.response) {
-                console.log("Response data:", error.response.data);
-                console.log("Response status:", error.response.status);
-                alert(error.response.data.toString());
-              }
-              window.location.reload();
-            })
+            // .then((response) => {
+            //   console.log("Registered successfuly", response);
+            //   alert(response.data.toString());
+            //   navigate("/users");
+            // })
+            // .catch((error) => {
+            //   console.error("Login error:", error);
+            //   if (error.response) {
+            //     console.log("Response data:", error.response.data);
+            //     console.log("Response status:", error.response.status);
+            //     alert(error.response.data.toString());
+            //   }
+            //   window.location.reload();
+            // })
         )
       );
-    } catch (err) {
-      console.error("Error uploading image: ", err);
-      if (error.response) {
-        if (error.response.status === 401) {
-          alert("Session expired. Please log in again.");
-          localStorage.removeItem("token");
-          navigate("/login");
+
+      // Set success message (added)
+      setSuccessMessage("Users added successfully!");
+      
+      // Start redirect animation, then navigate (added)
+      setTimeout(() => {
+        navigate("/users");
+      }, 2000);
+
+  //   } catch (err) {
+  //     console.error("Error uploading image: ", err);
+  //     if (error.response) {
+  //       if (error.response.status === 401) {
+  //         alert("Session expired. Please log in again.");
+  //         localStorage.removeItem("token");
+  //         navigate("/login");
+  //       } else {
+  //         alert(error.response.data.message);
+  //       }
+  //     } else {
+  //       alert("An unexpected error occurred.");
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+      //replace with this catch (testing only)
+      }catch (err) {
+      console.error("Registration error:", err);
+      
+      if (err.response) {
+        if (err.response.status === 401) {
+          setErrorMessage("Session expired. Please log in again.");
+          
+          setTimeout(() => {
+            localStorage.removeItem("token");
+            navigate("/login");
+          }, 2000);
         } else {
-          alert(error.response.data.message);
+          setErrorMessage(err.response.data?.toString() || "Error adding users!");
         }
       } else {
-        alert("An unexpected error occurred.");
+        setErrorMessage("An unexpected error occurred. Please try again.");
       }
+      
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
     } finally {
       setLoading(false);
     }
@@ -119,6 +159,20 @@ function UserProfilePage() {
               toggleSidebar={toggleSidebar}
               translations={translations}
             />
+
+            {/* Success Message Display (added)*/}
+            {successMessage && (
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-50">
+                {successMessage}
+              </div>
+            )}
+
+            {/* Error Message Display (added)*/}
+            {errorMessage && (
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+                {errorMessage}
+              </div>
+            )}
 
             {/* <!-- Main Content --> */}
             <div className="flex flex-col flex-1">
