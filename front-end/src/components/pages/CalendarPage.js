@@ -4,6 +4,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function CalendarPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -16,7 +18,10 @@ function CalendarPage() {
   const [eventDate, setEventDate] = useState(null); // Date object for event selection
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDescription] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  
   // States for time components
   const [selectedHour, setSelectedHour] = useState(today.getHours());
   const [selectedMinute, setSelectedMinute] = useState(today.getMinutes());
@@ -76,39 +81,91 @@ function CalendarPage() {
     );
   };
 
-  // Add a new event
-  const addEvent = () => {
-    if (eventDate && eventTitle) {
+  //add event
+  const addEvent = async () => {
+    console.log("addEvent function called"); // Check if this appears in the console
+    console.log("eventDate:", eventDate);
+  console.log("eventTitle:", eventTitle);
+
+    if (!eventDate || !eventTitle) {
+      alert("Event date and title are required.");
+      return;
+    }
+  
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token:", token); // Check if token is retrieved correctly
+  
       const eventDetails = new Date(eventDate);
       eventDetails.setHours(selectedHour, selectedMinute);
-
-      // Get the list of selected devices (that are also favorited)
-      const selectedFavoritedDevices = favorites.filter((device) =>
-        selectedDevices.includes(device)
+  
+      const selectedFavoritedDevices = favorites
+        .filter((device) => selectedDevices.includes(device))
+        .map((device) => device.deviceid);
+  
+      const eventData = {
+        date: eventDetails.toISOString(),
+        title: eventTitle,
+        description: eventDescription,
+        repeat: isOn,
+        devices: selectedFavoritedDevices,
+      };
+  
+      console.log("Sending event data:", eventData); // Log event data before sending
+  
+      const response = await axios.post(
+        "http://localhost:8080/api/addEvent",
+        eventData,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      setEvents([
-        ...events,
+  
+      console.log("Response:", response); // Log response from the API
+  
+      setEvents((prevEvents) => [
+        ...prevEvents,
         {
-          id: Date.now(),
+          id: response.data.eventId,
           date: eventDetails,
           title: eventTitle,
           description: eventDescription,
-          repeat: isOn, // Add the repeat state to the event
-          devices: selectedFavoritedDevices, // Only include the selected devices
+          repeat: isOn,
+          devices: favorites.filter((device) =>
+            selectedDevices.includes(device.deviceid)
+          ),
         },
       ]);
-
+  
       // Reset input fields
       setEventDate(null);
       setSelectedHour(new Date().getHours());
       setSelectedMinute(new Date().getMinutes());
       setEventTitle("");
       setEventDescription("");
-      setIsOn(false); // Reset the repeat switch
-      setSelectedDevices([]); // Reset the selected devices state
+      setIsOn(false);
+      setSelectedDevices([]);
+
+      alert("Successfully created!");
+
+    } catch (err) {
+      console.error("API error:", err); // Log the error
+  
+      if (err.response?.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }
+  
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   // Delete an event by ID
   const deleteEvent = (id) => {
