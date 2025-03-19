@@ -5,6 +5,8 @@ import axios from "axios";
 
 function ChangePasswordPage() {
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState("");   //new added
+  const [errorMessage, setErrorMessage] = useState("");       //new added
 
   // front
   const handleButtonClick = (event) => {
@@ -57,20 +59,34 @@ function ChangePasswordPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setSuccessMessage("");    //new added
+    setErrorMessage("");      //new added
 
     const token = localStorage.getItem('token');
 
     if (token) {
         if (newPassword !== confirmPassword) {
-          alert("New password is not matched!");
-          window.location.reload();
+          // alert("New password is not matched!");
+          // window.location.reload();
+          setErrorMessage("New password is not matched!");  //new added
+          setTimeout(() => {    //new added
+            localStorage.removeItem("token");
+            localStorage.removeItem("selectedDevice");
+            window.location.reload();
+          }, 5000);
           setLoading(false);
           return ;
         }
         
         if (oldPassword === newPassword) {
-          alert("New password is same as old password!");
-          window.location.reload();
+          // alert("New password is same as old password!");
+          // window.location.reload();
+          setErrorMessage("New password cannot be the same as old password!"); //new added
+          setTimeout(() => {    //new added
+            localStorage.removeItem("token");
+            localStorage.removeItem("selectedDevice");
+            window.location.reload();
+          }, 5000);
           setLoading(false);
           return ;
         }
@@ -82,9 +98,13 @@ function ChangePasswordPage() {
           )
           .then((response) => {
             console.log(response.data);
-            alert("Password successfully change!");
+            // alert("Password successfully change!");
+            setSuccessMessage("Password successfully changed! Redirecting..."); //new added
             setLoading(false);
-            navigate("/profile");
+            // navigate("/profile");
+            setTimeout(() => {        //new added
+              navigate("/profile");   //new added
+            }, 5000);                 //new added
           })
           .catch((error) => {
             handleError(error);
@@ -92,15 +112,27 @@ function ChangePasswordPage() {
  
     } else {
       if (newPassword !== confirmPassword) {
-        alert("New password is not matched!");
-        window.location.reload();
+        // alert("New password is not matched!");
+        // window.location.reload();
+        setErrorMessage("New password is not matched!");  //new added
+        setTimeout(() => {    //new added
+          localStorage.removeItem("token");
+          localStorage.removeItem("selectedDevice");
+          window.location.reload();
+        }, 5000);
         setLoading(false);
         return ;
       }
   
       if (oldPassword === newPassword) {
-        alert("New password is same as old password!");
-        window.location.reload();
+        // alert("New password is same as old password!");
+        // window.location.reload();
+        setErrorMessage("New password cannot be the same as old password!"); //new added
+        setTimeout(() => {    //new added
+          localStorage.removeItem("token");
+          localStorage.removeItem("selectedDevice");
+          window.location.reload();
+        }, 5000);
         setLoading(false);
         return ;
       }
@@ -109,9 +141,13 @@ function ChangePasswordPage() {
         .put("http://localhost:8080/api/forgetPassword", {email, oldPassword, newPassword})
         .then((response) => {
           console.log(response.data);
-          alert("Password successfully change!");
+          // alert("Password successfully change!");
+          setSuccessMessage("Password successfully changed! Redirecting to login...");  //new added
           setLoading(false);
-          navigate("/login");
+          // navigate("/login");
+          setTimeout(() => {      //new added
+            navigate("/login");   //new added
+          }, 5000);               //new added
         })
         .catch((error) => {
           handleError(error);
@@ -125,11 +161,19 @@ function ChangePasswordPage() {
     if (error.response) {
       console.log("Response data:", error.response.data);
       console.log("Response status:", error.response.status);
-      alert("Error changing password: " + JSON.stringify(error.response.data));
+      // alert("Error changing password: " + JSON.stringify(error.response.data));
+      setErrorMessage("Error changing password: " +   //new added
+        (typeof error.response.data === 'object'      //new added
+          ? JSON.stringify(error.response.data)       //new added
+          : error.response.data.toString()));         //new added
     } else {
-      alert("Error changing password: " + error.message);
+      // alert("Error changing password: " + error.message);
+      setErrorMessage("Error changing password: " + error.message); //new added
     }
-    window.location.reload();
+    // window.location.reload();
+    setTimeout(() => {        //new added
+      setErrorMessage("");    //new added
+    }, 5000);                 //new added
   };
 
   return (
@@ -146,6 +190,21 @@ function ChangePasswordPage() {
               </h1>
             </div>
           </div>
+
+          {/* Success Message Display (new added) */} 
+          {successMessage && (
+            <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-50">
+              {successMessage}
+            </div>
+          )}
+
+          {/* Error Message Display (new added) */}
+          {errorMessage && (
+            <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+              {errorMessage}
+            </div>
+          )}
+
         </div>
       </div>
 

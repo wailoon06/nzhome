@@ -115,11 +115,14 @@ function UserProfilePage() {
       console.error("Registration error:", err);
       
       if (err.response) {
-        if (err.response.status === 401) {
+        const status = err.response.status;
+        if (status === 401 || status === 403) {
+          console.log("Session expired!");
           setErrorMessage("Session expired. Please log in again.");
           
           setTimeout(() => {
             localStorage.removeItem("token");
+            localStorage.removeItem("selectedDevice");
             navigate("/login");
           }, 2000);
         } else {
