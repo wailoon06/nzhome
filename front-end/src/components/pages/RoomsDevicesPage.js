@@ -164,6 +164,44 @@ function RoomsDevicesPage() {
     fetchUserDetails();
   }, [navigate]);
 
+  // delete users from room
+  // Handle delete submission
+  const handleDelete = async (email) => {
+    // Double confirm
+    if (!window.confirm("Are you sure you want to delete this user?")) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Get token
+      const token = localStorage.getItem("token");
+
+      // Delete user
+      const response = await axios.delete(
+        `http://localhost:8080/api/deleteUserFam`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          data: { email: email },
+        }
+      );
+
+      // Update the user list after successful deletion
+      setUserDetails((prevUsers) =>
+        prevUsers.filter((user) => user.email !== email)
+      );
+
+      alert(response.data.message);
+    } catch (err) {
+      console.error("Delete error:", err);
+      handleApiError(err);
+      window.location.reload();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -259,7 +297,7 @@ function RoomsDevicesPage() {
                                       {user.email}
                                     </div>
 
-                                    {/* <button
+                                    <button
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         handleDelete(user.email);
@@ -267,7 +305,7 @@ function RoomsDevicesPage() {
                                       className="text-red-500 text-xl font-bold px-2"
                                     >
                                       <i className="fas fa-times"></i>
-                                    </button> */}
+                                    </button>
                                   </div>
                                 ))
                               : !loading &&
