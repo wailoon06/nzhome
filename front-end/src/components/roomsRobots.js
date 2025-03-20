@@ -78,7 +78,6 @@ function RoomsRobots() {
   });
   const translations = translationsMap[language] || translationsMap["en"];
 
-
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[3fr,1.2fr] p-4 gap-4">
       {/* Rooms Section */}
