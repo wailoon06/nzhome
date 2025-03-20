@@ -202,6 +202,35 @@ function RoomsDevicesPage() {
     }
   };
 
+  // Add user
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false); // New state for Add User modal
+  const [userDetails2, setUserDetails2] = useState(null);
+
+  const openAddUserModal = () => setIsAddUserOpen(true);
+  const closeAddUserModal = () => setIsAddUserOpen(false);
+
+  const fetchUserDetails2 = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:8080/api/getUserFam", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setUserDetails2(response.data);
+    } catch (err) {
+      handleApiError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails2();
+  }, [navigate]);
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -314,12 +343,81 @@ function RoomsDevicesPage() {
                           {/* add user */}
                           <div className="flex justify-center mt-6">
                             <button
-                              onClick={() => console.log("Add new user")}
+                              onClick={openAddUserModal}
                               className="bg-blue-500 text-white py-2 px-4 rounded-full text-xl flex items-center hover:bg-blue-600 transition"
                             >
                               <i className="fas fa-plus mr-2"></i> Add User
                             </button>
                           </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Add user pop up */}
+                    {isAddUserOpen && (
+                      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1001]">
+                        <div className="bg-white w-11/12 max-w-3xl p-6 rounded-lg shadow-lg">
+                          {/* Header */}
+                          <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold">
+                              {translations.allUsers}
+                            </h2>
+                            <button
+                              className="text-gray-500 hover:text-gray-700 transition"
+                              onClick={closeAddUserModal}
+                            >
+                              <i className="fas fa-times"></i>
+                            </button>
+                          </div>
+
+                          {loading && (
+                            <div className="text-center py-8">
+                              <p>Loading users...</p>
+                            </div>
+                          )}
+
+                          {error && (
+                            <div className="text-center py-8 text-red-500">
+                              <p>{error}</p>
+                            </div>
+                          )}
+
+                          {/* Main Content Section */}
+                          <div className="flex flex-col items-center justify-center">
+                            {/* Scrollable container for users */}
+                            <div className="max-h-[60vh] w-full max-w-md mx-auto overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                              {!loading && !error && userDetails2.length > 0
+                                ? userDetails2.map((user, index) => (
+                                    <div
+                                      key={user.id || index}
+                                      className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center text-center text-lg w-full"
+                                    >
+                                      <h2 className="text-center w-full">
+                                        {user.username} ({user.role})
+                                      </h2>
+                                      <div className="text-[14px] sm:text-2xl font-bold text-center w-full">
+                                        {user.email}
+                                      </div>
+                                    </div>
+                                  ))
+                                : !loading &&
+                                  !error && (
+                                    <div className="text-center py-8">
+                                      <p>No users found.</p>
+                                    </div>
+                                  )}
+                            </div>
+                          </div>
+
+                          {/* add user */}
+                          {/* <div className="flex justify-center mt-6">
+                            <button
+                              onClick={openAddUserModal}
+                              className="bg-blue-500 text-white py-2 px-4 rounded-full text-xl flex items-center hover:bg-blue-600 transition"
+                            >
+                              <i className="fas fa-plus mr-2"></i> Add User
+                            </button>
+                          </div> */}
                         </div>
                       </div>
                     )}
