@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
+import axios from "axios";
 
 function RoomsNewAccessPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -12,18 +13,14 @@ function RoomsNewAccessPage() {
   };
 
   // Devices
-  const users = [{ name: "mom" }, { name: "daughter" }];
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedDevices, setSelectedDevices] = useState([]);
+  const [userDetails, setUserDetails] = useState(null);
+  const navigate = useNavigate();
 
-  const [selectedDevices, setSelectedDevices] = useState([]); // Selected users
-
-  // Toggle Selected State
-  const toggleSelected = (deviceName) => {
-    setSelectedDevices(
-      (prevSelected) =>
-        prevSelected.includes(deviceName)
-          ? prevSelected.filter((name) => name !== deviceName) // Remove from selected
-          : [...prevSelected, deviceName] // Add to selected
-    );
+  const handleNavigation = (path) => {
+    navigate(path);
   };
 
   // Get title
@@ -35,11 +32,65 @@ function RoomsNewAccessPage() {
 
   const translations = translationsMap[language] || translationsMap["en"];
 
+  // the family users
+  // Handle error
+  const handleApiError = (err) => {
+    console.error("API Error:", err);
+
+    if (err.response) {
+      setError(err.response.data.message);
+
+      if (err.response.status === 401) {
+        console.log("Session expired!");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    }
+  };
+
+  const fetchAllUsers = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:8080/api/getUserFam", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setUserDetails(response.data);
+    } catch (err) {
+      handleApiError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllUsers();
+  }, [navigate]);
+
+  // select users
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  const toggleSelected = (username) => {
+    setSelectedUsers(
+      (prevSelected) =>
+        prevSelected.includes(username)
+          ? prevSelected.filter((name) => name !== username) // Remove from selected
+          : [...prevSelected, username] // Add to selected
+    );
+  };
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
         </div>
         {/* Main Content */}
         <div
@@ -47,7 +98,11 @@ function RoomsNewAccessPage() {
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* <!-- Main Content --> */}
             <div class="flex flex-col flex-1">
@@ -76,49 +131,59 @@ function RoomsNewAccessPage() {
 
                       {/* Dynamically added blocks for Devices */}
                       <div className="grid grid-cols-4 gap-2 justify-center items-center p-3">
-                        {users.map((device) => (
-                          <div
-                            key={device.name}
-                            className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 cursor-pointer"
-                            onClick={() => toggleSelected(device.name)} // Toggle selected on click
-                          >
-                            <div className="grid sm:grid-cols-1 items-center gap-4 p-4">
-                              <img
-                                src=""
-                                alt=""
-                                className="border border-black rounded-lg mb-4 mx-auto"
-                                style={{ height: "100px", width: "100px" }}
-                              />
-                              <div className="relative w-full">
-                                <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                                  <div className="mb-2">{device.name}</div>
-                                </div>
-
-                                {/* Green Check Mark for Selected Devices */}
-                                {selectedDevices.includes(device.name) && (
-                                  <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
-                                    <i className="fas fa-check"></i>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
+                        {loading && (
+                          <div className="text-center py-8">
+                            <p>Loading users...</p>
                           </div>
-                        ))}
-
-                        {/* Message if no users */}
-                        {users.length === 0 && (
-                          <p className="text-gray-500 col-span-4 text-center">
-                            {translations.noUsersMessage}
-                          </p>
                         )}
+
+                        {error && (
+                          <div className="text-center py-8 text-red-500">
+                            <p>{error}</p>
+                          </div>
+                        )}
+
+                        {/* Main Content Section */}
+                        {/* Main Content Section */}
+                        <div className="flex flex-col items-center justify-center">
+                          {!loading && !error && userDetails.length > 0
+                            ? userDetails.map((user, index) => (
+                                <div
+                                  key={user.id || index}
+                                  onClick={() => toggleSelected(user.username)}
+                                  className="relative grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center justify-center text-center text-lg w-[85%] gap-4 cursor-pointer"
+                                >
+                                  {/* Green Check Mark for Selected Users */}
+                                  {selectedUsers.includes(user.username) && (
+                                    <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
+                                      <i className="fas fa-check"></i>
+                                    </div>
+                                  )}
+
+                                  {/* User Info */}
+                                  <h2>
+                                    {user.username} ({user.role})
+                                  </h2>
+                                  <div className="text-[14px] sm:text-2xl font-bold text-right">
+                                    {user.email}
+                                  </div>
+                                </div>
+                              ))
+                            : !loading &&
+                              !error && (
+                                <div className="text-center py-8">
+                                  <p>No users found.</p>
+                                </div>
+                              )}
+                        </div>
                       </div>
                     </div>
 
                     {/* Next Button */}
                     <Link
-                      to={`/rooms/devices/${roomTitle}`} // Use the input value in the link
+                      to={`/rooms/devices/${roomTitle}`}
                       className={`w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 block text-center ${
-                        selectedDevices.length === 0
+                        selectedUsers.length === 0
                           ? "pointer-events-none opacity-50"
                           : ""
                       }`} // Disable button if no users are selected
