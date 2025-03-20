@@ -248,7 +248,7 @@ function RoomsDevicesPage() {
 
                     {/* Modal */}
                     {isOpen && (
-                      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1001]">
                         <div className="bg-white w-11/12 max-w-3xl p-6 rounded-lg shadow-lg">
                           {/* Header */}
                           <div className="flex justify-between items-center mb-4">
@@ -277,43 +277,48 @@ function RoomsDevicesPage() {
 
                           {/* Main Content Section */}
                           <div className="flex flex-col items-center justify-center">
-                            {!loading && !error && userDetails.length > 0
-                              ? userDetails.map((user, index) => (
-                                  // <div
-                                  //   onClick={() => handleNavigation("#")}
-                                  //   className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center justify-center text-center text-lg w-[85%] gap-4"
-                                  // >
-                                  <div
-                                    key={user.id || index}
-                                    // onClick={() =>
-                                    //   handleNavigation(`/user/${user.id}`)
-                                    // }
-                                    className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center justify-center text-center text-lg w-[85%] gap-4"
-                                  >
-                                    <h2>
-                                      {user.username} ({user.role})
-                                    </h2>
-                                    <div className="text-[14px] sm:text-2xl font-bold text-right">
-                                      {user.email}
-                                    </div>
-
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDelete(user.email);
-                                      }}
-                                      className="text-red-500 text-xl font-bold px-2"
+                            {/* Scrollable container for users */}
+                            <div className="max-h-[60vh] w-full max-w-md mx-auto overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                              {!loading && !error && userDetails.length > 0
+                                ? userDetails.map((user, index) => (
+                                    <div
+                                      key={user.id || index}
+                                      className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center text-center text-lg w-full"
                                     >
-                                      <i className="fas fa-times"></i>
-                                    </button>
-                                  </div>
-                                ))
-                              : !loading &&
-                                !error && (
-                                  <div className="text-center py-8">
-                                    <p>No users found.</p>
-                                  </div>
-                                )}
+                                      <h2 className="text-center w-full">
+                                        {user.username} ({user.role})
+                                      </h2>
+                                      <div className="text-[14px] sm:text-2xl font-bold text-center w-full">
+                                        {user.email}
+                                      </div>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleDelete(user.email);
+                                        }}
+                                        className="text-red-500 text-xl font-bold px-2"
+                                      >
+                                        <i className="fas fa-times"></i>
+                                      </button>
+                                    </div>
+                                  ))
+                                : !loading &&
+                                  !error && (
+                                    <div className="text-center py-8">
+                                      <p>No users found.</p>
+                                    </div>
+                                  )}
+                            </div>
+                          </div>
+
+                          {/* add user */}
+                          <div className="flex justify-center mt-6">
+                            <button
+                              onClick={() => console.log("Add new user")}
+                              className="bg-blue-500 text-white py-2 px-4 rounded-full text-xl flex items-center hover:bg-blue-600 transition"
+                            >
+                              <i className="fas fa-plus mr-2"></i> Add User
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -408,142 +413,6 @@ function RoomsDevicesPage() {
       </div>
     </div>
   );
-
-  // return (
-  //   <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
-  //     <div className="p-2 grid grid-cols-[auto_1fr] h-full">
-  //       <div className="relative flex">
-  //         <Sidebar
-  //           isCollapsed={isCollapsed}
-  //           toggleSidebar={toggleSidebar}
-  //           language={language}
-  //         />
-  //       </div>
-
-  //       {/* Main Content */}
-  //       <div
-  //         className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
-  //       >
-  //         <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
-  //           {/* Main Content Header */}
-  //           <MainContentHeader
-  //             isCollapsed={isCollapsed}
-  //             toggleSidebar={toggleSidebar}
-  //             translations={translations}
-  //           />
-
-  //           {loading && (
-  //             <div className="text-center py-8">
-  //               <p>Loading devices...</p>
-  //             </div>
-  //           )}
-
-  //           {error && (
-  //             <div className="text-center py-8 text-red-500">
-  //               <p>{error}</p>
-  //             </div>
-  //           )}
-
-  //           {/* <!-- Main Content --> */}
-  //           <div class="flex flex-col flex-1">
-  //             {/* Main Content */}
-  //             <div
-  //               className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
-  //             >
-  //               <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
-  //                 {/* Main Content */}
-  //                 <div className="flex flex-col flex-1">
-  //                   {/* Setting Section */}
-  //                   <div className="grid grid-cols-[auto,1fr,auto] items-center mt-5 w-full">
-  //                     <a className="relative pl-4" href="/rooms">
-  //                       <i className="fa fa-2x fa-arrow-left"></i>
-  //                     </a>
-  //                     <h1 className="text-center lg:text-4xl w-full ml-[-1%]">
-  //                       {roomTitle}
-  //                     </h1>
-  //                   </div>
-
-  //                   {/* Main Content Section */}
-  //                   <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 gap-2 justify-center items-center p-3">
-  //                     {/* Dynamically added blocks */}
-  //                     <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
-  //                       {deviceDetails.map((device) => (
-  //                         <Link
-  //                           key={device.deviceName}
-  //                           to={`/rooms/summary/${device.deviceName}`}
-  //                           className="w-full"
-  //                         >
-  //                           <div className="grid sm:grid-cols-1 items-center gap-4 p-4">
-  //                             <img
-  //                               src={device.picture}
-  //                               alt={device.deviceName}
-  //                               className="border border-black rounded-lg mb-4 mx-auto"
-  //                               style={{ height: "100px", width: "100px" }}
-  //                             />
-  //                             <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
-  //                               <div className="mb-2">Xiaomi</div>
-  //                               <div
-  //                                 className={`text-2xl w-full mb-2 rounded-full text-white inline-block ${
-  //                                   deviceStates[device.deviceName]
-  //                                     ? "bg-green-500"
-  //                                     : "bg-red-500"
-  //                                 }`}
-  //                               >
-  //                                 {deviceStates[device.deviceName]
-  //                                   ? `${translations.online}`
-  //                                   : `${translations.offline}`}
-  //                               </div>
-  //                               <div className="flex flex-col items-center justify-center">
-  //                                 <div
-  //                                   onClick={(e) => {
-  //                                     e.preventDefault(); // Prevent navigation when toggling
-  //                                     toggleSwitch(device.deviceName);
-  //                                   }}
-  //                                   className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer transition-all ${
-  //                                     deviceStates[device.deviceName]
-  //                                       ? "bg-green-500"
-  //                                       : "bg-gray-300"
-  //                                   }`}
-  //                                 >
-  //                                   <div
-  //                                     className={`w-6 h-6 rounded-full bg-white shadow-md transform transition-transform ${
-  //                                       deviceStates[device.deviceName]
-  //                                         ? "translate-x-8"
-  //                                         : "translate-x-0"
-  //                                     }`}
-  //                                   ></div>
-  //                                 </div>
-  //                               </div>
-  //                             </div>
-  //                           </div>
-  //                         </Link>
-  //                       ))}
-  //                     </div>
-  //                     {/* More blocks will automatically adjust */}
-  //                   </div>
-  //                 </div>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
-
-  // const [deviceStates, setDeviceStates] = useState(
-  //   deviceDetails.reduce((acc, device) => {
-  //     acc[device.name] = false; // Initialize all devices as "Off"
-  //     return acc;
-  //   }, {})
-  // );
-
-  // const toggleSwitch = (deviceid) => {
-  //   setDeviceStates((prevState) => ({
-  //     ...prevState,
-  //     [deviceid]: !prevState[deviceid], // Toggle the state for the specific device
-  //   }));
-  // };
 }
 
 export default RoomsDevicesPage;
