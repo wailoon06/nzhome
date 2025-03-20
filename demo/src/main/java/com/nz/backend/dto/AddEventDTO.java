@@ -3,18 +3,20 @@ package com.nz.backend.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.nz.backend.entities.Device;
+
 public class AddEventDTO {
     private String title;
     private String description;
     private LocalDate date;
     private boolean repeat;
-    private List<AddNewDeviceDTO> devices;
+    private List<Device> devices;
 
     public AddEventDTO() {
     }
 
     public AddEventDTO(String title, String description, LocalDate date, boolean repeat,
-            List<AddNewDeviceDTO> devices) {
+            List<Device> devices) {
         this.title = title;
         this.description = description;
         this.date = date;
@@ -54,11 +56,11 @@ public class AddEventDTO {
         this.repeat = repeat;
     }
 
-    public List<AddNewDeviceDTO> getDevices() {
+    public List<Device> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<AddNewDeviceDTO> devices) {
+    public void setDevices(List<Device> devices) {
         this.devices = devices;
     }
 }

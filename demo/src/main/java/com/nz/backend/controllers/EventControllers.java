@@ -11,6 +11,8 @@ import com.nz.backend.enums.OnOff;
 import com.nz.backend.repo.EventRepo;
 import com.nz.backend.repo.UserRepo;
 
+import com.nz.backend.dto.AddEventDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +36,8 @@ public class EventControllers {
     private UserRepo userRepo;
 
     @PostMapping("/addEvent")
-    public ResponseEntity<?> addEvent(@RequestHeader("Authorization") String token, @RequestBody Event event) {
+    public ResponseEntity<?> addEvent(@RequestHeader("Authorization") String token,
+            @RequestBody AddEventDTO addEventDTO) {
         // Token Verification
         if (token == null) {
             return ResponseEntity.badRequest().body("Invalid token!");
@@ -51,13 +54,13 @@ public class EventControllers {
         Family family = user.getFamily();
 
         Event newEvent = new Event(
-                event.getTitle(),
-                event.getDescription(),
-                event.getDate(),
-                event.isRepeat(), //
+                addEventDTO.getTitle(),
+                addEventDTO.getDescription(),
+                addEventDTO.getDate(),
+                addEventDTO.isRepeat(), //
                 user,
                 family,
-                event.getDevices());
+                addEventDTO.getDevices());
         eventRepo.save(newEvent);
         return ResponseEntity.ok("Successfully Added!");
     }
