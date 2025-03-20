@@ -46,6 +46,35 @@ function UserSettingPage() {
     window.location.reload();
   };
 
+  // feedback
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!message.trim()) return alert("Message cannot be empty");
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+
+      if (response.ok) {
+        alert("Message posted successfully!");
+        setMessage("");
+        setIsOpen(false);
+      } else {
+        alert("Failed to post message");
+      }
+    } catch (error) {
+      alert("An error occurred: " + error.message);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -105,35 +134,52 @@ function UserSettingPage() {
                     <option value="ms">{translations.ms}</option>
                   </select>
                 </div>
-              </div>
 
-              <div className="flex flex-col items-center justify-center">
-                {/* <a
+                <div className="flex flex-col items-center justify-center">
+                  {/* <a
                   href="/profile/languages"
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
                   <span className="font-bold">{translations.languages}</span>
                 </a> */}
 
-                <div
-                  onClick={() => handleNavigation("#")}
-                  className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
-                >
-                  <span className="font-bold">
-                    {translations.notifications}
-                  </span>
-                </div>
+                  <div
+                    onClick={() => handleNavigation("#")}
+                    className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
+                  >
+                    <span className="font-bold">
+                      {translations.notifications}
+                    </span>
+                  </div>
 
-                <div
-                  onClick={() => handleNavigation("#")}
-                  className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
-                >
-                  <span className="font-bold">
-                    {translations.helpAndFeedback}
-                  </span>
-                </div>
+                  <div className="w-[96%] mt-4 p-2 border border-gray-500 rounded-md bg-white text-center">
+                    <button
+                      onClick={() => setIsOpen(!isOpen)}
+                      className="px-4 py-2 font-bold text-lg w-full"
+                    >
+                      Help & Feedback
+                    </button>
+                    {isOpen && (
+                      <div className="mt-4 flex flex-col items-center w-full">
+                        <textarea
+                          className="w-full max-w-lg p-2 border rounded-md teal-text"
+                          rows="4"
+                          placeholder="Type your message here..."
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                        ></textarea>
+                        <button
+                          onClick={handleSubmit}
+                          className="mt-2 px-4 py-2 bg-green-500 text-white rounded-md w-full max-w-lg"
+                          disabled={isLoading}
+                        >
+                          {isLoading ? "Posting..." : "Post Message"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
-                <div
+                  {/* <div
                   onClick={() => handleNavigation("#")}
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
@@ -145,13 +191,14 @@ function UserSettingPage() {
                   className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                 >
                   <span className="font-bold">{translations.privacy}</span>
-                </div>
+                </div> */}
 
-                <div
-                  onClick={logOut}
-                  className="rounded-md border border-gray-500 bg-white p-4 mt-12 flex items-center justify-center text-center text-lg w-[96%]"
-                >
-                  <span className="font-bold">{translations.logOut}</span>
+                  <div
+                    onClick={logOut}
+                    className="rounded-md border border-gray-500 bg-white p-4 mt-12 flex items-center justify-center text-center text-lg w-[96%]"
+                  >
+                    <span className="font-bold">{translations.logOut}</span>
+                  </div>
                 </div>
               </div>
             </div>
