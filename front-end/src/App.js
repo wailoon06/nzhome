@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
+import axios from "axios";
+import { useEffect } from "react";
 
 import WidgetsEnergy from "./components/widgetsEnergy";
 import RoomsRobots from "./components/roomsRobots";
@@ -48,7 +50,8 @@ function App() {
     setIsCollapsed(!isCollapsed);
   };
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Language
   const [language, setLanguage] = useState(() => {
@@ -74,6 +77,42 @@ function App() {
     }
     window.location.reload();
   }
+
+  const [userDetails, setUserDetails] = useState(null);
+
+  const fetchUserDetails = async () => {
+    setLoading(true);
+    
+    try {
+      // Get token
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:8080/api/getUserDetails', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      setUserDetails(response.data);
+  
+    } catch (err) {
+      console.error('Error fetching user details:', err);
+      setError(err.message || 'Failed to load user details');
+      
+      // Handle token expiration or authentication issues
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        // Token expired or invalid - redirect to login
+        console.log("Session expired!");
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   return (
     <Routes>

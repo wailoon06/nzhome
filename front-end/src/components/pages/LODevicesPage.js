@@ -187,7 +187,7 @@ function LODevicesPage() {
                         <p>No Image Available</p>
                       )}
                       <div className="teal-text text-sm sm:text-base w-full mb-2">
-                        <strong>{device.deviceName}</strong>
+                        <strong>{device.deviceName} ({device.room.roomName})</strong>
                       </div>
                     </Link>
 
