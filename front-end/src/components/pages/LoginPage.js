@@ -29,7 +29,7 @@ function LoginPage() {
 
     try {
       // Post email and password from user for verification
-      const response = await axios.post("https://localhost:8080/api/login", { email, password })
+      const response = await axios.post("http://localhost:8080/api/login", { email, password })
 
       // Message for redirecting
       console.log(response.data);

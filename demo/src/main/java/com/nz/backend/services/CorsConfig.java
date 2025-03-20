@@ -13,7 +13,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://nzhome.vercel.app/") // Replace with your Vercel URL
+                        .allowedOrigins("https://nzhome.vercel.app/", "http://localhost:3000/") // Replace with your Vercel URL
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
