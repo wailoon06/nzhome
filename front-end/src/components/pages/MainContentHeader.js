@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const MainContentHeader = ({ isCollapsed, toggleSidebar, translations }) => {
   return (
-    <div className="sticky top-0 z-[9999]">
+    <div className="sticky top-0 z-[1000]">
       <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
         {/* Hamburger Button */}
         <div className={`flex items-center ${isCollapsed ? "block" : "hidden"}`}>
