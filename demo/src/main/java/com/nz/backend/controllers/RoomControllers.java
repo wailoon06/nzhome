@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nz.backend.dto.AddRoomDTO;
 import com.nz.backend.dto.RoomNameDTO;
 import com.nz.backend.dto.UpdateRoomDTO;
 import com.nz.backend.entities.Device;
@@ -78,6 +77,11 @@ public class RoomControllers {
         if (user.getRole().name().equals("User")) {
             return ResponseEntity.badRequest().body("Access Denied!");
         }       
+
+        Room room = roomRepo.findByRoomNameAndFamily(roomName, user.getFamily());
+        if (room != null) {
+            return ResponseEntity.badRequest().body("Room already exists!");
+        }
 
         // Get image
         if (file.getSize() > 5 * 1024 * 1024) {

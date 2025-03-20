@@ -42,8 +42,8 @@ function AddNewDevicePage() {
     { name: "Arlo Ultra Camera", img: "/image/camera.jpg", category: "Camera" },
   ];
   const robot = [
-    { name: "Xiaomi Vacuum Robot", img: "/image/vrobot.avif", category: "Robot" },
-    { name: "ILife Vacuum Robot", img: "/image/vrobot.avif", category: "Robot" },
+    { name: "Xiaomi Vacuum Robot", img: "/image/vrobot.avif", category: "Vacuum" },
+    { name: "ILife Vacuum Robot", img: "/image/vrobot.avif", category: "Vacuum" },
   ];
 
   // Language

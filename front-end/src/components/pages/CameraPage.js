@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function CameraPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -10,23 +13,62 @@ function CameraPage() {
     setIsCollapsed(!isCollapsed);
   };
 
+  const navigate = useNavigate();
+  const [deviceDetails, setDeviceDetails] = useState([]);
+  const [cameraDetails, setCameraDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
+  // Get device
+  const fetchDeviceDetails = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/getAllDevice",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // console.log("API Response:", response);
+
+      // if (!response.data) {
+      //   throw new Error("Invalid API response: No data found");
+      // }
+
+      setDeviceDetails(response.data);
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDeviceDetails();
+  },[]);
+
+  useEffect(() => {
+    const camera = deviceDetails.filter(device => device.category?.categoryName === "Camera");
+    setCameraDetails(camera);
+  }, [deviceDetails]);
+
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [animationClass, setAnimationClass] = useState(""); // Track animation
   const [tempIndex, setTempIndex] = useState(currentIndex); // Temporary index for animation
-  const rooms = [
-    { img: "room1.jpg", name: "Living Room" },
-    { img: "room2.jpg", name: "Kitchen" },
-    { img: "room3.jpg", name: "Bathroom" },
-    { img: "room4.jpg", name: "Master" },
-    { img: "room5.jpg", name: "Guest Room" },
-    { img: "room6.jpg", name: "Office" },
-    { img: "room7.jpg", name: "Garage" },
-    { img: "room8.jpg", name: "Patio" },
-    { img: "room8.jpg", name: "Patio" },
-    { img: "room8.jpg", name: "Patio" },
-  ];
 
-  const totalPages = Math.ceil(rooms.length / 1);
+  const totalPages = Math.ceil(cameraDetails.length / 1);
   const currentPage = Math.floor(currentIndex / 1);
 
   const prevItems = () => {
@@ -36,7 +78,7 @@ function CameraPage() {
   };
 
   const nextItems = () => {
-    if (currentIndex + 1 >= rooms.length) return; // Prevent unnecessary actions
+    if (currentIndex + 1 >= cameraDetails.length) return; // Prevent unnecessary actions
     setAnimationClass("animate-slide-in-next");
     setTempIndex(currentIndex + 1); // Update temp index for display
   };
@@ -108,31 +150,34 @@ function CameraPage() {
                 {/* ==================== */}
 
                 <div className="rounded-lg p-4 mb-4 relative overflow-hidden">
+                {cameraDetails.length === 0 ? (
+                  <div className="text-center text-gray-500 text-lg font-semibold">
+                    No camera found
+                  </div>
+                ) : (
                   <div className="transition-all duration-500 ease-in-out">
                     <div
                       className={`grid grid-cols-1 gap-4 transition-all duration-500 ease-in-out ${animationClass}`}
                       onAnimationEnd={handleAnimationEnd}
                     >
-                      {rooms
+                      {cameraDetails
                         .slice(tempIndex, tempIndex + 1)
-                        .map((room, index) => (
+                        .map((camera, index) => (
                           <div
                             key={index}
                             className="bg-white border-8 rounded-lg mb-4 py-3 flex flex-col justify-end h-full"
                           >
                             <div className="flex justify-center items-center mb-4 h-[23rem]">
                               <img
-                                src={
-                                  "https://wallpapers.com/images/featured/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg"
-                                }
-                                alt={""}
+                                src={camera.picture}
+                                alt={camera.room.roomName}
                                 className="rounded-lg object-contain"
                                 style={{ maxHeight: "100%" }}
                               />
                             </div>
 
                             <div className="relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center">
-                              {room.name}
+                              {camera.room.roomName}
                             </div>
 
                             <div className="flex flex-col items-center space-y-4 mt-8">
@@ -182,6 +227,7 @@ function CameraPage() {
                         ))}
                     </div>
                   </div>
+                  )}
 
                   <div className="flex justify-center mt-4 space-x-2">
                     {Array.from({ length: totalPages }).map((_, index) => (
@@ -205,7 +251,7 @@ function CameraPage() {
                     </button>
                     <button
                       onClick={nextItems}
-                      disabled={currentIndex + 1 >= rooms.length}
+                      disabled={currentIndex + 1 >= cameraDetails.length}
                       className="bg-white border-4 text-gray-800 p-2 rounded-full"
                     >
                       <i className={"fas fa-chevron-right"}></i>
@@ -222,3 +268,16 @@ function CameraPage() {
 }
 
 export default CameraPage;
+
+  // const rooms = [
+  //   { img: "room1.jpg", name: "Living Room" },
+  //   { img: "room2.jpg", name: "Kitchen" },
+  //   { img: "room3.jpg", name: "Bathroom" },
+  //   { img: "room4.jpg", name: "Master" },
+  //   { img: "room5.jpg", name: "Guest Room" },
+  //   { img: "room6.jpg", name: "Office" },
+  //   { img: "room7.jpg", name: "Garage" },
+  //   { img: "room8.jpg", name: "Patio" },
+  //   { img: "room8.jpg", name: "Patio" },
+  //   { img: "room8.jpg", name: "Patio" },
+  // ];

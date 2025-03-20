@@ -264,7 +264,7 @@ function App() {
       <Route path="/users" element={<AllUserPage />} />
       <Route path="/change&password" element={<ChangePasswordPage />} />
       <Route path="/robots" element={<SelectRobotPage />} />
-      <Route path="/robots/vacuum/:name" element={<VacuumBotsPage />} />
+      <Route path="/robots/vacuum/:id/:name" element={<VacuumBotsPage />} />
       <Route path="/notification" element={<NotificationPage />} />
       <Route path="/devices" element={<LODevicesPage />} />
       <Route
