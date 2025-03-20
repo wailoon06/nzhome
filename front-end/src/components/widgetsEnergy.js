@@ -42,6 +42,43 @@ function WidgetsEnergy() {
   
     return () => clearInterval(interval); // Cleanup on unmount
   }, [navigate]);
+  
+  // Handle getting user details
+  const [userDetails, setUserDetails] = useState(null);
+
+  const fetchUserDetails = async () => {
+    setLoading(true);
+    
+    try {
+      // Get token
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:8080/api/getUserDetails', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      setUserDetails(response.data);
+  
+    } catch (err) {
+      console.error('Error fetching user details:', err);
+      setError(err.message || 'Failed to load user details');
+      
+      // Handle token expiration or authentication issues
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        // Token expired or invalid - redirect to login
+        console.log("Session expired!");
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   return (
     <div className="grid grid-cols-2 p-4 gap-4 mb-4">
@@ -147,9 +184,11 @@ function WidgetsEnergy() {
             </a>
 
             {/* Overlay Div */}
-            <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
-              <i className="fas fa-lock text-white text-2xl"></i>
-            </div>
+            {userDetails?.role === "User" && (
+              <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
+                <i className="fas fa-lock text-white text-2xl"></i>
+              </div>
+            )}
           </div>
 
           {/* This Month Energy Usage */}
@@ -171,9 +210,11 @@ function WidgetsEnergy() {
             </a>
 
             {/* Overlay Div */}
-            <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
-              <i className="fas fa-lock text-white text-2xl"></i>
-            </div>
+            {userDetails?.role === "User" && (
+              <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
+                <i className="fas fa-lock text-white text-2xl"></i>
+              </div>
+            )}
           </div>
         </div>
 
@@ -203,9 +244,11 @@ function WidgetsEnergy() {
             </a>
 
             {/* Overlay Div */}
-            <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
-              <i className="fas fa-lock text-white text-2xl"></i>
-            </div>
+            {userDetails?.role === "User" && (
+              <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
+                <i className="fas fa-lock text-white text-2xl"></i>
+              </div>
+            )}
           </div>
         </div>
       </div>

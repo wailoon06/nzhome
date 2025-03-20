@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,32 +24,27 @@ public class Energy {
     @JoinColumn(name = "Deviceid", nullable = false)
     private Device device;
 
-    @Column(name = "energyConsumption", nullable = false)
-    private int energyConsumption;
+    @Column(name = "energyConsumption")
+    private Double energyConsumption;
 
-    @Column(name = "energyUsage", nullable = false)
-    private int energyUsage;
+    @Column(name = "energyUsage")
+    private Double energyUsage;
 
     @Column(name = "date", nullable = false, updatable = false)
     private LocalDate date;
-
-    @PrePersist
-    protected void onCreate() {
-        date = LocalDate.now();
-    }
 
     @ManyToOne
     @JoinColumn(name = "Familyid") 
     private Family family;
 
-
     // Constructors
     public Energy() {}
 
-    public Energy(Device device, int energyConsumption, int energyUsage, Family family) {
+    public Energy(Device device, Double energyConsumption, Double energyUsage, LocalDate date, Family family) {
         this.device = device;
         this.energyConsumption = energyConsumption;
         this.energyUsage = energyUsage;
+        this.date = date;
         this.family = family;
     }
 
@@ -71,20 +65,12 @@ public class Energy {
         this.device = device;
     }
 
-    public int getEnergyConsumption() {
+    public Double getEnergyConsumption() {
         return energyConsumption;
     }
 
-    public void setEnergyConsumption(int energyConsumption) {
-        this.energyConsumption = energyConsumption;
-    }
-
-    public int getEnergyUsage() {
+    public Double getEnergyUsage() {
         return energyUsage;
-    }
-
-    public void setEnergyUsage(int energyUsage) {
-        this.energyUsage = energyUsage;
     }
 
     public LocalDate getDate() {
