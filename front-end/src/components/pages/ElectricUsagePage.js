@@ -4,6 +4,8 @@ import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
 
+import { PDFDocument, rgb } from "pdf-lib";
+
 function ElectricUsagePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => {
@@ -16,22 +18,88 @@ function ElectricUsagePage() {
 
   const translations = translationsMap[language] || translationsMap["en"];
 
+  const generatePDF = async () => {
+    // Extract text from the specific section
+    const energyTextElements = document.querySelectorAll(".teal-text");
+    let extractedText = "";
+
+    energyTextElements.forEach((el) => {
+      if (el.innerText.trim()) {
+        extractedText += el.innerText.trim() + "\n";
+      }
+    });
+
+    // Create a new PDF Document
+    const pdfDoc = await PDFDocument.create();
+    let page = pdfDoc.addPage([600, 400]); // Initial page
+    let { width, height } = page.getSize();
+
+    // Define text properties
+    const fontSize = 14;
+    const margin = 50;
+    let yPosition = height - margin;
+    let lineCount = 0;
+
+    // Split text into lines
+    const lines = extractedText.split("\n");
+
+    for (let line of lines) {
+      // Check if we need a new page
+      if (yPosition < margin) {
+        page = pdfDoc.addPage([600, 400]); // Create a new page
+        yPosition = height - margin;
+        lineCount = 0; // Reset line counter for new page
+      }
+
+      // Draw the text line
+      page.drawText(line, {
+        x: margin,
+        y: yPosition,
+        size: fontSize,
+        color: rgb(0, 0, 0),
+      });
+
+      yPosition -= fontSize + 5; // Move down
+
+      lineCount++;
+      if (lineCount % 3 === 0) {
+        yPosition -= fontSize + 10; // Add extra spacing after every 2 rows
+      }
+    }
+
+    // Save and download the PDF
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Energy_Report.pdf";
+    link.click();
+  };
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} language={language} />
-         </div>
+          <Sidebar
+            isCollapsed={isCollapsed}
+            toggleSidebar={toggleSidebar}
+            language={language}
+          />
+        </div>
         {/* Main Content */}
         <div
           className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
         >
           <div className="px-4 grid grid-rows-[5rem_1fr] flex-1">
             {/* Main Content Header */}
-            <MainContentHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} translations={translations} />
+            <MainContentHeader
+              isCollapsed={isCollapsed}
+              toggleSidebar={toggleSidebar}
+              translations={translations}
+            />
 
             {/* <!-- Main Content --> */}
-            <div class="flex flex-col flex-1 gap-4">
+            <div id="reportGen" class="flex flex-col flex-1 gap-4">
               {/* Internet Usage Section */}
               <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
                 <a className="relative pl-4" href="/">
@@ -281,17 +349,16 @@ function ElectricUsagePage() {
                           </div>
                         </div>
                       </Link>
-                      <a href="/">
-                        <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
-                          <div className="items-center gap-4">
-                            <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">
-                                {translations.generate_report}
-                              </div>
-                            </div>
+                      <div
+                        className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col p-3 cursor-pointer"
+                        onClick={generatePDF}
+                      >
+                        <div className="items-center gap-4">
+                          <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">Generate Report</div>
                           </div>
                         </div>
-                      </a>
+                      </div>
                     </div>
                   </div>
                 </div>
