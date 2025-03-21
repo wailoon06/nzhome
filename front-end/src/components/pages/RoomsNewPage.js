@@ -168,6 +168,7 @@ function RoomsNewPage() {
 
       // Handle successful response
       if (response.status === 200) {
+        localStorage.setItem("roomid", response.data);
         setUploadStatus("Image updated successfully!");
         alert("Room successfully created!")
         navigate(`/rooms/${roomName}/access`);

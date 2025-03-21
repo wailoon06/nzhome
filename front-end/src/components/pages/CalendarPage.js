@@ -20,6 +20,8 @@ function CalendarPage() {
   const [eventDescription, setEventDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  
   const navigate = useNavigate();
   
   // States for time components
@@ -44,23 +46,43 @@ function CalendarPage() {
     setIsOn(!isOn);
   };
 
-  // Devices
-  const devices = [
-    {
-      name: "xiaomi",
-      type: "vacuum",
-    },
-    { name: "Daikin", type: "aircon" },
-  ];
-
   const [isOpen, setIsOpen] = useState(false); // Modal state
   const [favorites, setFavorites] = useState([]); // Favorite devices
   const [selectedDevices, setSelectedDevices] = useState([]); // Selected devices
 
   // Modal Handlers
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const [devices, setDevices] = useState([]); // Store fetched devices
 
+  const openModal = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found! User is not logged in.");
+        return;
+      }
+
+      const response = await axios.get("http://localhost:8080/api/getAllDevice", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Extract device ID and name
+      const devicesList = response.data.map(device => ({
+        id: device.deviceid,  // Include the device ID
+        name: device.deviceName,
+        picture: device.picture
+      }));
+
+      setDevices(devicesList);
+      console.log(devicesList);
+      setIsOpen(true);
+    } catch (error) {
+      console.error("Error fetching devices:", error.response?.status, error.message);
+    }
+};
+
+  
+  const closeModal = () => setIsOpen(false);
+  
   // Toggle Favorite
   const toggleFavorite = (deviceName) => {
     setFavorites(
@@ -310,11 +332,15 @@ function CalendarPage() {
                                     </strong>
                                     <ul className="list-disc pl-4">
                                       {event.devices.map((device, index) => (
-                                        <li
-                                          key={index}
-                                          className="text-sm text-gray-700"
-                                        >
-                                          {device}
+                                        <li key={index} className="flex items-center space-x-2 text-sm text-gray-700">
+                                          {/* Device Image */}
+                                          <img 
+                                            src={device.picture}
+                                            alt={device.name} 
+                                            className="w-8 h-8 rounded-md object-cover" // Adjust size and styling
+                                          />
+                                          {/* Device Name */}
+                                          <span>{device.name}</span>
                                         </li>
                                       ))}
                                     </ul>
@@ -402,9 +428,7 @@ function CalendarPage() {
                                 <div className="bg-white w-11/12 max-w-3xl p-6 rounded-lg shadow-lg">
                                   {/* Header */}
                                   <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-xl font-semibold">
-                                      View All Items
-                                    </h2>
+                                    <h2 className="text-xl font-semibold">View All Items</h2>
                                     <button
                                       className="text-gray-500 hover:text-gray-700 transition"
                                       onClick={closeModal}
@@ -413,70 +437,52 @@ function CalendarPage() {
                                     </button>
                                   </div>
 
+
                                   {/* Content */}
                                   <div className="overflow-y-auto max-h-96">
                                     <ul className="space-y-4">
-                                      {devices.map((device) => (
-                                        <li
-                                          key={device.name}
-                                          className={`p-4 rounded-lg shadow-sm transition flex justify-between items-center ${
-                                            selectedDevices.includes(
-                                              device.name
-                                            )
-                                              ? "bg-blue-200"
-                                              : "bg-gray-100 hover:bg-gray-200"
+                                    {devices.map((device, index) => (
+                                      <li
+                                        key={device.id || `${device.name}-${index}`} // Ensure uniqueness
+                                        className={`p-4 rounded-lg shadow-sm transition flex justify-between items-center ${
+                                          selectedDevices.includes(device.name)
+                                            ? "bg-blue-200"
+                                            : "bg-gray-100 hover:bg-gray-200"
+                                        }`}
+                                      >
+                                        <div className="relative w-full">
+                                          <span>
+                                            {device.name} 
+                                          </span>
+
+                                          {/* Green Check Mark for Selected Devices */}
+                                          {selectedDevices.includes(device.name) && (
+                                            <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
+                                              <i className="fas fa-check"></i>
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        <button
+                                          onClick={() => toggleFavorite(device.name)}
+                                          className={`text-sm px-3 py-1 rounded-md ${
+                                            favorites.includes(device.name) ? "bg-green-500 text-white" : "bg-gray-300 text-black"
                                           }`}
                                         >
-                                          <div className="relative w-full">
-                                            <span>
-                                              {device.name} ({device.type})
-                                            </span>
+                                          {favorites.includes(device.name) ? translations.favorited : translations.favorite}
+                                        </button>
 
-                                            {/* Green Check Mark for Selected Devices */}
-                                            {selectedDevices.includes(
-                                              device.name
-                                            ) && (
-                                              <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
-                                                <i className="fas fa-check"></i>
-                                              </div>
-                                            )}
-                                          </div>
+                                        <button
+                                          onClick={() => toggleSelected(device.name)}
+                                          className={`text-sm px-3 py-1 rounded-md ml-2 ${
+                                            selectedDevices.includes(device.name) ? "bg-blue-500 text-white" : "bg-gray-300 text-black"
+                                          }`}
+                                        >
+                                          {selectedDevices.includes(device.name) ? translations.deselect : translations.select}
+                                        </button>
+                                      </li>
+                                    ))}
 
-                                          <button
-                                            onClick={() =>
-                                              toggleFavorite(device.name)
-                                            }
-                                            className={`text-sm px-3 py-1 rounded-md ${
-                                              favorites.includes(device.name)
-                                                ? "bg-green-500 text-white"
-                                                : "bg-gray-300 text-black"
-                                            }`}
-                                          >
-                                            {favorites.includes(device.name)
-                                              ? translations.favorited
-                                              : translations.favorite}
-                                          </button>
-
-                                          <button
-                                            onClick={() =>
-                                              toggleSelected(device.name)
-                                            }
-                                            className={`text-sm px-3 py-1 rounded-md ml-2 ${
-                                              selectedDevices.includes(
-                                                device.name
-                                              )
-                                                ? "bg-blue-500 text-white"
-                                                : "bg-gray-300 text-black"
-                                            }`}
-                                          >
-                                            {selectedDevices.includes(
-                                              device.name
-                                            )
-                                              ? translations.deselect
-                                              : translations.select}
-                                          </button>
-                                        </li>
-                                      ))}
                                     </ul>
                                   </div>
                                 </div>
@@ -487,32 +493,34 @@ function CalendarPage() {
 
                         <div className="grid grid-cols-4 gap-2 justify-center items-center p-3">
                           {/* Dynamically added blocks for Selected Devices */}
-                          {selectedDevices.map((selectedDevice) => (
-                            <div
-                              key={selectedDevice}
-                              className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 cursor-pointer"
-                              onClick={() => toggleSelected(selectedDevice)} // Toggle selection when clicked
-                            >
-                              <div className="grid sm:grid-cols-1 items-center gap-4 p-4">
-                                <img
-                                  src=""
-                                  alt=""
-                                  className="border border-black rounded-lg mb-4 mx-auto"
-                                  style={{ height: "100px", width: "100px" }}
-                                />
-                                <div className="relative w-full">
-                                  <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                                    <div className="mb-2">{selectedDevice}</div>
-                                  </div>
+                          {selectedDevices.map((selectedDevice) => {
+                            const device = devices.find(d => d.name === selectedDevice);
 
-                                  {/* Green Check Mark for Selected Devices */}
-                                  <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
-                                    <i className="fas fa-check"></i>
-                                  </div>
+                            return (
+                              <div
+                                key={selectedDevice}
+                                className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-between items-center p-3 cursor-pointer min-h-[200px] w-40"
+                                onClick={() => toggleSelected(selectedDevice)}
+                              >
+                                {device ? (
+                                  <img
+                                    src={device.picture}
+                                    alt={device.name}
+                                    className="border border-black rounded-lg mb-4 mx-auto object-contain"
+                                    style={{ height: "100px", width: "100px" }}
+                                  />
+                                ) : (
+                                  <p>No Image Available</p>
+                                )}
+
+                                <span className="text-center whitespace-nowrap">{device.name}</span>
+
+                                <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
+                                  <i className="fas fa-check"></i>
                                 </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
 
                           {/* Message if no selected devices */}
                           {selectedDevices.length === 0 && (

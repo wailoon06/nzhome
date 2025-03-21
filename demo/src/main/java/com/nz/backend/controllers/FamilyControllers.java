@@ -157,6 +157,7 @@ public class FamilyControllers {
         
         return users.stream().map(user -> {
             Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("userid", user.getUserId());
             userInfo.put("username", user.getUsername());
             userInfo.put("email", user.getEmail());
             userInfo.put("role", user.getRole());

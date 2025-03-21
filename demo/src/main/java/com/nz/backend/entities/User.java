@@ -23,7 +23,7 @@ public class User {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserID")
+    @Column(name = "userid")
     private Long userid;
 
     @Column(nullable = false, unique = true)
