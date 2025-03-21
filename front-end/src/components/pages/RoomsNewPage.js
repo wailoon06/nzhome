@@ -55,6 +55,9 @@ function RoomsNewPage() {
   // Fetch Device Details
   const [deviceDetails, setDeviceDetails] = useState([]);
 
+  const [successMessage, setSuccessMessage] = useState(""); //added
+  const [errorMessage, setErrorMessage] = useState("");     //added
+
   const fetchDeviceDetails = async (e) => {
     setLoading(true);
     setError(null);
@@ -73,10 +76,17 @@ function RoomsNewPage() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+          setTimeout(() => {
+            localStorage.removeItem("token");
+            localStorage.removeItem("selectedDevice");
+            navigate("/login");
+          }, 2000);
       } else {
         setError("An unexpected error occurs");
       }
@@ -130,6 +140,8 @@ function RoomsNewPage() {
   // Handle submission for room title, picture and selected device
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccessMessage("");  //added
+    setErrorMessage("");
 
     if (!roomName) {
       // alert(translations.pleaseEnterRoomTitle || "Please enter a room title");
@@ -170,17 +182,31 @@ function RoomsNewPage() {
       if (response.status === 200) {
         localStorage.setItem("roomid", response.data);
         setUploadStatus("Image updated successfully!");
-        alert("Room successfully created!")
+        // alert("Room successfully created!")
+        // Set success message (added)
+      setSuccessMessage("Room successfully created!");
+      
+      // Start redirect animation, then navigate (added)
+      setTimeout(() => {
         navigate(`/rooms/${roomName}/access`);
+      }, 2000);
+      // navigate(`/rooms/${roomName}/access`);
       }
 
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+          setTimeout(() => {
+            localStorage.removeItem("token");
+            localStorage.removeItem("selectedDevice");
+            navigate("/login");
+          }, 2000);
       } else {
         setError("An unexpected error occurs");
       }
@@ -199,6 +225,20 @@ function RoomsNewPage() {
             language={language}
           />
         </div>
+
+        {/* Success Message Display (added)*/}
+        {successMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-50">
+            {successMessage}
+          </div>
+        )}
+
+        {/* Error Message Display (added)*/}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+            {errorMessage}
+          </div>
+        )}
 
         {/* Main Content */}
         <div
