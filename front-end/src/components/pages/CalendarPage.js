@@ -20,6 +20,8 @@ function CalendarPage() {
   const [eventDescription, setEventDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  
   const navigate = useNavigate();
   
   // States for time components
@@ -58,29 +60,29 @@ function CalendarPage() {
         console.error("No token found! User is not logged in.");
         return;
       }
-  
+
       const response = await axios.get("http://localhost:8080/api/getAllDevice", {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
-      // Extract only device names
+
+      // Extract device ID and name
       const devicesList = response.data.map(device => ({
-        name: device.deviceName
+        id: device.deviceid,  // Include the device ID
+        name: device.deviceName,
+        picture: device.picture
       }));
-      
+
       setDevices(devicesList);
-      
       console.log(devicesList);
       setIsOpen(true);
     } catch (error) {
       console.error("Error fetching devices:", error.response?.status, error.message);
     }
-  };
-  
-  
+};
 
+  
   const closeModal = () => setIsOpen(false);
-
+  
   // Toggle Favorite
   const toggleFavorite = (deviceName) => {
     setFavorites(
@@ -330,11 +332,15 @@ function CalendarPage() {
                                     </strong>
                                     <ul className="list-disc pl-4">
                                       {event.devices.map((device, index) => (
-                                        <li
-                                          key={index}
-                                          className="text-sm text-gray-700"
-                                        >
-                                          {device}
+                                        <li key={index} className="flex items-center space-x-2 text-sm text-gray-700">
+                                          {/* Device Image */}
+                                          <img 
+                                            src={device.picture}
+                                            alt={device.name} 
+                                            className="w-8 h-8 rounded-md object-cover" // Adjust size and styling
+                                          />
+                                          {/* Device Name */}
+                                          <span>{device.name}</span>
                                         </li>
                                       ))}
                                     </ul>
@@ -487,32 +493,34 @@ function CalendarPage() {
 
                         <div className="grid grid-cols-4 gap-2 justify-center items-center p-3">
                           {/* Dynamically added blocks for Selected Devices */}
-                          {selectedDevices.map((selectedDevice) => (
-                            <div
-                              key={selectedDevice}
-                              className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 cursor-pointer"
-                              onClick={() => toggleSelected(selectedDevice)} // Toggle selection when clicked
-                            >
-                              <div className="grid sm:grid-cols-1 items-center gap-4 p-4">
-                                <img
-                                  src=""
-                                  alt=""
-                                  className="border border-black rounded-lg mb-4 mx-auto"
-                                  style={{ height: "100px", width: "100px" }}
-                                />
-                                <div className="relative w-full">
-                                  <div className="grid grid-rows-3 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                                    <div className="mb-2">{selectedDevice}</div>
-                                  </div>
+                          {selectedDevices.map((selectedDevice) => {
+                            const device = devices.find(d => d.name === selectedDevice);
 
-                                  {/* Green Check Mark for Selected Devices */}
-                                  <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
-                                    <i className="fas fa-check"></i>
-                                  </div>
+                            return (
+                              <div
+                                key={selectedDevice}
+                                className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-between items-center p-3 cursor-pointer min-h-[200px] w-40"
+                                onClick={() => toggleSelected(selectedDevice)}
+                              >
+                                {device ? (
+                                  <img
+                                    src={device.picture}
+                                    alt={device.name}
+                                    className="border border-black rounded-lg mb-4 mx-auto object-contain"
+                                    style={{ height: "100px", width: "100px" }}
+                                  />
+                                ) : (
+                                  <p>No Image Available</p>
+                                )}
+
+                                <span className="text-center whitespace-nowrap">{device.name}</span>
+
+                                <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
+                                  <i className="fas fa-check"></i>
                                 </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
 
                           {/* Message if no selected devices */}
                           {selectedDevices.length === 0 && (
