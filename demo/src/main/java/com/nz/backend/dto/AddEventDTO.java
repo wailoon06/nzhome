@@ -10,13 +10,14 @@ public class AddEventDTO {
     private String description;
     private LocalDate date;
     private boolean repeat;
-    private List<Device> devices;
+    private List<Long> devices;
+    private Device deviceid;
 
     public AddEventDTO() {
     }
 
     public AddEventDTO(String title, String description, LocalDate date, boolean repeat,
-            List<Device> devices) {
+            List<Long> devices) {
         this.title = title;
         this.description = description;
         this.date = date;
@@ -56,11 +57,20 @@ public class AddEventDTO {
         this.repeat = repeat;
     }
 
-    public List<Device> getDevices() {
+    public List<Long> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<Device> devices) {
+    public Long getDeviceId(int i) {
+
+        return devices.get(i);
+    }
+
+    public int lengthOfDevices() {
+        return devices.size();
+    }
+
+    public void setDevices(List<Long> devices) {
         this.devices = devices;
     }
 }

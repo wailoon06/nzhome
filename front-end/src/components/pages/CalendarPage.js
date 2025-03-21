@@ -20,6 +20,9 @@ function CalendarPage() {
   const [eventDescription, setEventDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [roomNames, setRoomNames] = useState([]);
+  const [devicesByRoom, setDevicesByRoom] = useState({});
+  
   
   
   const navigate = useNavigate();
@@ -69,11 +72,73 @@ function CalendarPage() {
       const devicesList = response.data.map(device => ({
         id: device.deviceid,  // Include the device ID
         name: device.deviceName,
-        picture: device.picture
+        picture: device.picture,
+        room: device.room
       }));
 
-      setDevices(devicesList);
-      console.log(devicesList);
+      // Step 2: Extract unique rooms from devices
+      const uniqueRooms = [...new Set(
+        devicesList
+          .filter(device => device.room && device.room.roomid) // Filter out devices without rooms
+          .map(device => device.room.roomid)
+      )];
+
+      // Step 3: Check permissions for each unique room
+      const authorizedRoomIds = [];
+      
+      for (const roomId of uniqueRooms) {
+        try {
+          // Use your existing validatePermission endpoint
+          await axios.post(
+            "http://localhost:8080/api/validatePermission",
+            { roomid: roomId },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          
+          // If we get here without an error, the user has permission for this room
+          authorizedRoomIds.push(roomId);
+        } catch (err) {
+          // If we get a 403 error, the user doesn't have permission for this room
+          // Just continue to the next room
+          console.log(`No permission for room ${roomId}`);
+        }
+      }
+      // Step 4: Filter devices to only those in rooms the user has access to
+      const authorizedDevices = devicesList.filter(device => {
+        // Include devices without rooms (Unassigned) or in authorized rooms
+        return !device.room || !device.room.roomid || authorizedRoomIds.includes(device.room.roomid);
+      });
+      
+      setDevices(authorizedDevices);
+      console.log(authorizedDevices);
+
+       // Step 5: Organize authorized devices by room
+       const deviceRooms = {};
+       const rooms = [];
+       
+       // Group devices by room
+       authorizedDevices.forEach(device => {
+         const roomName = device.room && device.room.roomName ? device.room.roomName : "Unassigned";
+         
+         if (!deviceRooms[roomName]) {
+           deviceRooms[roomName] = [];
+           rooms.push(roomName);
+         }
+         
+         deviceRooms[roomName].push(device);
+       });
+       
+       // Sort room names alphabetically
+       rooms.sort((a, b) => {
+         // Keep "Unassigned" at the end
+         if (a === "Unassigned") return 1;
+         if (b === "Unassigned") return -1;
+         return a.localeCompare(b);
+       });
+       
+       setRoomNames(rooms);
+       console.log(rooms);
+       setDevicesByRoom(deviceRooms);
       setIsOpen(true);
     } catch (error) {
       console.error("Error fetching devices:", error.response?.status, error.message);
@@ -103,6 +168,7 @@ function CalendarPage() {
     );
   };
 
+
   //add event
   const addEvent = async () => {
     console.log("addEvent function called"); // Check if this appears in the console
@@ -124,16 +190,20 @@ function CalendarPage() {
       const eventDetails = new Date(eventDate);
       eventDetails.setHours(selectedHour, selectedMinute);
   
-      const selectedFavoritedDevices = favorites
-        .filter((device) => selectedDevices.includes(device))
-        .map((device) => device.deviceid);
-  
+      const selectedDeviceIds = devices
+      .filter(device => selectedDevices.includes(device.name)) // Check if selectedDevices contains device name
+      .map(device => device.id); // Extract deviceid
+
+      console.log("Devices:", devices); // Check if devices array is populated
+      console.log("Selected Devices:", selectedDevices); // Check if selectedDevices has values
+      console.log("Selected Device IDs:", selectedDeviceIds); // Verify extracted device IDs
+
       const eventData = {
         date: eventDetails.toISOString(),
         title: eventTitle,
         description: eventDescription,
         repeat: isOn,
-        devices: selectedFavoritedDevices,
+        devices: selectedDeviceIds
       };
   
       console.log("Sending event data:", eventData); // Log event data before sending
@@ -190,9 +260,26 @@ function CalendarPage() {
   
 
   // Delete an event by ID
-  const deleteEvent = (id) => {
-    setEvents(events.filter((event) => event.id !== id));
+  const deleteEvent = async (eventid) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found! User is not logged in.");
+        return;
+      }
+      console.log(eventid);
+      const response = await axios.delete("http://localhost:8080/api/deleteEvent", {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { eventid }, // Send the event ID in the request body
+      });
+  
+      console.log(response.data);
+      setEvents((prevEvents) => prevEvents.filter((event) => event.eventid !== eventid));
+    } catch (error) {
+      console.error("Error deleting event:", error.response?.data || error.message);
+    }
   };
+  
 
   // translation
   const [language, setLanguage] = useState(() => {
@@ -452,7 +539,7 @@ function CalendarPage() {
                                       >
                                         <div className="relative w-full">
                                           <span>
-                                            {device.name} 
+                                            {device.name} {device.room?.roomName ? `(${device.room.roomName})` : "(Unassigned)"}
                                           </span>
 
                                           {/* Green Check Mark for Selected Devices */}
@@ -512,12 +599,7 @@ function CalendarPage() {
                                 ) : (
                                   <p>No Image Available</p>
                                 )}
-
                                 <span className="text-center whitespace-nowrap">{device.name}</span>
-
-                                <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
-                                  <i className="fas fa-check"></i>
-                                </div>
                               </div>
                             );
                           })}

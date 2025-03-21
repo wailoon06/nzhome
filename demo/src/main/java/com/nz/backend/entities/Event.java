@@ -35,23 +35,25 @@ public class Event {
     @JoinColumn(name = "Familyid")
     private Family family;
 
-    @ManyToMany
-    @JoinTable(name = "event_device", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "device_id"))
-    private List<Device> devices;
+    @Column
+    private List<Long> devices;
+
+    @Column
+    private Long deviceid;
 
     // Constructors
     public Event() {
     }
 
     public Event(String title, String description, LocalDate date, boolean repeat, User createdBy, Family family,
-            List<Device> devices) {
+            Long deviceid) {
         this.title = title;
         this.description = description;
         this.date = date;
         this.repeat = repeat;
         this.createdBy = createdBy;
         this.family = family;
-        this.devices = devices;
+        this.deviceid = deviceid;
     }
 
     // Getters and Setters
@@ -111,11 +113,15 @@ public class Event {
         this.family = family;
     }
 
-    public List<Device> getDevices() {
+    public List<Long> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<Device> devices) {
+    public void setDevices(List<Long> devices) {
         this.devices = devices;
+    }
+
+    public Long getDeviceId(int i) {
+        return devices.get(i);
     }
 }
