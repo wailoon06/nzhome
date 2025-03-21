@@ -126,7 +126,7 @@ function InternetUsagePage() {
       /* Network speed */
 
       const interval = setInterval(() => {
-        // Generate a random speed between 500 and 7000 MB/s
+        // Generate a random speed between 20and 50 MB/s
         const newSpeed = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
         setNetworkSpeed(newSpeed);
       }, 1000); // Update every second

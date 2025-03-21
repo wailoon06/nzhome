@@ -33,17 +33,31 @@ function UserSettingPage() {
   }, [language]);
 
   // Handle log out
+  const [logoutMessage, setlogoutMessage] = useState("");
+  
   const logOut = async () => {
     const token = localStorage.getItem("token");
 
     if (token) {
       localStorage.removeItem("token");
-      alert("Logout Successfully!");
+      // alert("Logout Successfully!");
+      setlogoutMessage("Logout Successful! Redirecting...");
       localStorage.setItem("started", "false");
+      setTimeout(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }, 3000);;
+
     } else {
       localStorage.setItem("started", "false"); // Save flag
     }
-    window.location.reload();
+
+    setTimeout(() => {//new added
+      setlogoutMessage("");
+      navigate("/login"); // Redirect after message disappears
+    }, 3000);
+
   };
 
   // feedback
@@ -85,6 +99,12 @@ function UserSettingPage() {
             language={language}
           />
         </div>
+
+        {logoutMessage && (
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out">
+          {logoutMessage}
+        </div>
+      )}
 
         {/* Main Content */}
         <div

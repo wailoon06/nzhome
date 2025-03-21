@@ -44,21 +44,41 @@ function CalendarPage() {
     setIsOn(!isOn);
   };
 
-  // Devices
-  const devices = [
-    {
-      name: "xiaomi",
-      type: "vacuum",
-    },
-    { name: "Daikin", type: "aircon" },
-  ];
-
   const [isOpen, setIsOpen] = useState(false); // Modal state
   const [favorites, setFavorites] = useState([]); // Favorite devices
   const [selectedDevices, setSelectedDevices] = useState([]); // Selected devices
 
   // Modal Handlers
-  const openModal = () => setIsOpen(true);
+  const [devices, setDevices] = useState([]); // Store fetched devices
+
+  const openModal = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found! User is not logged in.");
+        return;
+      }
+  
+      const response = await axios.get("http://localhost:8080/api/getAllDevice", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      // Extract only device names
+      const devicesList = response.data.map(device => ({
+        name: device.deviceName
+      }));
+      
+      setDevices(devicesList);
+      
+      console.log(devicesList);
+      setIsOpen(true);
+    } catch (error) {
+      console.error("Error fetching devices:", error.response?.status, error.message);
+    }
+  };
+  
+  
+
   const closeModal = () => setIsOpen(false);
 
   // Toggle Favorite
@@ -402,9 +422,7 @@ function CalendarPage() {
                                 <div className="bg-white w-11/12 max-w-3xl p-6 rounded-lg shadow-lg">
                                   {/* Header */}
                                   <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-xl font-semibold">
-                                      View All Items
-                                    </h2>
+                                    <h2 className="text-xl font-semibold">View All Items</h2>
                                     <button
                                       className="text-gray-500 hover:text-gray-700 transition"
                                       onClick={closeModal}
@@ -413,70 +431,52 @@ function CalendarPage() {
                                     </button>
                                   </div>
 
+
                                   {/* Content */}
                                   <div className="overflow-y-auto max-h-96">
                                     <ul className="space-y-4">
-                                      {devices.map((device) => (
-                                        <li
-                                          key={device.name}
-                                          className={`p-4 rounded-lg shadow-sm transition flex justify-between items-center ${
-                                            selectedDevices.includes(
-                                              device.name
-                                            )
-                                              ? "bg-blue-200"
-                                              : "bg-gray-100 hover:bg-gray-200"
+                                    {devices.map((device, index) => (
+                                      <li
+                                        key={device.id || `${device.name}-${index}`} // Ensure uniqueness
+                                        className={`p-4 rounded-lg shadow-sm transition flex justify-between items-center ${
+                                          selectedDevices.includes(device.name)
+                                            ? "bg-blue-200"
+                                            : "bg-gray-100 hover:bg-gray-200"
+                                        }`}
+                                      >
+                                        <div className="relative w-full">
+                                          <span>
+                                            {device.name} 
+                                          </span>
+
+                                          {/* Green Check Mark for Selected Devices */}
+                                          {selectedDevices.includes(device.name) && (
+                                            <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
+                                              <i className="fas fa-check"></i>
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        <button
+                                          onClick={() => toggleFavorite(device.name)}
+                                          className={`text-sm px-3 py-1 rounded-md ${
+                                            favorites.includes(device.name) ? "bg-green-500 text-white" : "bg-gray-300 text-black"
                                           }`}
                                         >
-                                          <div className="relative w-full">
-                                            <span>
-                                              {device.name} ({device.type})
-                                            </span>
+                                          {favorites.includes(device.name) ? translations.favorited : translations.favorite}
+                                        </button>
 
-                                            {/* Green Check Mark for Selected Devices */}
-                                            {selectedDevices.includes(
-                                              device.name
-                                            ) && (
-                                              <div className="absolute top-0 right-0 bg-green-500 text-white rounded-full p-1">
-                                                <i className="fas fa-check"></i>
-                                              </div>
-                                            )}
-                                          </div>
+                                        <button
+                                          onClick={() => toggleSelected(device.name)}
+                                          className={`text-sm px-3 py-1 rounded-md ml-2 ${
+                                            selectedDevices.includes(device.name) ? "bg-blue-500 text-white" : "bg-gray-300 text-black"
+                                          }`}
+                                        >
+                                          {selectedDevices.includes(device.name) ? translations.deselect : translations.select}
+                                        </button>
+                                      </li>
+                                    ))}
 
-                                          <button
-                                            onClick={() =>
-                                              toggleFavorite(device.name)
-                                            }
-                                            className={`text-sm px-3 py-1 rounded-md ${
-                                              favorites.includes(device.name)
-                                                ? "bg-green-500 text-white"
-                                                : "bg-gray-300 text-black"
-                                            }`}
-                                          >
-                                            {favorites.includes(device.name)
-                                              ? translations.favorited
-                                              : translations.favorite}
-                                          </button>
-
-                                          <button
-                                            onClick={() =>
-                                              toggleSelected(device.name)
-                                            }
-                                            className={`text-sm px-3 py-1 rounded-md ml-2 ${
-                                              selectedDevices.includes(
-                                                device.name
-                                              )
-                                                ? "bg-blue-500 text-white"
-                                                : "bg-gray-300 text-black"
-                                            }`}
-                                          >
-                                            {selectedDevices.includes(
-                                              device.name
-                                            )
-                                              ? translations.deselect
-                                              : translations.select}
-                                          </button>
-                                        </li>
-                                      ))}
                                     </ul>
                                   </div>
                                 </div>
