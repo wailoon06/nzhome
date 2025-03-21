@@ -16,7 +16,6 @@ function RoomsNewAccessPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDevices, setSelectedDevices] = useState([]);
-  const [userDetails, setUserDetails] = useState(null);
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
@@ -32,22 +31,7 @@ function RoomsNewAccessPage() {
 
   const translations = translationsMap[language] || translationsMap["en"];
 
-  // the family users
-  // Handle error
-  const handleApiError = (err) => {
-    console.error("API Error:", err);
-
-    if (err.response) {
-      setError(err.response.data.message);
-
-      if (err.response.status === 401) {
-        console.log("Session expired!");
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    }
-  };
-
+  const [userDetails, setUserDetails] = useState(null);
   const fetchAllUsers = async () => {
     setLoading(true);
     setError(null);
@@ -60,7 +44,14 @@ function RoomsNewAccessPage() {
 
       setUserDetails(response.data);
     } catch (err) {
-      handleApiError(err);
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
     } finally {
       setLoading(false);
     }
@@ -68,21 +59,56 @@ function RoomsNewAccessPage() {
 
   useEffect(() => {
     fetchAllUsers();
-  }, [navigate]);
+  }, []);
 
   // select users
   const [selectedUsers, setSelectedUsers] = useState([]);
 
-  const toggleSelected = (username) => {
+  const toggleSelected = (userid) => {
     setSelectedUsers(
       (prevSelected) =>
-        prevSelected.includes(username)
-          ? prevSelected.filter((name) => name !== username) // Remove from selected
-          : [...prevSelected, username] // Add to selected
+        prevSelected.includes(userid)
+          ? prevSelected.filter((id) => id !== userid) // Remove from selected
+          : [...prevSelected, userid] // Add to selected
     );
   };
 
-  return (
+  const handlePermissionSubmit = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      const roomid = localStorage.getItem("roomid");
+      
+      const response = await axios.post(
+        "http://localhost:8080/api/grantPermission",
+        { 
+          userid: selectedUsers, 
+          roomid: roomid 
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      alert("Permission successfully granted!");
+      navigate(`/rooms/devices/${roomid}/${roomTitle}`);
+      localStorage.removeItem("roomid");
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.clear();
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (  
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
         <div className="relative flex">
@@ -144,17 +170,16 @@ function RoomsNewAccessPage() {
                         )}
 
                         {/* Main Content Section */}
-                        {/* Main Content Section */}
                         <div className="flex flex-col items-center justify-center">
                           {!loading && !error && userDetails.length > 0
                             ? userDetails.map((user, index) => (
                                 <div
                                   key={user.id || index}
-                                  onClick={() => toggleSelected(user.username)}
+                                  onClick={() => toggleSelected(user.userid)}
                                   className="relative grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center justify-center text-center text-lg w-[85%] gap-4 cursor-pointer"
                                 >
                                   {/* Green Check Mark for Selected Users */}
-                                  {selectedUsers.includes(user.username) && (
+                                  {selectedUsers.includes(user.userid) && (
                                     <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
                                       <i className="fas fa-check"></i>
                                     </div>
@@ -180,8 +205,8 @@ function RoomsNewAccessPage() {
                     </div>
 
                     {/* Next Button */}
-                    <Link
-                      to={`/rooms/devices/${roomTitle}`}
+                    <button
+                      onClick={handlePermissionSubmit}
                       className={`w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 block text-center ${
                         selectedUsers.length === 0
                           ? "pointer-events-none opacity-50"
@@ -189,7 +214,7 @@ function RoomsNewAccessPage() {
                       }`} // Disable button if no users are selected
                     >
                       {translations.nextStep}
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>

@@ -26,9 +26,11 @@ import com.nz.backend.dto.RoomNameDTO;
 import com.nz.backend.dto.UpdateRoomDTO;
 import com.nz.backend.entities.Device;
 import com.nz.backend.entities.Family;
+import com.nz.backend.entities.Permission;
 import com.nz.backend.entities.Room;
 import com.nz.backend.entities.User;
 import com.nz.backend.repo.DeviceRepo;
+import com.nz.backend.repo.PermissionRepo;
 import com.nz.backend.repo.RoomRepo;
 import com.nz.backend.repo.UserRepo;
 import com.nz.backend.services.JwtService;
@@ -49,6 +51,9 @@ public class RoomControllers {
 
     @Autowired
     private DeviceRepo deviceRepo;
+
+    @Autowired
+    private PermissionRepo permissionRepo;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -108,8 +113,11 @@ public class RoomControllers {
             }
             deviceRepo.saveAll(devices);
         }
-        
-        return ResponseEntity.ok("Room successfully created!");
+
+        Permission permission = new Permission(user, newRoom, user);
+        permissionRepo.save(permission);
+
+        return ResponseEntity.ok(newRoom.getRoomid());
     }
 
     // DONE

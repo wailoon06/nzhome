@@ -13,23 +13,36 @@ function RoomsDevicesPage() {
   };
   const navigate = useNavigate();
 
-  const { roomTitle } = useParams();
+  const { roomid, roomTitle } = useParams();
 
   // Language
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
   const translations = translationsMap[language] || translationsMap["en"];
-
-  // Fetch Device Details
+ 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+
+    // Handle error
+    const handleApiError = (err) => {
+      console.error("API Error:", err);
+  
+      if (err.response) {
+        setError(err.response.data.message);
+  
+        if (err.response.status === 401) {
+          console.log("Session expired!");
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      }
+    };
+
+  // Fetch Device Details
   const [deviceStates, setDeviceStates] = useState({});
   const [deviceDetails, setDeviceDetails] = useState([]);
-
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
 
   const fetchDeviceDetails = async (e) => {
     setLoading(true);
@@ -65,6 +78,7 @@ function RoomsDevicesPage() {
   useEffect(() => {
     fetchDeviceDetails();
   }, [roomTitle]);
+
 
   // Toggle function (On/Off)
   useEffect(() => {
@@ -119,29 +133,18 @@ function RoomsDevicesPage() {
     }
   };
 
-  // Handle error
-  const handleApiError = (err) => {
-    console.error("API Error:", err);
+  // Get all users
+  // Get users with permission (show)
+  // Filter users without permission with all users and users with permission (show)
+  // Grant permission for selected users (post)
 
-    if (err.response) {
-      setError(err.response.data.message);
+  const [userDetails, setUserDetails] = useState([]);                        // All users in the family
+  const [userWithPermission, setUserWithPermission] = useState([]);          // Users with permission
+  const [usersWithoutPermission, setUserWithoutPermission] = useState([]);   // Users without permission
+  const [selectedUsers, setSelectedUsers] = useState([]);                    // Selected users to grant permission
 
-      if (err.response.status === 401) {
-        console.log("Session expired!");
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    }
-  };
 
-  // Show Users
-  const [userDetails, setUserDetails] = useState(null);
-
-  // Modal Handlers
-  const [isOpen, setIsOpen] = useState(false); // Modal state
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
-
+  // Get all users in family (userid)
   const fetchUserDetails = async () => {
     setLoading(true);
     setError(null);
@@ -162,74 +165,153 @@ function RoomsDevicesPage() {
 
   useEffect(() => {
     fetchUserDetails();
-  }, [navigate]);
+  }, []);
 
-  // delete users from room
-  // Handle delete submission
-  const handleDelete = async (email) => {
-    // Double confirm
-    if (!window.confirm("Are you sure you want to delete this user?")) {
-      return;
-    }
 
-    setLoading(true);
-
-    try {
-      // Get token
-      const token = localStorage.getItem("token");
-
-      // Delete user
-      const response = await axios.delete(
-        `http://localhost:8080/api/deleteUserFam`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          data: { email: email },
-        }
-      );
-
-      // Update the user list after successful deletion
-      setUserDetails((prevUsers) =>
-        prevUsers.filter((user) => user.email !== email)
-      );
-
-      alert(response.data.message);
-    } catch (err) {
-      console.error("Delete error:", err);
-      handleApiError(err);
-      window.location.reload();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Add user
-  const [isAddUserOpen, setIsAddUserOpen] = useState(false); // New state for Add User modal
-  const [userDetails2, setUserDetails2] = useState(null);
-
-  const openAddUserModal = () => setIsAddUserOpen(true);
-  const closeAddUserModal = () => setIsAddUserOpen(false);
-
-  const fetchUserDetails2 = async () => {
+  // Get users with permission (userId)
+  const fetchUserWithPermission = async () => {
     setLoading(true);
     setError(null);
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8080/api/getUserFam", {
+      const response = await axios.post("http://localhost:8080/api/getUserWithPermission",
+      {
+        roomid: roomid
+      },
+      { 
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setUserDetails2(response.data);
+      setUserWithPermission(response.data);
     } catch (err) {
       handleApiError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  // Get users without permission
+  useEffect(() => {
+    if (userDetails.length > 0 && userWithPermission.length > 0) {
+      const withoutPermission = userDetails.filter(user => 
+        !userWithPermission.some(permUser => permUser.userId === user.userid)
+      );
+      setUserWithoutPermission(withoutPermission);
+    }
+  }, [userDetails, userWithPermission]);
+
+
+  // Selected users for permission granting
+  const toggleUserSelection = (userid) => {
+    setSelectedUsers((prevSelected) => {
+      if (prevSelected.includes(userid)) {
+        return prevSelected.filter(id => id !== userid);
+      } else {
+        return [...prevSelected, userid];
+      }
+    });
+  };
+
+  // Handle permission submission
+  const handlePermissionSubmit = async () => {
+    if (selectedUsers.length === 0) {
+      alert("Please select at least one user");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      
+      const response = await axios.post(
+        "http://localhost:8080/api/grantPermission",
+        { 
+          userid: selectedUsers, 
+          roomid: roomid 
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      alert("Permission successfully granted!");
+
+      setSelectedUsers([]);
+
+      fetchUserWithPermission();
+
+      closeAddUserModal();
+
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.clear();
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUserDetails2();
-  }, [navigate]);
+    fetchUserWithPermission();
+  }, [roomid]);
+
+
+  // Handle delete submission
+  const handleDelete = async (userId) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      
+      const response = await axios.delete(
+        "http://localhost:8080/api/deletePermission",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          data: { 
+            userid: [userId], 
+            roomid: roomid 
+          }
+        }
+      );
+      
+      alert("Permission successfully removed!");
+
+      fetchUserWithPermission();
+
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.clear();
+        navigate("/login");
+      }
+      setError("An unexpected error occurs");
+    } finally {
+      setLoading(false);
+    }
+  }
+  
+  // Modals when open all users
+  const [isOpen, setIsOpen] = useState(false); 
+  const openModal = () => {
+    fetchUserWithPermission();
+    setIsOpen(true);
+  };
+  const closeModal = () => setIsOpen(false);
+
+  // Modals when open add users
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false); 
+  const openAddUserModal = () => setIsAddUserOpen(true);
+  const closeAddUserModal = () => setIsAddUserOpen(false);
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -282,7 +364,8 @@ function RoomsDevicesPage() {
                           {/* Header */}
                           <div className="flex justify-between items-center mb-4">
                             <h2 className="text-xl font-semibold">
-                              {translations.allUsers}
+                              {/* {translations.allUsers} */}
+                              Users With Access
                             </h2>
                             <button
                               className="text-gray-500 hover:text-gray-700 transition"
@@ -309,9 +392,9 @@ function RoomsDevicesPage() {
                             {/* Scrollable container for users */}
                             <div className="max-h-[60vh] w-full max-w-md mx-auto overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
                               {!loading && !error && userDetails.length > 0
-                                ? userDetails.map((user, index) => (
+                                ? userWithPermission.map((user, index) => (
                                     <div
-                                      key={user.id || index}
+                                      key={user.userId || index}
                                       className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center text-center text-lg w-full"
                                     >
                                       <h2 className="text-center w-full">
@@ -321,9 +404,8 @@ function RoomsDevicesPage() {
                                         {user.email}
                                       </div>
                                       <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleDelete(user.email);
+                                        onClick={() => {
+                                          handleDelete(user.userId);
                                         }}
                                         className="text-red-500 text-xl font-bold px-2"
                                       >
@@ -334,7 +416,7 @@ function RoomsDevicesPage() {
                                 : !loading &&
                                   !error && (
                                     <div className="text-center py-8">
-                                      <p>No users found.</p>
+                                      <p>No users with access found.</p>
                                     </div>
                                   )}
                             </div>
@@ -386,10 +468,11 @@ function RoomsDevicesPage() {
                           <div className="flex flex-col items-center justify-center">
                             {/* Scrollable container for users */}
                             <div className="max-h-[60vh] w-full max-w-md mx-auto overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-                              {!loading && !error && userDetails2.length > 0
-                                ? userDetails2.map((user, index) => (
+                              {!loading && !error && userDetails.length > 0
+                                ? usersWithoutPermission.map((user, index) => (
                                     <div
-                                      key={user.id || index}
+                                      key={user.userid || index}
+                                      onClick={() => toggleUserSelection(user.userid)}
                                       className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center text-center text-lg w-full"
                                     >
                                       <h2 className="text-center w-full">
@@ -398,26 +481,32 @@ function RoomsDevicesPage() {
                                       <div className="text-[14px] sm:text-2xl font-bold text-center w-full">
                                         {user.email}
                                       </div>
+                                      <div className="text-blue-500">
+                                        {selectedUsers.includes(user.userid) && (
+                                          <i className="fas fa-check"></i>
+                                        )}
+                                      </div>
                                     </div>
                                   ))
                                 : !loading &&
                                   !error && (
                                     <div className="text-center py-8">
-                                      <p>No users found.</p>
+                                      <p>No additional users found without access.</p>
                                     </div>
                                   )}
                             </div>
                           </div>
 
                           {/* add user */}
-                          {/* <div className="flex justify-center mt-6">
+                          <div className="flex justify-center mt-6">
                             <button
-                              onClick={openAddUserModal}
+                              onClick={handlePermissionSubmit}
                               className="bg-blue-500 text-white py-2 px-4 rounded-full text-xl flex items-center hover:bg-blue-600 transition"
+                              disabled={selectedUsers.length === 0}
                             >
-                              <i className="fas fa-plus mr-2"></i> Add User
+                              <i className="fas fa-plus mr-2"></i> Grant Access
                             </button>
-                          </div> */}
+                          </div>
                         </div>
                       </div>
                     )}

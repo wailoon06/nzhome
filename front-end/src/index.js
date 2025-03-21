@@ -113,7 +113,7 @@ const Root = () => {
           element={<RoomsNewAccessPage />}
         />
         <Route
-          path="/rooms/devices/:roomTitle"
+          path="/rooms/devices/:roomid/:roomTitle"
           element={<RoomsDevicesPage />}
         />
         <Route

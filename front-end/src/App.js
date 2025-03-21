@@ -320,7 +320,7 @@ function App() {
       <Route path="/calendar/report" element={<CalendarReport />} />
       <Route path="/rooms/new" element={<RoomsNewPage />} />
       <Route path="/rooms/:roomTitle/access" element={<RoomsNewAccessPage />} />
-      <Route path="/rooms/devices/:roomTitle" element={<RoomsDevicesPage />} />
+      <Route path="/rooms/devices/:roomid/:roomTitle" element={<RoomsDevicesPage />} />
       <Route
         path="/rooms/summary/:roomTitle"
         element={<RoomEnergyUsagePage />}

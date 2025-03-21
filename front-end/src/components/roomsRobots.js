@@ -99,7 +99,7 @@ function RoomsRobots() {
                 className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end"
               >
                 <div className="flex justify-center items-center mb-4 h-[170px]">
-                  <Link to={room.roomName === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.roomName}`}>
+                  <Link to={room.roomName === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.roomid}/${room.roomName}`}>
                     <img
                       src={room.roomName === "Add Room" ? room.picture : `data:image/png;base64,${room.picture}`}
                       alt={room.roomName}
@@ -108,7 +108,7 @@ function RoomsRobots() {
                     />
                   </Link>
                 </div>
-                <Link to={room.roomName === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.roomName}`}>
+                <Link to={room.roomName === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.roomid}/${room.roomName}`}>
                   <div className="relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center cursor-pointer">
                     {room.roomName}
                   </div>
