@@ -33,15 +33,15 @@ function UserSettingPage() {
   }, [language]);
 
   // Handle log out
-  const [redirectMessage, setRedirectMessage] = useState("");
-
+  const [logoutMessage, setlogoutMessage] = useState("");
+  
   const logOut = async () => {
     const token = localStorage.getItem("token");
 
     if (token) {
       localStorage.removeItem("token");
       // alert("Logout Successfully!");
-      setRedirectMessage("Logout Successful! Redirecting...");
+      setlogoutMessage("Logout Successful! Redirecting...");
       localStorage.setItem("started", "false");
       setTimeout(() => {
         localStorage.removeItem("token");
@@ -54,7 +54,7 @@ function UserSettingPage() {
     }
 
     setTimeout(() => {//new added
-      setRedirectMessage("");
+      setlogoutMessage("");
       navigate("/login"); // Redirect after message disappears
     }, 3000);
 
@@ -100,9 +100,9 @@ function UserSettingPage() {
           />
         </div>
 
-        {redirectMessage && (
+        {logoutMessage && (
         <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out">
-          {redirectMessage}
+          {logoutMessage}
         </div>
       )}
 
