@@ -186,17 +186,24 @@ function LODevicesPage() {
                       ) : (
                         <p>No Image Available</p>
                       )}
-                      <div className="teal-text text-sm sm:text-base w-full mb-2">
-                        <strong>{device.deviceName} ({device.room.roomName})</strong>
-                      </div>
+                      {/* Displaying device name with room (if available) */}
+                      {device.room && device.room.roomName ? (
+                        <div className="teal-text text-sm sm:text-base w-full mb-2">
+                          <strong>
+                            {device.deviceName} ({device.room.roomName})
+                          </strong>
+                        </div>
+                      ) : (
+                        <div className="teal-text text-sm sm:text-base w-full mb-2">
+                          <strong>{device.deviceName}</strong>
+                        </div>
+                      )}
                     </Link>
 
                     {/* Status Indicator */}
                     <div
                       className={`text-2xl w-auto px-4 mb-2 rounded-full text-white inline-block py-1 ${
-                        device.onOff === "On"
-                          ? "bg-green-500"
-                          : "bg-red-500"
+                        device.onOff === "On" ? "bg-green-500" : "bg-red-500"
                       }`}
                     >
                       {device.onOff === "On"
