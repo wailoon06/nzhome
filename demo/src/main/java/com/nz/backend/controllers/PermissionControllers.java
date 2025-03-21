@@ -82,7 +82,7 @@ public class PermissionControllers {
     }
 
     @PostMapping("/validatePermission")
-    public ResponseEntity<?> validatePermission (@RequestHeader("Authorization") String token, @RequestParam Long roomid ) {
+    public ResponseEntity<?> validatePermission (@RequestHeader("Authorization") String token, @RequestBody GrantDTO grantDTO) {
 
         // Token Verification
         if (token == null){
@@ -98,7 +98,7 @@ public class PermissionControllers {
             return ResponseEntity.badRequest().body("User not found!");
         }
         
-        Room room = roomRepo.findById(roomid)
+        Room room = roomRepo.findById(grantDTO.getRoomid())
         .orElseThrow(() -> new RuntimeException("Room not found!"));
         
         Permission permission = permissionRepo.findByUserAndRoom(user, room);

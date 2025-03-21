@@ -9,11 +9,32 @@ function RoomsRobots() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
 
   // Fetch room list
   const [roomList, setRoomList] = useState([]);
+  // Store user permissions for rooms
+  const [roomPermissions, setRoomPermissions] = useState({});
 
-  const fetchRoomList = async (e) => {
+  const checkUserRole = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/getUserDetails",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      // Check if the role is OWNER
+      setIsOwner(response.data.role === "Owner");
+    } catch (error) {
+      console.error("Error checking user role:", error);
+      setIsOwner(false);
+    }
+  };
+
+  const fetchRoomList = async () => {
     setLoading(true);
     setError(null);
 
@@ -27,8 +48,36 @@ function RoomsRobots() {
         }
       );
 
-      const updatedRoomList = [...response.data, { roomName: "Add Room", picture: "/image/plus.png" }];
+      // Only add the "Add Room" option if user is an owner
+      let updatedRoomList = [...response.data];
+      if (isOwner) {
+        updatedRoomList.push({ roomName: "Add Room", picture: "/image/plus.png" });
+      }
+      
       setRoomList(updatedRoomList);
+
+      // Check permissions for each room
+      const permissionsMap = {};
+      
+      // For each room (except "Add Room"), validate permission
+      for (const room of response.data) {
+        try {
+          await axios.post(
+            "http://localhost:8080/api/validatePermission",
+            { roomid: room.roomid },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          // If no error is thrown, user has permission
+          permissionsMap[room.roomid] = true;
+        } catch (error) {
+          // If 403 Forbidden or any other error, user doesn't have permission
+          permissionsMap[room.roomid] = false;
+        }
+      }
+      
+      setRoomPermissions(permissionsMap);
 
     } catch (err) {
       if (err.response && err.response.status === 403) {
@@ -46,8 +95,14 @@ function RoomsRobots() {
   };
 
   useEffect(() => {
-    fetchRoomList();
+    // First check the user role
+    checkUserRole();
   }, []);
+  
+  useEffect(() => {
+    // After checking the role, fetch room list
+    fetchRoomList();
+  }, [isOwner]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [animationClass, setAnimationClass] = useState(""); // Track animation
@@ -78,6 +133,20 @@ function RoomsRobots() {
   });
   const translations = translationsMap[language] || translationsMap["en"];
 
+  // Handle room click with permission check
+  const handleRoomClick = (room, e) => {
+    // Always allow "Add Room"
+    if (room.roomName === "Add Room") {
+      return;
+    }
+    
+    // Check if user has permission
+    if (!roomPermissions[room.roomid]) {
+      e.preventDefault();
+      alert(translations.noPermission || "You don't have permission to access this room");
+    }
+  };
+
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[3fr,1.2fr] p-4 gap-4">
       {/* Rooms Section */}
@@ -93,28 +162,48 @@ function RoomsRobots() {
             className={`grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 transition-all duration-500 ease-in-out ${animationClass}`}
             onAnimationEnd={handleAnimationEnd}
           >
-            {roomList.slice(tempIndex, tempIndex + 4).map((room, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end"
-              >
-                <div className="flex justify-center items-center mb-4 h-[170px]">
-                  <Link to={room.roomName === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.roomid}/${room.roomName}`}>
-                    <img
-                      src={room.roomName === "Add Room" ? room.picture : `data:image/png;base64,${room.picture}`}
-                      alt={room.roomName}
-                      className="rounded-lg object-contain cursor-pointer"
-                      style={{ maxWidth: "100%", maxHeight: "170px" }}
-                    />
+            {roomList.slice(tempIndex, tempIndex + 4).map((room, index) => {
+              const isAddRoom = room.roomName === "Add Room";
+              const hasPermission = isAddRoom || roomPermissions[room.roomid];
+              
+              return (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end relative"
+                >
+                  <div className="flex justify-center items-center mb-4 h-[170px] relative">
+                    <Link 
+                      to={isAddRoom ? "/rooms/new" : `/rooms/devices/${room.roomid}/${room.roomName}`}
+                      onClick={(e) => handleRoomClick(room, e)}
+                      className={!hasPermission ? "cursor-not-allowed w-full h-full flex justify-center items-center" : "cursor-pointer w-full h-full flex justify-center items-center"}
+                    >
+                      <img
+                        src={isAddRoom ? room.picture : `data:image/png;base64,${room.picture}`}
+                        alt={room.roomName}
+                        className={`rounded-lg object-contain ${!hasPermission ? "opacity-60" : ""}`}
+                        style={{ maxWidth: "100%", maxHeight: "170px" }}
+                      />
+                      {!hasPermission && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <i className="fas fa-lock text-gray-600 text-2xl"></i>
+                        </div>
+                      )}
+                    </Link>
+                  </div>
+                  <Link 
+                    to={isAddRoom ? "/rooms/new" : `/rooms/devices/${room.roomid}/${room.roomName}`}
+                    onClick={(e) => handleRoomClick(room, e)}
+                  >
+                    <div className={`relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center ${!hasPermission ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                      {room.roomName}
+                      {!hasPermission && !isAddRoom && (
+                        <i className="fas fa-lock ml-2 text-gray-600"></i>
+                      )}
+                    </div>
                   </Link>
                 </div>
-                <Link to={room.roomName === "Add Room" ? "/rooms/new" : `/rooms/devices/${room.roomid}/${room.roomName}`}>
-                  <div className="relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center cursor-pointer">
-                    {room.roomName}
-                  </div>
-                </Link>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
