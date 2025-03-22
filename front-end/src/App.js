@@ -76,8 +76,7 @@ function App() {
       setlogoutMessage("Logout Successful! Redirecting...");
       localStorage.setItem("started", "false");
       setTimeout(() => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
+        localStorage.clear();
         navigate("/login");
       }, 3000);;
     } else {

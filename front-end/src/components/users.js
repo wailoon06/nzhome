@@ -53,7 +53,7 @@ function Users() {
           return 0;
         });
 
-        setUsers(response.data);
+        setUsers(sortedUsers);
       } catch (err) {
         handleApiError(err);
       } finally {
@@ -175,22 +175,33 @@ function Users() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="absolute inset-y-1/2 w-[95%] flex justify-between items-center">
-            <button
-              onClick={prevItems}
-              disabled={currentIndex === 0}
-              className="bg-white text-gray-800 p-2 rounded-full"
-            >
-              <i className={"fas fa-chevron-left"}></i>
-            </button>
-            <button
-              onClick={nextItems}
-              disabled={currentIndex + 3 >= users.length}
-              className="bg-white text-gray-800 p-2 rounded-full"
-            >
-              <i className={"fas fa-chevron-right"}></i>
-            </button>
-          </div>
+          {users.length > 1 && (
+            <div className="absolute inset-y-1/2 w-[97%] flex px-10 pe-6 items-center">
+              {/* Left Button - Stays on the left when visible */}
+              {currentIndex > 0 && (
+                <div className="flex-1 flex justify-start">
+                  <button
+                    onClick={prevItems}
+                    className="bg-white border-4 text-gray-800 p-2 rounded-full"
+                  >
+                    <i className="fas fa-chevron-left"></i>
+                  </button>
+                </div>
+              )}
+
+              {/* Right Button - Stays on the right when visible */}
+              {currentIndex + 1 < users.length && (
+                <div className="flex-1 flex justify-end">
+                  <button
+                    onClick={nextItems}
+                    className="bg-white border-4 text-gray-800 p-2 rounded-full"
+                  >
+                    <i className="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
