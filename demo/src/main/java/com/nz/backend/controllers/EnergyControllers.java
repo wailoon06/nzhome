@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nz.backend.dto.EnergyDTO;
 import com.nz.backend.entities.Energy;
+import com.nz.backend.entities.User;
 import com.nz.backend.repo.DeviceRepo;
 import com.nz.backend.repo.EnergyRepo;
+import com.nz.backend.repo.UserRepo;
 import com.nz.backend.services.JwtService;
 
 @RestController
@@ -25,6 +27,9 @@ public class EnergyControllers {
 
     @Autowired
     private DeviceRepo deviceRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     @Autowired
     private EnergyRepo energyRepo;
@@ -47,7 +52,36 @@ public class EnergyControllers {
         }
 
         List<EnergyDTO> energyDTOList = energyData.stream()
-            .map(e -> new EnergyDTO(e.getEnergyId(), e.getDate(), e.getEnergyConsumption()))
+            .map(e -> new EnergyDTO(e.getEnergyId(), e.getDate(), e.getEnergyConsumption(), e.getEnergyGeneration(), e.getDevice().getDeviceid()))
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(energyDTOList);
+    }
+
+    @GetMapping("/getEnergyFam")
+    public ResponseEntity<List<EnergyDTO>> getEnergyFam(@RequestHeader("Authorization") String token) {
+
+        // Token Verification
+        if (token == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        List<Energy> energyData = energyRepo.findByFamily(user.getFamily());
+        if (energyData.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<EnergyDTO> energyDTOList = energyData.stream()
+            .map(e -> new EnergyDTO(e.getEnergyId(), e.getDate(), e.getEnergyConsumption(), e.getEnergyGeneration(), e.getDevice().getDeviceid()))
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(energyDTOList);

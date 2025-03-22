@@ -153,7 +153,7 @@ public class DeviceControllers {
         for (Energy energy : energyList) {
             Map<String, Object> energyData = new HashMap<>();
             energyData.put("energyConsumption", energy.getEnergyConsumption());
-            energyData.put("energyUsage", energy.getEnergyUsage());
+            energyData.put("energyGeneration", energy.getEnergyGeneration());
             energyData.put("date", energy.getDate());
             energyDataList.add(energyData);
         }

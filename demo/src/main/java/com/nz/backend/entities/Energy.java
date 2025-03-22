@@ -27,8 +27,8 @@ public class Energy {
     @Column(name = "energyConsumption")
     private Double energyConsumption;
 
-    @Column(name = "energyUsage")
-    private Double energyUsage;
+    @Column(name = "energyGeneration")
+    private Double energyGeneration;
 
     @Column(name = "date", nullable = false, updatable = false)
     private LocalDate date;
@@ -40,10 +40,10 @@ public class Energy {
     // Constructors
     public Energy() {}
 
-    public Energy(Device device, Double energyConsumption, Double energyUsage, LocalDate date, Family family) {
+    public Energy(Device device, Double energyConsumption, Double energyGeneration, LocalDate date, Family family) {
         this.device = device;
         this.energyConsumption = energyConsumption;
-        this.energyUsage = energyUsage;
+        this.energyGeneration = energyGeneration;
         this.date = date;
         this.family = family;
     }
@@ -69,8 +69,8 @@ public class Energy {
         return energyConsumption;
     }
 
-    public Double getEnergyUsage() {
-        return energyUsage;
+    public Double getEnergyGeneration() {
+        return energyGeneration;
     }
 
     public LocalDate getDate() {
