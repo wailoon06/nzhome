@@ -34,6 +34,8 @@ function UserSettingPage() {
 
   // Handle log out
   const [logoutMessage, setlogoutMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   
   const logOut = async () => {
     const token = localStorage.getItem("token");
@@ -66,9 +68,20 @@ function UserSettingPage() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async () => {
-    if (!message.trim()) return alert("Message cannot be empty");
+    // if (!message.trim()) return alert("Message cannot be empty");
+    if (!message.trim()) {
 
-    setIsLoading(true);
+      setErrorMessage("Message cannot be empty");
+      setTimeout(() => {
+        setErrorMessage("");
+        // window.location.reload();
+      }, 3000);
+      setIsLoading(true);
+      return;
+
+    }
+
+    
     try {
       const response = await fetch("/api/messages", {
         method: "POST",
@@ -77,14 +90,36 @@ function UserSettingPage() {
       });
 
       if (response.ok) {
-        alert("Message posted successfully!");
-        setMessage("");
-        setIsOpen(false);
+        // alert("Message posted successfully!");
+        // setMessage("");
+        // setIsOpen(false);
+        // Show success message(added)
+      setSuccessMessage("Message posted successfully!");
+      
+      // Auto-clear success message after 3 seconds(added)
+      setTimeout(() => {
+        setSuccessMessage("");
+        // window.location.reload();
+      }, 3000);
+
       } else {
-        alert("Failed to post message");
+        // alert("Failed to post message");
+        setErrorMessage("Failed to post message");//added
+        
+        setTimeout(() => {//added
+          localStorage.clear();
+          setErrorMessage("");
+          // window.location.reload();
+        }, 2000);
       }
     } catch (error) {
-      alert("An error occurred: " + error.message);
+      // alert("An error occurred: " + error.message);
+      setErrorMessage("An error occurred: " + error.message);//added
+        
+      setTimeout(() => {//added
+        localStorage.clear();
+        setErrorMessage("");
+      }, 2000);
     }
     setIsLoading(false);
   };
@@ -103,8 +138,22 @@ function UserSettingPage() {
         {logoutMessage && (
         <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out">
           {logoutMessage}
-        </div>
-      )}
+        </div>  
+        )}
+
+        {/* Success Message Display (added) */}
+        {successMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-[10000]">
+            {successMessage}
+          </div>
+        )}
+
+        {/* Error Message Display (added) */}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-[10000]">
+            {errorMessage}
+          </div>
+        )}
 
         {/* Main Content */}
         <div
