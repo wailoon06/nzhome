@@ -738,7 +738,7 @@ function RoomsDevicesPage() {
                     className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col items-center p-4"
                   >
                     <Link
-                      to={`/rooms/summary/${device.deviceName}`}
+                      to={`/devices/${device.type}/${device.deviceid}/${device.deviceName}/details`}
                       className="w-full text-center"
                     >
                       {/* Displaying Image */}

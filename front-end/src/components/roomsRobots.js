@@ -238,7 +238,7 @@ function RoomsRobots() {
                       to={
                         isAddRoom
                           ? "/rooms/new"
-                          : `/rooms/devices/${room.roomid}/${room.roomName}`
+                          : `/${room.roomName}/${room.roomid}/devices`
                       }
                       onClick={(e) => handleRoomClick(room, e)}
                       className={
