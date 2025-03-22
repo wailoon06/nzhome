@@ -46,10 +46,10 @@ function CalendarPage() {
   };
 
   // Switch
-  const [isOn, setIsOn] = useState(false);
+  const [onOff, setonOff] = useState(false);
 
   const toggleSwitch = () => {
-    setIsOn(!isOn);
+    setonOff(!onOff);
   };
 
   const [isOpen, setIsOpen] = useState(false); // Modal state
@@ -211,7 +211,7 @@ function CalendarPage() {
         date: eventDetails.toISOString(),
         title: eventTitle,
         description: eventDescription,
-        repeat: isOn,
+        onOff: onOff ? "ON" : "OFF",  // ✅ Convert boolean to string
         devices: selectedDeviceIds
       };
   
@@ -232,7 +232,7 @@ function CalendarPage() {
           date: eventDetails,
           title: eventTitle,
           description: eventDescription,
-          repeat: isOn,
+          onOff: onOff,
           devices: favorites.filter((device) =>
             selectedDevices.includes(device.deviceid)
           ),
@@ -245,7 +245,7 @@ function CalendarPage() {
       setSelectedMinute(new Date().getMinutes());
       setEventTitle("");
       setEventDescription("");
-      setIsOn(false);
+      setonOff(onOff.Off);
       setSelectedDevices([]);
 
       // alert("Successfully created!");
@@ -340,11 +340,11 @@ function CalendarPage() {
       console.log(title);
       const response = await axios.delete("http://localhost:8080/api/deleteEvent", {
         headers: { Authorization: `Bearer ${token}` },
-        data: {title}, // Send title & deviceId instead of eventid
+        data: {title} // Send title
       });
   
       console.log(response.data);
-      
+      fetchUpcomingEvents();
       // Remove deleted event from UI
       setEvents((prevEvents) => 
         prevEvents.filter(event => !(event.title === title && event.deviceid === deviceId))
@@ -491,12 +491,19 @@ function CalendarPage() {
                                     {new Date(event.date).toLocaleTimeString()}
                                   </span>
 
-                                  {/* Conditionally Render Repeat Status */}
-                                  {event.repeat && (
+                                  {/* device Status */}
+                                  {event.onOff === "ON" && (
                                     <div className="text-sm text-green-600 mt-2">
-                                      <strong>Repeat: </strong> This event is set to repeat.
+                                      <strong>Turn on device </strong> 
                                     </div>
                                   )}
+
+                                  {event.onOff === "OFF" && (
+                                    <div className="text-sm text-red-600 mt-2">
+                                      <strong>Turn off device</strong>
+                                    </div>
+                                  )}
+
 
                                   {/* Conditionally Render Devices */}
                                   {event.devices && event.devices.length > 0 && (
@@ -564,21 +571,21 @@ function CalendarPage() {
                         {/* Switch */}
                         <div
                           className={`w-14 h-8 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${
-                            isOn ? "bg-green-500" : "bg-gray-400"
+                            onOff ? "bg-green-500" : "bg-gray-400"
                           }`}
                           onClick={toggleSwitch}
                         >
                           <div
                             className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                              isOn ? "translate-x-6" : "translate-x-0"
+                              onOff ? "translate-x-6" : "translate-x-0"
                             }`}
                           ></div>
                         </div>
                         {/* Label */}
                         <span className="text-lg font-medium">
-                          {isOn
-                            ? `${translations.on_repeat}`
-                            : `${translations.off_repeat}`}
+                          {onOff
+                            ? `${translations.on_turn}`
+                            : `${translations.off_turn}`}
                         </span>
                       </div>
                       {/* ======================== */}

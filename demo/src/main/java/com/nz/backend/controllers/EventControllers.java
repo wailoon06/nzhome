@@ -9,6 +9,7 @@ import com.nz.backend.repo.DeviceRepo;
 import com.nz.backend.repo.UserRepo;
 import com.nz.backend.dto.AddEventDTO;
 import com.nz.backend.dto.EventNameDTO;
+import com.nz.backend.enums.OnOff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import com.nz.backend.services.JwtService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -65,7 +67,7 @@ public class EventControllers {
                     addEventDTO.getTitle(),
                     addEventDTO.getDescription(),
                     addEventDTO.getDate(),
-                    addEventDTO.isRepeat(),
+                    addEventDTO.getOnOff(),
                     user,
                     family,
                     deviceId);
@@ -97,20 +99,14 @@ public class EventControllers {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         }
-
-        // Find the event by title and device ID
-        System.out.println(eventNameDTO.getTitle());
-        Event matchEvent = eventRepo.findByTitle(eventNameDTO.getTitle());
-        if (matchEvent == null) {
+        // Find the event by title
+        Optional<Event> matchEvent = eventRepo.findByTitle(eventNameDTO.getTitle());
+        if (matchEvent.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event not found!");
         }
+        Event event = matchEvent.get();
 
-        // Check if the user is the creator of the event
-        if (!matchEvent.getCreatedBy().getEmail().equals(user.getEmail())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to delete this event!");
-        }
-
-        eventRepo.delete(matchEvent);
+        eventRepo.delete(event);
         return ResponseEntity.ok("Event deleted successfully!");
     }
 
