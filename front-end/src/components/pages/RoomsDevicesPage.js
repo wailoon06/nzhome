@@ -20,7 +20,7 @@ function RoomsDevicesPage() {
     return localStorage.getItem("language") || "en";
   });
   const translations = translationsMap[language] || translationsMap["en"];
- 
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -104,7 +104,6 @@ function RoomsDevicesPage() {
     fetchDeviceDetails();
   }, [roomTitle]);
 
-
   // Toggle function (On/Off)
   useEffect(() => {
     if (deviceDetails.length > 0) {
@@ -183,11 +182,10 @@ function RoomsDevicesPage() {
   // Filter users without permission with all users and users with permission (show)
   // Grant permission for selected users (post)
 
-  const [userDetails, setUserDetails] = useState([]);                        // All users in the family
-  const [userWithPermission, setUserWithPermission] = useState([]);          // Users with permission
-  const [usersWithoutPermission, setUserWithoutPermission] = useState([]);   // Users without permission
-  const [selectedUsers, setSelectedUsers] = useState([]);                    // Selected users to grant permission
-
+  const [userDetails, setUserDetails] = useState([]); // All users in the family
+  const [userWithPermission, setUserWithPermission] = useState([]); // Users with permission
+  const [usersWithoutPermission, setUserWithoutPermission] = useState([]); // Users without permission
+  const [selectedUsers, setSelectedUsers] = useState([]); // Selected users to grant permission
 
   // Get all users in family (userid)
   const fetchUserDetails = async () => {
@@ -212,7 +210,6 @@ function RoomsDevicesPage() {
     fetchUserDetails();
   }, []);
 
-
   // Get users with permission (userId)
   const fetchUserWithPermission = async () => {
     setLoading(true);
@@ -220,13 +217,15 @@ function RoomsDevicesPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post("http://localhost:8080/api/getUserWithPermission",
-      {
-        roomid: roomid
-      },
-      { 
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/getUserWithPermission",
+        {
+          roomid: roomid,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setUserWithPermission(response.data);
     } catch (err) {
@@ -236,23 +235,24 @@ function RoomsDevicesPage() {
     }
   };
 
-
   // Get users without permission
   useEffect(() => {
     if (userDetails.length > 0 && userWithPermission.length > 0) {
-      const withoutPermission = userDetails.filter(user => 
-        !userWithPermission.some(permUser => permUser.userId === user.userid)
+      const withoutPermission = userDetails.filter(
+        (user) =>
+          !userWithPermission.some(
+            (permUser) => permUser.userId === user.userid
+          )
       );
       setUserWithoutPermission(withoutPermission);
     }
   }, [userDetails, userWithPermission]);
 
-
   // Selected users for permission granting
   const toggleUserSelection = (userid) => {
     setSelectedUsers((prevSelected) => {
       if (prevSelected.includes(userid)) {
-        return prevSelected.filter(id => id !== userid);
+        return prevSelected.filter((id) => id !== userid);
       } else {
         return [...prevSelected, userid];
       }
@@ -275,12 +275,12 @@ function RoomsDevicesPage() {
 
     try {
       const token = localStorage.getItem("token");
-      
+
       const response = await axios.post(
         "http://localhost:8080/api/grantPermission",
-        { 
-          userid: selectedUsers, 
-          roomid: roomid 
+        {
+          userid: selectedUsers,
+          roomid: roomid,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -301,7 +301,6 @@ function RoomsDevicesPage() {
       fetchUserWithPermission();
 
       closeAddUserModal();
-
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
@@ -329,7 +328,6 @@ function RoomsDevicesPage() {
     fetchUserWithPermission();
   }, [roomid]);
 
-
   // Handle delete submission
   const handleDelete = async (userId) => {
     setLoading(true);
@@ -337,15 +335,15 @@ function RoomsDevicesPage() {
 
     try {
       const token = localStorage.getItem("token");
-      
+
       const response = await axios.delete(
         "http://localhost:8080/api/deletePermission",
         {
           headers: { Authorization: `Bearer ${token}` },
-          data: { 
-            userid: [userId], 
-            roomid: roomid 
-          }
+          data: {
+            userid: [userId],
+            roomid: roomid,
+          },
         }
       );
       
@@ -359,7 +357,6 @@ function RoomsDevicesPage() {
       }, 5000);
 
       fetchUserWithPermission();
-
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
@@ -381,10 +378,10 @@ function RoomsDevicesPage() {
     } finally {
       setLoading(false);
     }
-  }
-  
+  };
+
   // Modals when open all users
-  const [isOpen, setIsOpen] = useState(false); 
+  const [isOpen, setIsOpen] = useState(false);
   const openModal = () => {
     fetchUserWithPermission();
     setIsOpen(true);
@@ -392,7 +389,7 @@ function RoomsDevicesPage() {
   const closeModal = () => setIsOpen(false);
 
   // Modals when open add users
-  const [isAddUserOpen, setIsAddUserOpen] = useState(false); 
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
   const openAddUserModal = () => setIsAddUserOpen(true);
   const closeAddUserModal = () => setIsAddUserOpen(false);
 
@@ -455,78 +452,108 @@ function RoomsDevicesPage() {
                       <i className="fas fa-user text-2xl mr-5 text-3xl"></i>
                     </button>
 
-                    {/* Modal */}
+                    {/* Users Modal */}
                     {isOpen && (
-                      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1001]">
-                        <div className="bg-white w-11/12 max-w-3xl p-6 rounded-lg shadow-lg">
+                      <div
+                        className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[1001] backdrop-blur-sm"
+                        onClick={closeModal}
+                      >
+                        <div
+                          className="bg-white w-11/12 max-w-3xl p-6 rounded-xl shadow-xl border border-gray-100 transform transition-all duration-200"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           {/* Header */}
-                          <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold">
-                              {/* {translations.allUsers} */}
+                          <div className="flex justify-between items-center mb-6 border-b pb-4">
+                            <h2 className="text-2xl font-semibold text-gray-800 flex items-center">
+                              <i className="fas fa-users-cog mr-3 text-blue-500"></i>
                               Users With Access
                             </h2>
                             <button
-                              className="text-gray-500 hover:text-gray-700 transition"
+                              className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 p-2 rounded-full transition-colors"
                               onClick={closeModal}
+                              aria-label="Close"
                             >
-                              <i className="fas fa-times"></i>
+                              <i className="fas fa-times text-lg"></i>
                             </button>
                           </div>
 
                           {loading && (
-                            <div className="text-center py-8">
-                              <p>Loading users...</p>
+                            <div className="text-center py-12">
+                              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                              <p className="text-gray-600">Loading users...</p>
                             </div>
                           )}
 
                           {error && (
-                            <div className="text-center py-8 text-red-500">
-                              <p>{error}</p>
+                            <div className="text-center py-8 bg-red-50 rounded-lg my-4">
+                              <i className="fas fa-exclamation-circle text-red-500 text-3xl mb-2"></i>
+                              <p className="text-red-600">{error}</p>
                             </div>
                           )}
 
                           {/* Main Content Section */}
                           <div className="flex flex-col items-center justify-center">
+                            {/* User count summary */}
+                            {!loading &&
+                              !error &&
+                              userWithPermission.length > 0 && (
+                                <div className="w-full max-w-md mb-4 text-gray-600 text-sm">
+                                  <span className="font-medium">
+                                    {userWithPermission.length}
+                                  </span>{" "}
+                                  users have access to this device
+                                </div>
+                              )}
+
                             {/* Scrollable container for users */}
-                            <div className="max-h-[60vh] w-full max-w-md mx-auto overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                            <div className="max-h-[60vh] w-full max-w-md mx-auto overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
                               {!loading && !error && userDetails.length > 0
                                 ? userWithPermission.map((user, index) => (
                                     <div
                                       key={user.userId || index}
-                                      className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center text-center text-lg w-full"
+                                      className="flex justify-between rounded-lg border border-gray-200 bg-white p-4 mb-3 items-center w-full hover:shadow-md transition-shadow"
                                     >
-                                      <h2 className="text-center w-full">
-                                        {user.username} ({user.role})
-                                      </h2>
-                                      <div className="text-[14px] sm:text-2xl font-bold text-center w-full">
-                                        {user.email}
+                                      <div className="flex flex-col">
+                                        <h3 className="font-medium text-gray-800">
+                                          {user.username}{" "}
+                                          <span className="text-sm text-gray-500">
+                                            ({user.role})
+                                          </span>
+                                        </h3>
+                                        <div className="text-sm text-gray-600">
+                                          {user.email}
+                                        </div>
                                       </div>
                                       <button
                                         onClick={() => {
                                           handleDelete(user.userId);
                                         }}
-                                        className="text-red-500 text-xl font-bold px-2"
+                                        className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors ml-2"
+                                        aria-label="Remove user access"
                                       >
-                                        <i className="fas fa-times"></i>
+                                        <i className="fas fa-trash-alt"></i>
                                       </button>
                                     </div>
                                   ))
                                 : !loading &&
                                   !error && (
-                                    <div className="text-center py-8">
-                                      <p>No users with access found.</p>
+                                    <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+                                      <i className="fas fa-user-slash text-gray-300 text-5xl mb-4"></i>
+                                      <p className="text-gray-500">
+                                        No users with access found.
+                                      </p>
                                     </div>
                                   )}
                             </div>
                           </div>
 
                           {/* add user */}
-                          <div className="flex justify-center mt-6">
+                          <div className="flex justify-center mt-8 pt-4 border-t">
                             <button
                               onClick={openAddUserModal}
-                              className="bg-blue-500 text-white py-2 px-4 rounded-full text-xl flex items-center hover:bg-blue-600 transition"
+                              className="bg-blue-500 text-white py-3 px-6 rounded-lg text-base font-medium flex items-center hover:bg-blue-600 transition shadow-sm hover:shadow"
                             >
-                              <i className="fas fa-plus mr-2"></i> Add User
+                              <i className="fas fa-user-plus mr-2"></i> Add User
                             </button>
                           </div>
                         </div>
@@ -535,74 +562,148 @@ function RoomsDevicesPage() {
 
                     {/* Add user pop up */}
                     {isAddUserOpen && (
-                      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1001]">
-                        <div className="bg-white w-11/12 max-w-3xl p-6 rounded-lg shadow-lg">
+                      <div
+                        className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[1001] backdrop-blur-sm"
+                        onClick={closeAddUserModal}
+                      >
+                        <div
+                          className="bg-white w-11/12 max-w-3xl p-6 rounded-xl shadow-xl border border-gray-100"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           {/* Header */}
-                          <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold">
+                          <div className="flex justify-between items-center mb-6 border-b pb-4">
+                            <h2 className="text-2xl font-semibold text-gray-800 flex items-center">
+                              <i className="fas fa-user-plus mr-3 text-blue-500"></i>
                               {translations.addUser}
                             </h2>
                             <button
-                              className="text-gray-500 hover:text-gray-700 transition"
+                              className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 p-2 rounded-full transition-colors"
                               onClick={closeAddUserModal}
+                              aria-label="Close"
                             >
-                              <i className="fas fa-times"></i>
+                              <i className="fas fa-times text-lg"></i>
                             </button>
                           </div>
 
                           {loading && (
-                            <div className="text-center py-8">
-                              <p>Loading users...</p>
+                            <div className="text-center py-12">
+                              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                              <p className="text-gray-600">Loading users...</p>
                             </div>
                           )}
 
                           {error && (
-                            <div className="text-center py-8 text-red-500">
-                              <p>{error}</p>
+                            <div className="text-center py-8 bg-red-50 rounded-lg my-4">
+                              <i className="fas fa-exclamation-circle text-red-500 text-3xl mb-2"></i>
+                              <p className="text-red-600">{error}</p>
                             </div>
                           )}
 
+                          {/* Search input */}
+                          {!loading &&
+                            !error &&
+                            usersWithoutPermission.length > 0 && (
+                              <div className="mb-4 max-w-md mx-auto">
+                                <div className="relative">
+                                  <input
+                                    type="text"
+                                    placeholder="Search users..."
+                                    className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  />
+                                  <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                </div>
+                              </div>
+                            )}
+
                           {/* Main Content Section */}
                           <div className="flex flex-col items-center justify-center">
+                            {/* Available users count */}
+                            {!loading &&
+                              !error &&
+                              usersWithoutPermission.length > 0 && (
+                                <div className="w-full max-w-md mb-2 text-gray-600 text-sm">
+                                  <span className="font-medium">
+                                    {usersWithoutPermission.length}
+                                  </span>{" "}
+                                  users available
+                                </div>
+                              )}
+
                             {/* Scrollable container for users */}
-                            <div className="max-h-[60vh] w-full max-w-md mx-auto overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                            <div className="max-h-[50vh] w-full max-w-md mx-auto overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
                               {!loading && !error && userDetails.length > 0
                                 ? usersWithoutPermission.map((user, index) => (
                                     <div
                                       key={user.userid || index}
-                                      onClick={() => toggleUserSelection(user.userid)}
-                                      className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center text-center text-lg w-full"
+                                      onClick={() =>
+                                        toggleUserSelection(user.userid)
+                                      }
+                                      className={`flex justify-between rounded-lg border p-4 mb-3 items-center w-full cursor-pointer transition-all ${
+                                        selectedUsers.includes(user.userid)
+                                          ? "border-blue-300 bg-blue-50"
+                                          : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                                      }`}
                                     >
-                                      <h2 className="text-center w-full">
-                                        {user.username} ({user.role})
-                                      </h2>
-                                      <div className="text-[14px] sm:text-2xl font-bold text-center w-full">
-                                        {user.email}
+                                      <div className="flex flex-col">
+                                        <h3 className="font-medium text-gray-800">
+                                          {user.username}{" "}
+                                          <span className="text-sm text-gray-500">
+                                            ({user.role})
+                                          </span>
+                                        </h3>
+                                        <div className="text-sm text-gray-600">
+                                          {user.email}
+                                        </div>
                                       </div>
-                                      <div className="text-blue-500">
-                                        {selectedUsers.includes(user.userid) && (
-                                          <i className="fas fa-check"></i>
+                                      <div
+                                        className={`w-6 h-6 flex items-center justify-center rounded-full ${
+                                          selectedUsers.includes(user.userid)
+                                            ? "bg-blue-500 text-white"
+                                            : "border-2 border-gray-300"
+                                        }`}
+                                      >
+                                        {selectedUsers.includes(
+                                          user.userid
+                                        ) && (
+                                          <i className="fas fa-check text-sm"></i>
                                         )}
                                       </div>
                                     </div>
                                   ))
                                 : !loading &&
                                   !error && (
-                                    <div className="text-center py-8">
-                                      <p>No additional users found without access.</p>
+                                    <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+                                      <i className="fas fa-users text-gray-300 text-5xl mb-4"></i>
+                                      <p className="text-gray-500">
+                                        No additional users found without
+                                        access.
+                                      </p>
                                     </div>
                                   )}
                             </div>
                           </div>
 
-                          {/* add user */}
-                          <div className="flex justify-center mt-6">
+                          {/* Selected count and grant access button */}
+                          <div className="flex flex-col sm:flex-row justify-between items-center mt-8 pt-4 border-t">
+                            <div className="mb-4 sm:mb-0 text-gray-600">
+                              {selectedUsers.length > 0 ? (
+                                <span className="font-medium">
+                                  {selectedUsers.length} users selected
+                                </span>
+                              ) : (
+                                <span>Select users to grant access</span>
+                              )}
+                            </div>
                             <button
                               onClick={handlePermissionSubmit}
-                              className="bg-blue-500 text-white py-2 px-4 rounded-full text-xl flex items-center hover:bg-blue-600 transition"
+                              className={`py-3 px-6 rounded-lg text-base font-medium flex items-center transition ${
+                                selectedUsers.length === 0
+                                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                  : "bg-blue-500 text-white hover:bg-blue-600 shadow-sm hover:shadow"
+                              }`}
                               disabled={selectedUsers.length === 0}
                             >
-                              <i className="fas fa-plus mr-2"></i> Grant Access
+                              <i className="fas fa-key mr-2"></i> Grant Access
                             </button>
                           </div>
                         </div>

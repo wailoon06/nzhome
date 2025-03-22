@@ -147,6 +147,35 @@ function RoomsRobots() {
     }
   };
 
+  const [robot, setRobot] = useState([]);
+  const fetchDeviceDetails = async () => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/getAllDevice",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      // Filter only devices with categoryName === 'Robot'
+      const robotDevices = response.data.filter(device => device.category.categoryName === "Vacuum");
+  
+      setRobot(robotDevices);
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    fetchDeviceDetails();
+  }, []);
+
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[3fr,1.2fr] p-4 gap-4">
       {/* Rooms Section */}
@@ -165,22 +194,36 @@ function RoomsRobots() {
             {roomList.slice(tempIndex, tempIndex + 4).map((room, index) => {
               const isAddRoom = room.roomName === "Add Room";
               const hasPermission = isAddRoom || roomPermissions[room.roomid];
-              
+
               return (
                 <div
                   key={index}
                   className="bg-white rounded-lg mb-4 p-4 flex flex-col justify-end relative"
                 >
                   <div className="flex justify-center items-center mb-4 h-[170px] relative">
-                    <Link 
-                      to={isAddRoom ? "/rooms/new" : `/rooms/devices/${room.roomid}/${room.roomName}`}
+                    <Link
+                      to={
+                        isAddRoom
+                          ? "/rooms/new"
+                          : `/rooms/devices/${room.roomid}/${room.roomName}`
+                      }
                       onClick={(e) => handleRoomClick(room, e)}
-                      className={!hasPermission ? "cursor-not-allowed w-full h-full flex justify-center items-center" : "cursor-pointer w-full h-full flex justify-center items-center"}
+                      className={
+                        !hasPermission
+                          ? "cursor-not-allowed w-full h-full flex justify-center items-center"
+                          : "cursor-pointer w-full h-full flex justify-center items-center"
+                      }
                     >
                       <img
-                        src={isAddRoom ? room.picture : `data:image/png;base64,${room.picture}`}
+                        src={
+                          isAddRoom
+                            ? room.picture
+                            : `data:image/png;base64,${room.picture}`
+                        }
                         alt={room.roomName}
-                        className={`rounded-lg object-contain ${!hasPermission ? "opacity-60" : ""}`}
+                        className={`rounded-lg object-contain ${
+                          !hasPermission ? "opacity-60" : ""
+                        }`}
                         style={{ maxWidth: "100%", maxHeight: "170px" }}
                       />
                       {!hasPermission && (
@@ -190,11 +233,19 @@ function RoomsRobots() {
                       )}
                     </Link>
                   </div>
-                  <Link 
-                    to={isAddRoom ? "/rooms/new" : `/rooms/devices/${room.roomid}/${room.roomName}`}
+                  <Link
+                    to={
+                      isAddRoom
+                        ? "/rooms/new"
+                        : `/rooms/devices/${room.roomid}/${room.roomName}`
+                    }
                     onClick={(e) => handleRoomClick(room, e)}
                   >
-                    <div className={`relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center ${!hasPermission ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                    <div
+                      className={`relative bg-white text-gray-800 rounded-full text-sm py-2 px-4 flex justify-center items-center ${
+                        !hasPermission ? "cursor-not-allowed" : "cursor-pointer"
+                      }`}
+                    >
                       {room.roomName}
                       {!hasPermission && !isAddRoom && (
                         <i className="fas fa-lock ml-2 text-gray-600"></i>
@@ -212,7 +263,9 @@ function RoomsRobots() {
           {Array.from({ length: totalPages }).map((_, index) => (
             <span
               key={index}
-              className={`text-2xl ${index === currentPage ? "teal-text" : "text-white"}`}
+              className={`text-2xl ${
+                index === currentPage ? "teal-text" : "text-white"
+              }`}
             >
               •
             </span>
@@ -220,38 +273,65 @@ function RoomsRobots() {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="absolute inset-y-1/2 w-[95%] flex justify-between items-center">
-          <button
-            onClick={prevItems}
-            disabled={currentIndex === 0}
-            className="bg-white text-gray-800 p-2 rounded-full"
-          >
-            <i className={"fas fa-chevron-left"}></i>
-          </button>
-          <button
-            onClick={nextItems}
-            disabled={currentIndex + 4 >= roomList.length}
-            className="bg-white text-gray-800 p-2 rounded-full"
-          >
-            <i className={"fas fa-chevron-right"}></i>
-          </button>
-        </div>
+        {roomList.length > 1 && (
+          <div className="absolute inset-y-1/2 w-[99%] flex px-10 pe-6 items-center">
+            {/* Left Button - Stays on the left when visible */}
+            {currentIndex > 0 && (
+              <div className="flex-1 flex justify-start">
+                <button
+                  onClick={prevItems}
+                  disabled={currentIndex === 0}
+                  className="bg-white border-4 text-gray-800 p-2 rounded-full"
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </button>
+              </div>
+            )}
+
+            {/* Right Button - Stays on the right when visible */}
+            {currentIndex + 4 < roomList.length && (
+              <div className="flex-1 flex justify-end">
+                <button
+                  onClick={nextItems}
+                  disabled={currentIndex + 4 >= roomList.length}
+                  className="bg-white border-4 text-gray-800 p-2 rounded-full"
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Track Robot Section */}
-      <div className="baseGreen2 rounded-lg mb-4 p-4 flex flex-col justify-center">
-        <img
-          src="/image/robot.jpg"
-          alt="Robot"
-          className="rounded-lg mb-4"
-          style={{ height: "300px" }}
-        />
-        <a href="/robots">
-          <div className="relative bg-white text-gray-800 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center cursor-pointer">
+      {robot && robot.length > 0 ? (
+        <div className="baseGreen2 rounded-lg mb-4 p-4 flex flex-col justify-center">
+          <img
+            src="/image/robot.jpg"
+            alt="Robot"
+            className="rounded-lg mb-4"
+            style={{ height: "300px" }}
+          />
+          <a href="/robots">
+            <div className="relative bg-white text-gray-800 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center cursor-pointer">
+              {translations.trackRobot}
+            </div>
+          </a>
+        </div>
+      ) : (
+        <div className="baseGreen2 rounded-lg mb-4 p-4 flex flex-col justify-center opacity-50 cursor-not-allowed">
+          <img
+            src="/image/robot.jpg"
+            alt="Robot"
+            className="rounded-lg mb-4"
+            style={{ height: "300px", filter: "grayscale(100%)" }}
+          />
+          <div className="relative bg-gray-400 text-gray-600 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center">
             {translations.trackRobot}
           </div>
-        </a>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

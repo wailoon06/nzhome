@@ -80,6 +80,35 @@ function WidgetsEnergy() {
     fetchUserDetails();
   }, []);
 
+  const [camera, setCamera] = useState([]);
+  const fetchCameraDetails = async () => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/getAllDevice",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      // Filter only devices with categoryName === 'Robot'
+      const camera = response.data.filter(device => device.category.categoryName === "Camera");
+  
+      setCamera(camera);
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    fetchCameraDetails();
+  }, []);
+
   return (
     <div className="grid grid-cols-2 p-4 gap-4 mb-4">
       {/* Widgets */}
@@ -92,9 +121,15 @@ function WidgetsEnergy() {
             style={{ height: "170px" }}
           />
           <a href="/camera">
-            <div className="relative bg-white text-gray-800 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center cursor-pointer">
-              {translations.checkCamera}
-            </div>
+            {camera && camera.length > 0 ? (
+              <div className="relative bg-white text-gray-800 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center cursor-pointer">
+                {translations.checkCamera}
+              </div>
+            ) : (
+              <div className="relative bg-gray-400 text-gray-600 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center">
+                {translations.checkCamera}
+              </div>
+            )}
           </a>
         </div>
 

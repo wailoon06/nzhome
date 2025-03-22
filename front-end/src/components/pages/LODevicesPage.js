@@ -19,12 +19,49 @@ function LODevicesPage() {
   const [deviceStates, setDeviceStates] = useState({});
   const [devicesByRoom, setDevicesByRoom] = useState({});
   const [roomNames, setRoomNames] = useState([]);
+  
 
   // Language
   const [language, setLanguage] = useState(
     () => localStorage.getItem("language") || "en"
   );
   const translations = translationsMap[language] || translationsMap["en"];
+  
+  const [userDetails, setUserDetails] = useState([]);
+  
+  const fetchUserDetails = async () => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const token = localStorage.getItem("token");
+  
+      // Step 1: Get all devices
+      const response = await axios.get(
+        "http://localhost:8080/api/getUserDetails",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setUserDetails(response.data.role);
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        alert("Session expired!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedDevice");
+        navigate("/login");
+      }
+      setError("An unexpected error occurred");
+    } finally {
+        setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   // Get device
   const fetchDeviceDetails = async () => {
@@ -47,7 +84,7 @@ function LODevicesPage() {
       // Step 2: Extract unique rooms from devices
       const uniqueRooms = [...new Set(
         allDevices
-          .filter(device => device.room && device.room.roomid) // Filter out devices without rooms
+          .filter(device => device.room.roomid) // Filter out devices without rooms
           .map(device => device.room.roomid)
       )];
       
@@ -86,7 +123,7 @@ function LODevicesPage() {
       
       // Group devices by room
       authorizedDevices.forEach(device => {
-        const roomName = device.room && device.room.roomName ? device.room.roomName : "Unassigned";
+        const roomName = device.room.roomName;
         
         if (!deviceRooms[roomName]) {
           deviceRooms[roomName] = [];
@@ -97,12 +134,7 @@ function LODevicesPage() {
       });
       
       // Sort room names alphabetically
-      rooms.sort((a, b) => {
-        // Keep "Unassigned" at the end
-        if (a === "Unassigned") return 1;
-        if (b === "Unassigned") return -1;
-        return a.localeCompare(b);
-      });
+      rooms.sort((a, b) => a.localeCompare(b));
       
       setRoomNames(rooms);
       setDevicesByRoom(deviceRooms);
@@ -203,7 +235,7 @@ function LODevicesPage() {
         {device.room && device.room.roomName ? (
           <div className="teal-text text-sm sm:text-base w-full mb-2">
             <strong>
-              {device.deviceName} ({device.room.roomName})
+              {device.deviceName}
             </strong>
           </div>
         ) : (
@@ -277,9 +309,11 @@ function LODevicesPage() {
                 <h1 className="text-center lg:text-4xl w-full ml-[-1%]">
                   {translations.list_of_devices}
                 </h1>
-                <a href="/devices/new">
-                  <i className="fas fa-plus text-2xl"></i>
-                </a>
+                {userDetails == "Owner" && (
+                  <a href="/devices/new">
+                    <i className="fas fa-plus text-2xl"></i>
+                  </a>
+                )}
               </div>
 
               {loading && (

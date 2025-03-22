@@ -56,7 +56,7 @@ public class PermissionControllers {
         if (owner == null) {
             return ResponseEntity.badRequest().body("User not found!");
         }
-
+        
         // Access denied for normal user
         if (owner.getRole().name().equals("User")) {
             return ResponseEntity.badRequest().body("Access Denied!");
@@ -169,6 +169,9 @@ public class PermissionControllers {
 
         // Grant permission for each user
         for (User user : users) {
+            if (user.getRole().equals(owner.getRole())) {
+                return ResponseEntity.badRequest().body("You are the owner!");
+            }
             Permission permission = permissionRepo.findByUserAndRoom(user, room);
             permissionRepo.delete(permission);
         }

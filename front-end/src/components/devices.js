@@ -20,6 +20,8 @@ function Devices() {
   });
   const navigate = useNavigate();
   const [deviceDetails, setDeviceDetails] = useState([]);
+  const [devicesByRoom, setDevicesByRoom] = useState({});
+  const [roomNames, setRoomNames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -48,13 +50,72 @@ function Devices() {
         }
       );
 
-      // console.log("API Response:", response);
+      const allDevices = response.data;
 
-      // if (!response.data) {
-      //   throw new Error("Invalid API response: No data found");
-      // }
+      // Step 2: Extract unique rooms from devices
+      const uniqueRooms = [
+        ...new Set(
+          allDevices
+            .filter((device) => device.room && device.room.roomid) // Filter out devices without rooms
+            .map((device) => device.room.roomid)
+        ),
+      ];
 
-      setDeviceDetails(response.data);
+      // Step 3: Check permissions for each unique room
+      const authorizedRoomIds = [];
+
+      for (const roomId of uniqueRooms) {
+        try {
+          // Use your existing validatePermission endpoint
+          await axios.post(
+            "http://localhost:8080/api/validatePermission",
+            { roomid: roomId },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+
+          // If we get here without an error, the user has permission for this room
+          authorizedRoomIds.push(roomId);
+        } catch (err) {
+          // If we get a 403 error, the user doesn't have permission for this room
+          // Just continue to the next room
+          console.log(`No permission for room ${roomId}`);
+        }
+      }
+
+      // Step 4: Filter devices to only those in rooms the user has access to
+      const authorizedDevices = allDevices.filter((device) => {
+        // Include devices without rooms (Unassigned) or in authorized rooms
+        return (
+          !device.room ||
+          !device.room.roomid ||
+          authorizedRoomIds.includes(device.room.roomid)
+        );
+      });
+
+      setDeviceDetails(authorizedDevices);
+
+      // Step 5: Organize authorized devices by room
+      const deviceRooms = {};
+      const rooms = [];
+      
+      // Group devices by room
+      authorizedDevices.forEach(device => {
+        const roomName = device.room.roomName;
+        
+        if (!deviceRooms[roomName]) {
+          deviceRooms[roomName] = [];
+          rooms.push(roomName);
+        }
+        
+        deviceRooms[roomName].push(device);
+      });
+      
+      // Sort room names alphabetically
+      rooms.sort((a, b) => a.localeCompare(b));
+      
+      setRoomNames(rooms);
+      setDevicesByRoom(deviceRooms);
+
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
@@ -83,7 +144,9 @@ function Devices() {
       (filter === "inactive" && device.onOff === "Off");
 
     return matchesSearch && matchesFilter;
-  });
+  }).sort((a, b) => 
+    a.room.roomName.localeCompare(b.room.roomName, undefined, { sensitivity: 'base' })
+  );
 
   const prevItems = () => {
     if (currentIndex === 0) return; // Prevent going to invalid index
@@ -227,6 +290,7 @@ function Devices() {
   const translations = translationsMap[language] || translationsMap["en"];
 
   console.log(filteredDevices);
+
   return (
     <div className="rounded-lg p-4 teal-text mb-4">
       <div className="grid grid-cols-1 gap-4">
@@ -312,7 +376,7 @@ function Devices() {
                       to={`/devices/${device.category.categoryName}/${device.deviceid}/${device.deviceName}/details`}
                     >
                       <div className="teal-text text-sm sm:text-base w-full text-center mb-2">
-                        {device.deviceName}
+                        {device.deviceName} ({device.room.roomName})
                       </div>
                     </Link>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -343,22 +407,31 @@ function Devices() {
             ))}
           </div>
 
-          {filteredDevices.length > 0 && (
-            <div className="absolute inset-y-1/2 w-[95%] flex justify-between items-center">
-              <button
-                onClick={prevItems}
-                disabled={currentIndex === 0}
-                className="bg-white text-gray-800 p-2 rounded-full"
-              >
-                <i className={"fas fa-chevron-left"}></i>
-              </button>
-              <button
-                onClick={nextItems}
-                disabled={currentIndex + 3 >= filteredDevices.length}
-                className="bg-white text-gray-800 p-2 rounded-full"
-              >
-                <i className={"fas fa-chevron-right"}></i>
-              </button>
+          {filteredDevices.length > 1 && (
+            <div className="absolute inset-y-1/2 w-[97%] flex px-10 pe-6 items-center">
+              {/* Left Button - Stays on the left when visible */}
+              {currentIndex > 0 && (
+                <div className="flex-1 flex justify-start">
+                  <button
+                    onClick={prevItems}
+                    className="bg-white border-4 text-gray-800 p-2 rounded-full"
+                  >
+                    <i className="fas fa-chevron-left"></i>
+                  </button>
+                </div>
+              )}
+
+              {/* Right Button - Stays on the right when visible */}
+              {currentIndex + 1 < filteredDevices.length && (
+                <div className="flex-1 flex justify-end">
+                  <button
+                    onClick={nextItems}
+                    className="bg-white border-4 text-gray-800 p-2 rounded-full"
+                  >
+                    <i className="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
