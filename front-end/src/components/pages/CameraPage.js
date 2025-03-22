@@ -32,51 +32,34 @@ function CameraPage() {
         }
       );
 
-      const camera = response.data.filter(
+      const cameras = response.data.filter(
         (device) => device.category.categoryName === "Camera"
       );
 
-      // Step 2: Extract unique rooms from devices
-      const uniqueRooms = [
-        ...new Set(
-          camera
-            .filter((device) => device.room.roomid) // Filter out devices without rooms
-            .map((device) => device.room.roomid)
-        ),
-      ];
-
       // Step 3: Check permissions for each unique room
-      const authorizedRoomIds = [];
+      const authorizedDevices = [];
 
-      for (const roomId of uniqueRooms) {
+      for (const camera of cameras) {
         try {
           // Use your existing validatePermission endpoint
           await axios.post(
-            "http://localhost:8080/api/validatePermission",
-            { roomid: roomId },
+            "http://localhost:8080/api/validateDevicePermission",
+            { deviceid: camera.deviceid },
             { headers: { Authorization: `Bearer ${token}` } }
           );
 
           // If we get here without an error, the user has permission for this room
-          authorizedRoomIds.push(roomId);
+          authorizedDevices.push(camera);
         } catch (err) {
           // If we get a 403 error, the user doesn't have permission for this room
           // Just continue to the next room
-          console.log(`No permission for room ${roomId}`);
+          console.log(`No permission for device`);
         }
       }
-
-      // Step 4: Filter devices to only those in rooms the user has access to
-      const authorizedDevices = camera.filter((device) => {
-        // Include devices without rooms (Unassigned) or in authorized rooms
-        return (
-          !device.room ||
-          !device.room.roomid ||
-          authorizedRoomIds.includes(device.room.roomid)
-        );
-      });
-
       setCameraDetails(authorizedDevices);
+
+
+      
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");

@@ -27,33 +27,35 @@ function RoomsDevicesPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-    // Handle error
-    const handleApiError = (err) => {
-      console.error("API Error:", err);
-  
-      if (err.response) {
-        setError(err.response.data.message);
-  
-        if (err.response.status === 401) {
-          console.log("Session expired!");
-          // localStorage.removeItem("token");
-          // navigate("/login");
-          setErrorMessage("Session expired. Please log in again.");//added
-        
-          setTimeout(() => {//added
-            localStorage.removeItem("token");
-            localStorage.removeItem("selectedDevice");
-            navigate("/login");
-          }, 2000);
-        }
-      } else {
-        setErrorMessage("An unexpected error occurred. Please try again.");//added
-      }
+  // Handle error
+  const handleApiError = (err) => {
+    console.error("API Error:", err);
 
-      setTimeout(() => {//added
-        setErrorMessage("");
-      }, 5000);
-    };
+    if (err.response) {
+      setError(err.response.data.message);
+
+      if (err.response.status === 401) {
+        console.log("Session expired!");
+        // localStorage.removeItem("token");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again."); //added
+
+        setTimeout(() => {
+          //added
+          localStorage.removeItem("token");
+          localStorage.removeItem("selectedDevice");
+          navigate("/login");
+        }, 2000);
+      }
+    } else {
+      setErrorMessage("An unexpected error occurred. Please try again."); //added
+    }
+
+    setTimeout(() => {
+      //added
+      setErrorMessage("");
+    }, 5000);
+  };
 
   // Fetch Device Details
   const [deviceStates, setDeviceStates] = useState({});
@@ -79,11 +81,12 @@ function RoomsDevicesPage() {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
         // alert("Session expired!");
-        setErrorMessage("Session expired. Please log in again.");//added
+        setErrorMessage("Session expired. Please log in again."); //added
         // localStorage.removeItem("token");
         // localStorage.removeItem("selectedDevice");
         // navigate("/login");
-        setTimeout(() => {//added
+        setTimeout(() => {
+          //added
           localStorage.removeItem("token");
           localStorage.removeItem("selectedDevice");
           navigate("/login");
@@ -139,12 +142,13 @@ function RoomsDevicesPage() {
       );
 
       // Show success message (added)
-      setSuccessMessage(`Device ${newState ? "turned on" : "turned off"} successfully!`);
+      setSuccessMessage(
+        `Device ${newState ? "turned on" : "turned off"} successfully!`
+      );
       // Auto-clear success message after 3 seconds (added)
       setTimeout(() => {
         setSuccessMessage("");
       }, 3000);
-
 
       // Refresh device list to get updated data
       fetchDeviceDetails();
@@ -161,9 +165,10 @@ function RoomsDevicesPage() {
         // localStorage.removeItem("token");
         // localStorage.removeItem("selectedDevice");
         // navigate("/login");
-        setErrorMessage("Session expired. Please log in again.");//added
-        
-        setTimeout(() => {//added
+        setErrorMessage("Session expired. Please log in again."); //added
+
+        setTimeout(() => {
+          //added
           localStorage.removeItem("token");
           localStorage.removeItem("selectedDevice");
           navigate("/login");
@@ -263,8 +268,9 @@ function RoomsDevicesPage() {
   const handlePermissionSubmit = async () => {
     if (selectedUsers.length === 0) {
       // alert("Please select at least one user");
-      setErrorMessage("Please select at least one user");//added
-      setTimeout(() => {//added
+      setErrorMessage("Please select at least one user"); //added
+      setTimeout(() => {
+        //added
         setErrorMessage("");
       }, 3000);
       return;
@@ -286,15 +292,15 @@ function RoomsDevicesPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       // alert("Permission successfully granted!");
       // Show success message(added)
       setSuccessMessage("Permission successfully granted!");
-      
+
       // Auto-clear success message after 3 seconds(added)
       setTimeout(() => {
         setSuccessMessage("");
-      }, 3000);  
+      }, 3000);
 
       setSelectedUsers([]);
 
@@ -307,18 +313,19 @@ function RoomsDevicesPage() {
         // alert("Session expired!");
         // localStorage.clear();
         // navigate("/login");
-        setErrorMessage("Session expired. Please log in again.");//added
-        
-        setTimeout(() => {//added
+        setErrorMessage("Session expired. Please log in again."); //added
+
+        setTimeout(() => {
+          //added
           localStorage.clear();
           navigate("/login");
         }, 2000);
       }
       // setError("An unexpected error occurs");
       setErrorMessage("Failed to grant permission. Please try again.");
-        setTimeout(() => {
-          setErrorMessage("");
-        }, 3000);
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
     } finally {
       setLoading(false);
     }
@@ -346,11 +353,11 @@ function RoomsDevicesPage() {
           },
         }
       );
-      
+
       // alert("Permission successfully removed!");
       // Show success message(added)
       setSuccessMessage("Permission successfully removed!");
-      
+
       // Auto-clear success message after 3 seconds(added)
       setTimeout(() => {
         setSuccessMessage("");
@@ -363,18 +370,19 @@ function RoomsDevicesPage() {
         // alert("Session expired!");
         // localStorage.clear();
         // navigate("/login");
-        setErrorMessage("Session expired. Please log in again.");//added
-        
-        setTimeout(() => {//added
+        setErrorMessage("Session expired. Please log in again."); //added
+
+        setTimeout(() => {
+          //added
           localStorage.clear();
           navigate("/login");
         }, 2000);
       }
       // setError("An unexpected error occurs");
-      setErrorMessage("Failed to remove permission. Please try again.");//added
-        setTimeout(() => {
-          setErrorMessage("");
-        }, 3000);
+      setErrorMessage("Failed to remove permission. Please try again."); //added
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
     } finally {
       setLoading(false);
     }
@@ -417,8 +425,8 @@ function RoomsDevicesPage() {
               translations={translations}
             />
 
-             {/* Success Message Display (added) */}
-             {successMessage && (
+            {/* Success Message Display (added) */}
+            {successMessage && (
               <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-[10000]">
                 {successMessage}
               </div>
@@ -430,7 +438,6 @@ function RoomsDevicesPage() {
                 {errorMessage}
               </div>
             )}
-
 
             {/* Main Section */}
             <div className="flex flex-col flex-1">
