@@ -81,9 +81,27 @@ function LODevicesPage() {
   
       const allDevices = response.data;
       
+      const authorisedDevices = [];
+
+      for (const device of allDevices) {
+        try {
+          await axios.post(
+            "http://localhost:8080/api/validatePermission",
+            { deviceid: device.deviceid },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+
+          authorisedDevices.push(device);
+        } catch (err) {
+          // If we get a 403 error, the user doesn't have permission for this device
+          // Just continue to the next device
+          console.log(`No permission for this device ${device}`);
+        }
+      }
+
       // Step 2: Extract unique rooms from devices
       const uniqueRooms = [...new Set(
-        allDevices
+        authorisedDevices
           .filter(device => device.room.roomid) // Filter out devices without rooms
           .map(device => device.room.roomid)
       )];
@@ -112,7 +130,7 @@ function LODevicesPage() {
       // Step 4: Filter devices to only those in rooms the user has access to
       const authorizedDevices = allDevices.filter(device => {
         // Include devices without rooms (Unassigned) or in authorized rooms
-        return !device.room || !device.room.roomid || authorizedRoomIds.includes(device.room.roomid);
+        return !device.room.roomid || authorizedRoomIds.includes(device.room.roomid);
       });
       
       setDeviceDetails(authorizedDevices);

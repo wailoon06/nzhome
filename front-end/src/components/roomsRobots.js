@@ -10,6 +10,7 @@ function RoomsRobots() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Fetch room list
   const [roomList, setRoomList] = useState([]);
@@ -82,12 +83,23 @@ function RoomsRobots() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");//added
+        
+        setTimeout(() => {//added
+          localStorage.removeItem("token");
+          localStorage.removeItem("selectedDevice");
+          navigate("/login");
+        }, 2000);
       } else {
-        setError("An unexpected error occurs");
+        // setError("An unexpected error occurs");
+        setErrorMessage("An unexpected error occurred. Please try again.");//added
+        setTimeout(() => {//added
+          setErrorMessage("");
+        }, 5000);
       }
     } finally {
       setLoading(false);
@@ -143,7 +155,14 @@ function RoomsRobots() {
     // Check if user has permission
     if (!roomPermissions[room.roomid]) {
       e.preventDefault();
-      alert(translations.noPermission || "You don't have permission to access this room");
+      // alert(translations.noPermission || "You don't have permission to access this room");
+      // Show success message (added)
+      // setSuccessMessage(translations.noPermission || "You don't have permission to access this room");
+      setErrorMessage("You don't have permission to access this room");
+      // Auto-clear success message after 3 seconds (added)
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
     }
   };
 
@@ -166,7 +185,11 @@ function RoomsRobots() {
   
       setRobot(robotDevices);
     } catch (err) {
-      setError("An unexpected error occurred");
+      // setError("An unexpected error occurred");
+      setErrorMessage("An unexpected error occurred. Please try again.");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
     } finally {
       setLoading(false);
     }
@@ -177,6 +200,15 @@ function RoomsRobots() {
   }, []);
 
   return (
+
+    <>
+    {/* Error Message*/}
+    {errorMessage && (
+      <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-[10000]">
+        {errorMessage}
+      </div>
+    )}
+
     <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[3fr,1.2fr] p-4 gap-4">
       {/* Rooms Section */}
       <div className="rounded-lg p-4 baseGreen2 mb-4 relative overflow-hidden">
@@ -185,6 +217,7 @@ function RoomsRobots() {
             {translations.rooms}
           </h2>
         </div>
+
 
         <div className="transition-all duration-500 ease-in-out">
           <div
@@ -333,6 +366,7 @@ function RoomsRobots() {
         </div>
       )}
     </div>
+    </>//added symbol
   );
 }
 

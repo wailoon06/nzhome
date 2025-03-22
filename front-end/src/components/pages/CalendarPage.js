@@ -23,7 +23,8 @@ function CalendarPage() {
   const [roomNames, setRoomNames] = useState([]);
   const [devicesByRoom, setDevicesByRoom] = useState({});
   const [userEvents, setUserEvents] = useState([]);
-
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   
   
   
@@ -178,7 +179,13 @@ function CalendarPage() {
   console.log("eventTitle:", eventTitle);
 
     if (!eventDate || !eventTitle) {
-      alert("Event date and title are required.");
+      // alert("Event date and title are required.");
+      setErrorMessage("Event date and title are required.");//added
+        
+      setTimeout(() => {//added
+        localStorage.clear();
+        setErrorMessage("");
+      }, 4000);
       return;
     }
   
@@ -241,7 +248,15 @@ function CalendarPage() {
       setonOff(onOff.Off);
       setSelectedDevices([]);
 
-      alert("Successfully created!");
+      // alert("Successfully created!");
+      // Show success message(added)
+      setSuccessMessage("Event successfully created!");
+      
+      // Auto-clear success message after 3 seconds(added)
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);  
+
       fetchUpcomingEvents(); 
 
     } catch (err) {
@@ -249,13 +264,23 @@ function CalendarPage() {
   
       if (err.response?.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");//added
+        
+        setTimeout(() => {//added
+          localStorage.clear();
+          navigate("/login");
+        }, 2000);
       }
   
-      setError("An unexpected error occurred");
+      // setError("An unexpected error occurred");
+      setErrorMessage("Failed to create event. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 3000);
     } finally {
       setLoading(false);
     }
@@ -348,6 +373,20 @@ function CalendarPage() {
             language={language}
           />
         </div>
+
+        {/* Success Message Display (added) */}
+        {successMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-[10000]">
+            {successMessage}
+          </div>
+        )}
+
+        {/* Error Message Display (added) */}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-[10000]">
+            {errorMessage}
+          </div>
+        )}
 
         {/* Main Content */}
         <div
