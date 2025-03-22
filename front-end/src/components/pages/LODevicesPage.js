@@ -78,7 +78,7 @@ function LODevicesPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+      
       const allDevices = response.data;
       
       // Step 2: Extract unique rooms from devices

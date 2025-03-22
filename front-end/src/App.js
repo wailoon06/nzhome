@@ -336,9 +336,9 @@ function App() {
       <Route path="/calendar/report" element={<CalendarReport />} />
       <Route path="/rooms/new" element={<RoomsNewPage />} />
       <Route path="/rooms/:roomTitle/access" element={<RoomsNewAccessPage />} />
-      <Route path="/rooms/devices/:roomid/:roomTitle" element={<RoomsDevicesPage />} />
+      <Route path="/:roomTitle/:roomid/devices" element={<RoomsDevicesPage />} />
       <Route
-        path="/rooms/summary/:roomTitle"
+        path="/devices/:type/:deviceid/:name/details"
         element={<RoomEnergyUsagePage />}
       />{" "}
       <Route
