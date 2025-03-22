@@ -1,8 +1,8 @@
 package com.nz.backend.entities;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.nz.backend.enums.OnOff;
 
 import jakarta.persistence.*;
 
@@ -42,16 +42,21 @@ public class Event {
     @Column
     private Long deviceid;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "onOff", nullable = false)
+    private OnOff onOff;
+
     // Constructors
     public Event() {
     }
 
-    public Event(String title, String description, LocalDateTime date, boolean repeat, User createdBy, Family family,
+    public Event(String title, String description, LocalDateTime date, OnOff onOff, User createdBy, Family family,
             Long deviceid) {
         this.title = title;
         this.description = description;
         this.date = date;
-        this.repeat = repeat;
+        // this.repeat = repeat;
+        this.onOff = onOff;
         this.createdBy = createdBy;
         this.family = family;
         this.deviceid = deviceid;
@@ -124,5 +129,13 @@ public class Event {
 
     public Long getDeviceId(int i) {
         return devices.get(i);
+    }
+
+    public OnOff getOnOff() {
+        return onOff;
+    }
+
+    public void setOnOff(OnOff onOff) {
+        this.onOff = onOff;
     }
 }
