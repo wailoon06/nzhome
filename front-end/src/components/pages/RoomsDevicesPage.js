@@ -266,7 +266,7 @@ function RoomsDevicesPage() {
       setErrorMessage("Please select at least one user");//added
       setTimeout(() => {//added
         setErrorMessage("");
-      }, 5000);
+      }, 3000);
       return;
     }
 
@@ -294,7 +294,7 @@ function RoomsDevicesPage() {
       // Auto-clear success message after 3 seconds(added)
       setTimeout(() => {
         setSuccessMessage("");
-      }, 5000);  
+      }, 3000);  
 
       setSelectedUsers([]);
 
@@ -318,7 +318,7 @@ function RoomsDevicesPage() {
       setErrorMessage("Failed to grant permission. Please try again.");
         setTimeout(() => {
           setErrorMessage("");
-        }, 5000);
+        }, 3000);
     } finally {
       setLoading(false);
     }
@@ -354,7 +354,7 @@ function RoomsDevicesPage() {
       // Auto-clear success message after 3 seconds(added)
       setTimeout(() => {
         setSuccessMessage("");
-      }, 5000);
+      }, 3000);
 
       fetchUserWithPermission();
     } catch (err) {
@@ -374,7 +374,7 @@ function RoomsDevicesPage() {
       setErrorMessage("Failed to remove permission. Please try again.");//added
         setTimeout(() => {
           setErrorMessage("");
-        }, 5000);
+        }, 3000);
     } finally {
       setLoading(false);
     }
@@ -419,14 +419,14 @@ function RoomsDevicesPage() {
 
              {/* Success Message Display (added) */}
              {successMessage && (
-              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-50">
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-[10000]">
                 {successMessage}
               </div>
             )}
 
             {/* Error Message Display (added) */}
             {errorMessage && (
-              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-[10000]">
                 {errorMessage}
               </div>
             )}

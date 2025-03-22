@@ -19,6 +19,9 @@ function NewDeviceDetailsPage() {
   const code = ["12345"];
   const [serialCode, setSerialCode] = useState("");
   const [isValid, setIsValid] = useState(null); 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  
 
   const toggleSwitch = () => {
     setIsSwitchOn((prevState) => !prevState);
@@ -59,16 +62,27 @@ function NewDeviceDetailsPage() {
       } catch (err) {
         if (err.response.status === 403) {
           console.log("Session expired!");
-          alert("Session expired!");
-          localStorage.removeItem("token");
-          localStorage.removeItem("selectedDevice");
-          navigate("/login");
+          // alert("Session expired!");
+          // localStorage.removeItem("token");
+          // localStorage.removeItem("selectedDevice");
+          // navigate("/login");
+          setErrorMessage("Session expired. Please log in again.");//added
+        
+          setTimeout(() => {//added
+            localStorage.removeItem("token");
+            localStorage.removeItem("selectedDevice");
+            navigate("/login");
+          }, 2000);
         }
 
-        setError("An unexpected error occurs");
+        // setError("An unexpected error occurs");
+        setErrorMessage("An unexpected error occurred. Please try again.");//added
       } finally {
         setLoading(false);
       }
+      setTimeout(() => {//added
+        setErrorMessage("");
+      }, 5000);
     };
 
     fetchRoomList();
@@ -97,22 +111,40 @@ function NewDeviceDetailsPage() {
       }
       );
       
-      alert("Successfully created!");
-      localStorage.removeItem("selectedDevice");
-      navigate(`/devices/new/${name}/test`);
+      // alert("Successfully created!");
+      // localStorage.removeItem("selectedDevice");
+      // navigate(`/devices/new/${name}/test`);
+      // Show success message(added)
+      setSuccessMessage("Device successfully added!");
+      
+      // Auto-clear success message after 3 seconds(added)
+      setTimeout(() => {
+        setSuccessMessage("");
+        localStorage.removeItem("selectedDevice");
+        navigate(`/devices/new/${name}/test`);
+      }, 3000);  
 
     } catch (err) {
       if (err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");//added
+        
+        setTimeout(() => {//added
+          localStorage.clear();
+          navigate("/login");
+        }, 2000);
       }
-      setError("An unexpected error occurs");
+      setErrorMessage("An unexpected error occurred. Please try again.");//added
     } finally {
       setLoading(false);
     }
+    setTimeout(() => {//added
+      setErrorMessage("");
+    }, 5000);
   };
 
   return (
@@ -125,6 +157,21 @@ function NewDeviceDetailsPage() {
             language={language}
           />
         </div>
+
+        {/* Success Message Display (added) */}
+        {successMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-[10000]">
+            {successMessage}
+          </div>
+        )}
+
+        {/* Error Message Display (added) */}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-[10000]">
+            {errorMessage}
+          </div>
+        )}
+
         {/* Main Content */}
         <div
           className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
