@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import translationsMap from "../locales/translationsMap";
@@ -22,6 +22,8 @@ function CalendarPage() {
   const [error, setError] = useState(null);
   const [roomNames, setRoomNames] = useState([]);
   const [devicesByRoom, setDevicesByRoom] = useState({});
+  const [userEvents, setUserEvents] = useState([]);
+
   
   
   
@@ -240,6 +242,7 @@ function CalendarPage() {
       setSelectedDevices([]);
 
       alert("Successfully created!");
+      fetchUpcomingEvents(); 
 
     } catch (err) {
       console.error("API error:", err); // Log the error
@@ -258,27 +261,74 @@ function CalendarPage() {
     }
   };
   
-
+  //fetch upcoming event
+  const fetchUpcomingEvents = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found!");
+        return;
+      }
+  
+      // Fetch user events from backend
+      const response = await fetch("http://localhost:8080/api/getUserEvents", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch events");
+      }
+  
+      let events = await response.json();
+      console.log("All Events:", events); // Debugging log
+  
+      // Get current time
+      const now = new Date();
+  
+      // Filter events that occur after the current time
+      const upcomingEvents = events.filter((event) => new Date(event.date) >= now);
+  
+      console.log("Upcoming Events:", upcomingEvents);
+      return upcomingEvents;
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchUpcomingEvents().then((events) => {
+      if (events) {
+        setUserEvents(events); // Assuming you have a state to store events
+      }
+    });
+  }, []);
+  
   // Delete an event by ID
-  const deleteEvent = async (eventid) => {
+  const deleteEvent = async (title, deviceId) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("No token found! User is not logged in.");
         return;
       }
-      console.log(eventid);
+  
       const response = await axios.delete("http://localhost:8080/api/deleteEvent", {
         headers: { Authorization: `Bearer ${token}` },
-        data: { eventid }, // Send the event ID in the request body
+        data: { title, deviceId }, // Send title & deviceId instead of eventid
       });
   
       console.log(response.data);
-      setEvents((prevEvents) => prevEvents.filter((event) => event.eventid !== eventid));
+      
+      // Remove deleted event from UI
+      setEvents((prevEvents) => 
+        prevEvents.filter(event => !(event.title === title && event.deviceid === deviceId))
+      );
     } catch (error) {
       console.error("Error deleting event:", error.response?.data || error.message);
     }
   };
+  
   
 
   // translation
@@ -379,72 +429,72 @@ function CalendarPage() {
                     </div>
 
                     {/* Right Section - DatePicker */}
-                    <div
-                      id="left"
-                      className="bg-gray-100 p-4 rounded-lg shadow-md"
-                    >
+                    <div id="left" className="bg-gray-100 p-4 rounded-lg shadow-md">
                       <div id="reminder-section">
-                        <h3 className="text-xl font-semibold mb-3">
-                          {translations.reminder}
-                        </h3>
-                        <ul id="reminderList" className="space-y-2">
-                          {events.map((event) => (
-                            <li
-                              key={event.id}
-                              className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm"
-                            >
-                              <div>
-                                <strong className="block text-sm font-bold">
-                                  {event.title}
-                                </strong>
-                                <span className="text-sm text-gray-600">
-                                  {event.description} on{" "}
-                                  {new Date(event.date).toLocaleDateString()} at{" "}
-                                  {new Date(event.date).toLocaleTimeString()}
-                                </span>
-
-                                {/* Conditionally render repeat status */}
-                                {event.repeat && (
-                                  <div className="text-sm text-green-600 mt-2">
-                                    <strong>Repeat: </strong> This event is set
-                                    to repeat.
-                                  </div>
-                                )}
-
-                                {/* Conditionally render devices */}
-                                {event.devices && event.devices.length > 0 && (
-                                  <div className="mt-2">
-                                    <strong className="block text-sm font-bold">
-                                      Selected Devices:
-                                    </strong>
-                                    <ul className="list-disc pl-4">
-                                      {event.devices.map((device, index) => (
-                                        <li key={index} className="flex items-center space-x-2 text-sm text-gray-700">
-                                          {/* Device Image */}
-                                          <img 
-                                            src={device.picture}
-                                            alt={device.name} 
-                                            className="w-8 h-8 rounded-md object-cover" // Adjust size and styling
-                                          />
-                                          {/* Device Name */}
-                                          <span>{device.name}</span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-
-                              <button
-                                className="delete-event text-red-500 hover:text-red-700 text-sm"
-                                onClick={() => deleteEvent(event.id)}
+                        <h3 className="text-xl font-semibold mb-3">{translations.reminder}</h3>
+                        <ul id="reminderList" className="max-h-96 overflow-y-auto space-y-2 border rounded-md p-2">
+                          {userEvents
+                            .filter((event) => new Date(event.date) >= new Date()) // Show only upcoming events
+                            .map((event) => (
+                              <li
+                                key={event.id}
+                                className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm"
                               >
-                                Delete
-                              </button>
-                            </li>
-                          ))}
+                                <div>
+                                  {/* Event Title */}
+                                  <strong className="block text-sm font-bold">{event.title}</strong>
+
+                                  {/* Event Description & Date */}
+                                  <span className="text-sm text-gray-600">
+                                    {event.description} on{" "}
+                                    {new Date(event.date).toLocaleDateString()} at{" "}
+                                    {new Date(event.date).toLocaleTimeString()}
+                                  </span>
+
+                                  {/* Conditionally Render Repeat Status */}
+                                  {event.repeat && (
+                                    <div className="text-sm text-green-600 mt-2">
+                                      <strong>Repeat: </strong> This event is set to repeat.
+                                    </div>
+                                  )}
+
+                                  {/* Conditionally Render Devices */}
+                                  {event.devices && event.devices.length > 0 && (
+                                    <div className="mt-2">
+                                      <strong className="block text-sm font-bold">
+                                        Selected Devices:
+                                      </strong>
+                                      <ul className="list-disc pl-4">
+                                        {event.devices.map((device, index) => (
+                                          <li key={index} className="flex items-center space-x-2 text-sm text-gray-700">
+                                            {/* Device Image */}
+                                            <img
+                                              src={device.picture}
+                                              alt={device.name}
+                                              className="w-8 h-8 rounded-md object-cover"
+                                            />
+                                            {/* Device Name */}
+                                            <span>{device.name}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Delete Button */}
+                                <button
+                                  className="delete-event text-red-500 hover:text-red-700 text-sm"
+                                  onClick={() => deleteEvent(event.title, event.deviceid)}
+                                >
+                                  Delete
+                                </button>
+
+                              </li>
+                            ))}
                         </ul>
                       </div>
+
                     </div>
                   </div>
 

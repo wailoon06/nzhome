@@ -1,6 +1,7 @@
 package com.nz.backend.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -22,7 +23,7 @@ public class Event {
     private String description;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Column(nullable = false)
     private boolean repeat;
@@ -45,7 +46,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(String title, String description, LocalDate date, boolean repeat, User createdBy, Family family,
+    public Event(String title, String description, LocalDateTime date, boolean repeat, User createdBy, Family family,
             Long deviceid) {
         this.title = title;
         this.description = description;
@@ -81,11 +82,11 @@ public class Event {
         this.description = description;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

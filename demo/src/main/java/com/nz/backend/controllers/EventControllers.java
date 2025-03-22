@@ -98,14 +98,10 @@ public class EventControllers {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         }
 
-        Event matchEvent = eventRepo.findById(eventNameDTO.getEventid()).orElse(null);
+        // Find the event by title and device ID
+        Event matchEvent = eventRepo.findByTitleAndDeviceId(eventNameDTO.getTitle(), eventNameDTO.getDeviceId());
         if (matchEvent == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event not found!");
-        }
-
-        // Ensure createdBy is not null before checking ownership
-        if (matchEvent.getCreatedBy() == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Event ownership cannot be verified!");
         }
 
         // Check if the user is the creator of the event
