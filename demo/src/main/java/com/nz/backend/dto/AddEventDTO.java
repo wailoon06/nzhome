@@ -1,6 +1,7 @@
 package com.nz.backend.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.nz.backend.entities.Device;
@@ -8,7 +9,7 @@ import com.nz.backend.entities.Device;
 public class AddEventDTO {
     private String title;
     private String description;
-    private LocalDate date;
+    private LocalDateTime date;
     private boolean repeat;
     private List<Long> devices;
     private Device deviceid;
@@ -16,7 +17,7 @@ public class AddEventDTO {
     public AddEventDTO() {
     }
 
-    public AddEventDTO(String title, String description, LocalDate date, boolean repeat,
+    public AddEventDTO(String title, String description, LocalDateTime date, boolean repeat,
             List<Long> devices) {
         this.title = title;
         this.description = description;
@@ -41,11 +42,11 @@ public class AddEventDTO {
         this.description = description;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
