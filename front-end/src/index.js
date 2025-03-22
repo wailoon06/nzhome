@@ -54,7 +54,7 @@ const Root = () => {
   //ROUTE WRAP
   return (
     <Router>
-      <Routes> 
+      <Routes>
         <Route
           path="/"
           element={hasStarted === "true" ? <App /> : <LandingPage />}
@@ -113,11 +113,11 @@ const Root = () => {
           element={<RoomsNewAccessPage />}
         />
         <Route
-          path="/rooms/devices/:roomid/:roomTitle"
+          path="/:roomTitle/:roomid/devices"
           element={<RoomsDevicesPage />}
         />
         <Route
-          path="/rooms/summary/:roomTitle"
+          path="/devices/:type/:deviceid/:name/details"
           element={<RoomEnergyUsagePage />}
         />{" "}
         <Route

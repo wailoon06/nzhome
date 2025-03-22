@@ -76,7 +76,7 @@ function LODevicesPage() {
         "http://localhost:8080/api/getAllDevice",
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+      
       const allDevices = response.data;
       const authorisedDevices = [];
   
