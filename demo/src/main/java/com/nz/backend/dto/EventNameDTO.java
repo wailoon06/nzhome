@@ -8,9 +8,8 @@ public class EventNameDTO {
     public EventNameDTO() {
     }
 
-    public EventNameDTO(String title, Long eventid) {
+    public EventNameDTO(String title) {
         this.title = title;
-        this.eventid = eventid;
     }
 
     public String getTitle() {

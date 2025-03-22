@@ -99,7 +99,8 @@ public class EventControllers {
         }
 
         // Find the event by title and device ID
-        Event matchEvent = eventRepo.findByTitleAndDeviceId(eventNameDTO.getTitle(), eventNameDTO.getDeviceId());
+        System.out.println(eventNameDTO.getTitle());
+        Event matchEvent = eventRepo.findByTitle(eventNameDTO.getTitle());
         if (matchEvent == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event not found!");
         }
