@@ -16,7 +16,7 @@ public interface EventRepo extends JpaRepository<Event, Long> {
 
     List<Event> findByCreatedBy(User user); // Fetch events created by a specific user
 
-    @Query("SELECT e FROM Event e WHERE e.title = :title AND e.deviceid = :deviceId")
-    Event findByTitleAndDeviceId(@Param("title") String title, @Param("deviceId") Long deviceId);
+    @Query("SELECT * FROM event WHERE e.title = :title")
+    Event findByTitle(@Param("title") String title);
 
 }

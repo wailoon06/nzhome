@@ -269,7 +269,8 @@ function CalendarPage() {
         console.error("No token found!");
         return;
       }
-  
+      setLoading(true); // Show loader
+
       // Fetch user events from backend
       const response = await fetch("http://localhost:8080/api/getUserEvents", {
         method: "GET",
@@ -288,20 +289,19 @@ function CalendarPage() {
   
       // Filter events that occur after the current time
       const upcomingEvents = events.filter((event) => new Date(event.date) >= now);
-  
+      setUserEvents(upcomingEvents);
       console.log("Upcoming Events:", upcomingEvents);
       return upcomingEvents;
     } catch (error) {
       console.error("Error fetching events:", error);
+    } finally
+    {
+      setLoading(false); // Hide loader
     }
   };
   
   useEffect(() => {
-    fetchUpcomingEvents().then((events) => {
-      if (events) {
-        setUserEvents(events); // Assuming you have a state to store events
-      }
-    });
+    fetchUpcomingEvents(); // Fetch events when component mounts
   }, []);
   
   // Delete an event by ID
@@ -312,10 +312,10 @@ function CalendarPage() {
         console.error("No token found! User is not logged in.");
         return;
       }
-  
+      console.log(title);
       const response = await axios.delete("http://localhost:8080/api/deleteEvent", {
         headers: { Authorization: `Bearer ${token}` },
-        data: { title, deviceId }, // Send title & deviceId instead of eventid
+        data: {title}, // Send title & deviceId instead of eventid
       });
   
       console.log(response.data);
@@ -432,6 +432,7 @@ function CalendarPage() {
                     <div id="left" className="bg-gray-100 p-4 rounded-lg shadow-md">
                       <div id="reminder-section">
                         <h3 className="text-xl font-semibold mb-3">{translations.reminder}</h3>
+                        {loading ? <p>Loading events...</p> : (
                         <ul id="reminderList" className="max-h-96 overflow-y-auto space-y-2 border rounded-md p-2">
                           {userEvents
                             .filter((event) => new Date(event.date) >= new Date()) // Show only upcoming events
@@ -493,6 +494,7 @@ function CalendarPage() {
                               </li>
                             ))}
                         </ul>
+                      )}
                       </div>
 
                     </div>
