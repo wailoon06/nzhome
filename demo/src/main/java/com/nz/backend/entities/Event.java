@@ -64,7 +64,6 @@ public class Event {
         this.title = title;
         this.description = description;
         this.date = date;
-        // this.repeat = repeat;
         this.onOff = onOff;
         this.createdBy = createdBy;
         this.family = family;

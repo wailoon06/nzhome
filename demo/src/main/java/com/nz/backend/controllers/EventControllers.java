@@ -55,7 +55,7 @@ public class EventControllers {
         }
 
         Family family = user.getFamily();
-        System.err.println(addEventDTO.getDevices());
+
         List<Event> savedEvents = new ArrayList<>();
         for (Long deviceId : addEventDTO.getDevices()) {
             Device device = deviceRepo.findById(deviceId).orElse(null);

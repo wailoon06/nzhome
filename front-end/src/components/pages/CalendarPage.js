@@ -46,11 +46,11 @@ function CalendarPage() {
   };
 
   // Switch
-  const [onOff, setonOff] = useState(false);
+  const [onOff, setOnOff] = useState("Off");
 
   const toggleSwitch = () => {
-    setonOff(!onOff);
-  };
+      setOnOff((prev) => (prev === "On" ? "Off" : "On")); // Toggle between "On" and "Off"
+    };  
 
   const [isOpen, setIsOpen] = useState(false); // Modal state
   const [favorites, setFavorites] = useState([]); // Favorite devices
@@ -176,7 +176,7 @@ function CalendarPage() {
   const addEvent = async () => {
     console.log("addEvent function called"); // Check if this appears in the console
     console.log("eventDate:", eventDate);
-  console.log("eventTitle:", eventTitle);
+    console.log("eventTitle:", eventTitle);
 
     if (!eventDate || !eventTitle) {
       // alert("Event date and title are required.");
@@ -211,7 +211,7 @@ function CalendarPage() {
         date: eventDetails.toISOString(),
         title: eventTitle,
         description: eventDescription,
-        onOff: onOff ? "ON" : "OFF",  // ✅ Convert boolean to string
+        onOff: onOff ? "On" : "Off",
         devices: selectedDeviceIds
       };
   
@@ -232,7 +232,7 @@ function CalendarPage() {
           date: eventDetails,
           title: eventTitle,
           description: eventDescription,
-          onOff: onOff,
+          onOff: onOff === "On" ? "On" : "Off", // Ensure correct string format
           devices: favorites.filter((device) =>
             selectedDevices.includes(device.deviceid)
           ),
@@ -245,7 +245,7 @@ function CalendarPage() {
       setSelectedMinute(new Date().getMinutes());
       setEventTitle("");
       setEventDescription("");
-      setonOff(onOff.Off);
+      setOnOff("Off");
       setSelectedDevices([]);
 
       // alert("Successfully created!");
@@ -571,21 +571,19 @@ function CalendarPage() {
                         {/* Switch */}
                         <div
                           className={`w-14 h-8 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${
-                            onOff ? "bg-green-500" : "bg-gray-400"
+                            onOff === "On" ? "bg-green-500" : "bg-gray-400"
                           }`}
                           onClick={toggleSwitch}
                         >
                           <div
                             className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                              onOff ? "translate-x-6" : "translate-x-0"
+                              onOff === "Off" ? "translate-x-6" : "translate-x-0"
                             }`}
                           ></div>
                         </div>
                         {/* Label */}
                         <span className="text-lg font-medium">
-                          {onOff
-                            ? `${translations.on_turn}`
-                            : `${translations.off_turn}`}
+                          {onOff === "On" ? translations?.on ?? "On" : translations?.off ?? "Off"}
                         </span>
                       </div>
                       {/* ======================== */}
