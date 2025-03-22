@@ -224,7 +224,7 @@ function DeviceDetailsPage() {
                             <Legend />
                             <Bar
                               dataKey="energy"
-                              fill="#8884d8"
+                              fill="#BE9D6A"
                               name="Energy Consumption (kWh)"
                               radius={[4, 4, 0, 0]}
                             />

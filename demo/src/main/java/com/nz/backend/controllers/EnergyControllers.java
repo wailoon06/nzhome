@@ -1,17 +1,22 @@
 package com.nz.backend.controllers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nz.backend.dto.DeviceEnergyTotalDTO;
 import com.nz.backend.dto.EnergyDTO;
 import com.nz.backend.entities.Energy;
 import com.nz.backend.entities.User;
@@ -52,8 +57,16 @@ public class EnergyControllers {
         }
 
         List<EnergyDTO> energyDTOList = energyData.stream()
-            .map(e -> new EnergyDTO(e.getEnergyId(), e.getDate(), e.getEnergyConsumption(), e.getEnergyGeneration(), e.getDevice().getDeviceid()))
-            .collect(Collectors.toList());
+        .map(energy -> new EnergyDTO(
+            energy.getEnergyId(),
+            energy.getDate(),
+            energy.getEnergyConsumption(),
+            energy.getEnergyGeneration(),
+            energy.getDevice().getDeviceid(),
+            energy.getDevice().getDeviceName(),
+            energy.getDevice().getRoom().getRoomName()
+        ))
+        .collect(Collectors.toList());
 
         return ResponseEntity.ok(energyDTOList);
     }
@@ -81,8 +94,16 @@ public class EnergyControllers {
         }
 
         List<EnergyDTO> energyDTOList = energyData.stream()
-            .map(e -> new EnergyDTO(e.getEnergyId(), e.getDate(), e.getEnergyConsumption(), e.getEnergyGeneration(), e.getDevice().getDeviceid()))
-            .collect(Collectors.toList());
+        .map(energy -> new EnergyDTO(
+            energy.getEnergyId(),
+            energy.getDate(),
+            energy.getEnergyConsumption(),
+            energy.getEnergyGeneration(),
+            energy.getDevice().getDeviceid(),
+            energy.getDevice().getDeviceName(),
+            energy.getDevice().getRoom().getRoomName()
+        ))
+        .collect(Collectors.toList());
 
         return ResponseEntity.ok(energyDTOList);
     }
