@@ -52,12 +52,8 @@ function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-<<<<<<< HEAD
   const [errorMessage, setErrorMessage] = useState("");   
   const [redirectMessage, setRedirectMessage] = useState("");    
-=======
-  const [errorMessage, setErrorMessage] = useState(""); //added
->>>>>>> a79c0cc552f85b1a0c6a92f4246218b495bbcbda
 
   // Language
   const [language, setLanguage] = useState(() => {
@@ -163,12 +159,8 @@ function App() {
                   isCollapsed ? "" : "baseGreen"
                 } rounded-lg min-h-full flex flex-col overflow-y-auto`}
               >
-<<<<<<< HEAD
 
                 {/* Error Message Display */}
-=======
-                {/* Error Message Display (added)*/}
->>>>>>> a79c0cc552f85b1a0c6a92f4246218b495bbcbda
                 {errorMessage && (
                   <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
                     {errorMessage}
