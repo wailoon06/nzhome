@@ -8,6 +8,7 @@
     "date-fns": "^4.1.0",
     "front-end": "file:",
     "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.483.0",
     "pdf-lib": "^1.17.1",
     "react": "^18.0.0",
     "react-datepicker": "^7.5.0",
