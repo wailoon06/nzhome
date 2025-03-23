@@ -273,7 +273,7 @@ function CalendarPage() {
         setTimeout(() => {//added
           localStorage.clear();
           navigate("/login");
-        }, 2000);
+        }, 5000);
       }
   
       // setError("An unexpected error occurred");

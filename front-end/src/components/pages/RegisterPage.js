@@ -41,7 +41,7 @@ function RegisterPage() {
 
       setTimeout(() => {
         navigate("/login");
-      }, 2000);
+      }, 3000);
 
     } catch (error) {
       console.error("Registration error:", error);
