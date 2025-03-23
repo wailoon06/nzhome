@@ -18,6 +18,7 @@ function RoomsNewAccessPage() {
   const [selectedDevices, setSelectedDevices] = useState([]);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");     //added
+  const [successMessage, setSuccessMessage] = useState("");     //added
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -99,9 +100,16 @@ function RoomsNewAccessPage() {
         }
       );
 
-      alert("Permission successfully granted!");
-      navigate(`/${roomTitle}/${roomid}/devices/`);
-      localStorage.removeItem("roomid");
+      // alert("Permission successfully granted!");
+      // navigate(`/${roomTitle}/${roomid}/devices/`);
+      // localStorage.removeItem("roomid");
+
+      setSuccessMessage("Permission successfully granted!");
+      
+      // Start redirect animation, then navigate (added)
+      setTimeout(() => {
+        navigate(`/${roomTitle}/${roomid}/devices/`);
+      }, 3000);
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
@@ -131,6 +139,13 @@ function RoomsNewAccessPage() {
             language={language}
           />
         </div>
+
+        {/* Success Message Display (added)*/}
+        {successMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-50">
+            {successMessage}
+          </div>
+        )}
 
         {/* Error Message Display (added)*/}
         {errorMessage && (

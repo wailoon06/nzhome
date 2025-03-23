@@ -15,6 +15,11 @@ function AllUserPage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");     //added
+  const [successMessage, setSuccessMessage] = useState(""); //added
+
+  // Add confirm dialog state
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [emailToDelete, setEmailToDelete] = useState("");
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -75,13 +80,29 @@ function AllUserPage() {
     fetchUserDetails();
   }, [navigate]);
 
-  // Handle delete submission
-  const handleDelete = async (email) => {
-    // Double confirm
-    if (!window.confirm("Are you sure you want to delete this user?")) {
-      return;
-    }
+  // Show confirm dialog
+  const showConfirm = (email) => {
+    setEmailToDelete(email);
+    setConfirmMessage("Are you sure you want to delete this user?");
+    
+    // Auto-hide after 10 seconds
+    setTimeout(() => {
+      setConfirmMessage("");
+      setEmailToDelete("");
+    }, 10000);
+  };
+  
 
+  // // Handle delete submission
+  // const handleDelete = async (email) => {
+  //   // Double confirm
+  //   if (!window.confirm("Are you sure you want to delete this user?")) {
+  //     return;
+  //   }
+
+   // Handle confirm actions
+   const handleConfirmYes = async () => {
+    setConfirmMessage("");
     setLoading(true);
 
     try {
@@ -93,23 +114,36 @@ function AllUserPage() {
         `http://localhost:8080/api/deleteUserFam`,
         {
           headers: { Authorization: `Bearer ${token}` },
-          data: { email: email },
+          data: { email: emailToDelete },
         }
       );
 
       // Update the user list after successful deletion
       setUserDetails((prevUsers) =>
-        prevUsers.filter((user) => user.email !== email)
+        prevUsers.filter((user) => user.email !== emailToDelete)
       );
 
-      alert(response.data.message);
+      // alert(response.data.message);
+      // Show success message(added)
+      setSuccessMessage(response.data.message || "User deleted successfully");
+      
+      // Auto-hide success message after 3 seconds(added)
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
     } catch (err) {
       console.error("Delete error:", err);
       handleApiError(err);
-      window.location.reload();
+      // window.location.reload();
     } finally {
       setLoading(false);
+      setEmailToDelete();
     }
+  };
+
+  const handleConfirmNo = () => {
+    setConfirmMessage("");
+    setEmailToDelete("");
   };
 
   const [userRole, setUserRole] = useState("");
@@ -165,12 +199,41 @@ function AllUserPage() {
           />
         </div>
 
+         {/* Success Message Display */}
+         {successMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-50">
+            {successMessage}
+          </div>
+        )}
+
         {/* Error Message Display (added)*/}
         {errorMessage && (
               <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
                 {errorMessage}
               </div>
         )}
+
+         {/* Confirm Dialog Display */}
+         {confirmMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50 flex flex-col items-center">
+            <div className="mb-2">{confirmMessage}</div>
+            <div className="flex space-x-4">
+              <button 
+                onClick={handleConfirmYes}
+                className="bg-green-500 text-white px-3 py-1 rounded-md"
+              >
+                Yes
+              </button>
+              <button 
+                onClick={handleConfirmNo}
+                className="bg-gray-500 text-white px-3 py-1 rounded-md"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        )}
+
 
         {/* Main Content */}
         <div
@@ -234,7 +297,8 @@ function AllUserPage() {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleDelete(user.email);
+                              // handleDelete(user.email);
+                              showConfirm(user.email);
                             }}
                             className="text-red-500 text-xl font-bold px-2"
                           >
