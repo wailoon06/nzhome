@@ -183,7 +183,6 @@ function CalendarPage() {
       setErrorMessage("Event date and title are required.");//added
         
       setTimeout(() => {//added
-        localStorage.clear();
         setErrorMessage("");
       }, 4000);
       return;
@@ -195,10 +194,15 @@ function CalendarPage() {
     try {
       const token = localStorage.getItem("token");
       console.log("Token:", token); // Check if token is retrieved correctly
-  
+
       const eventDetails = new Date(eventDate);
       eventDetails.setHours(selectedHour, selectedMinute);
-  
+      console.log("selected hour:", selectedHour); // Check if token is retrieved correctly
+      console.log("selected min:", selectedMinute); // Check if token is retrieved correctly
+      console.log("eventDetails:", eventDetails.toISOString); // Check if token is retrieved correctly
+      const adjustedDate = new Date(eventDetails.getTime() + (8 * 60 * 60 * 1000));
+
+console.log("Correct UTC Time:", adjustedDate.toISOString());
       const selectedDeviceIds = devices
       .filter(device => selectedDevices.includes(device.name)) // Check if selectedDevices contains device name
       .map(device => device.id); // Extract deviceid
@@ -208,13 +212,12 @@ function CalendarPage() {
       console.log("Selected Device IDs:", selectedDeviceIds); // Verify extracted device IDs
 
       const eventData = {
-        date: eventDetails.toISOString(),
+        date: adjustedDate.toISOString(),
         title: eventTitle,
         description: eventDescription,
         onOff: onOff ? "On" : "Off",
         devices: selectedDeviceIds
       };
-  
       console.log("Sending event data:", eventData); // Log event data before sending
   
       const response = await axios.post(
@@ -229,7 +232,7 @@ function CalendarPage() {
         ...prevEvents,
         {
           id: response.data.eventId,
-          date: eventDetails,
+          date: adjustedDate,
           title: eventTitle,
           description: eventDescription,
           onOff: onOff === "On" ? "On" : "Off", // Ensure correct string format

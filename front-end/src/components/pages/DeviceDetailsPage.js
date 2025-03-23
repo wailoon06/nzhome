@@ -888,7 +888,7 @@ function DeviceDetailsPage() {
                   {/* Action Button */}
                   <Link
                     key={name}
-                    to={`/devices/${type}/${name}/details/setAction`}
+                    to={`/devices/${type}/${deviceid}/${name}/details/setAction`}
                     className="block"
                   >
                     <div className="p-4 flex justify-center items-center">

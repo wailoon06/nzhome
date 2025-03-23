@@ -339,7 +339,7 @@ function App() {
       <Route path="/notification" element={<NotificationPage />} />
       <Route path="/devices" element={<LODevicesPage />} />
       <Route
-        path="/devices/:type/:name/details/setAction"
+        path="/devices/:type/:deviceid/:name/details/setAction"
         element={<ActionSchedulePage />}
       />
       <Route path="/devices/new" element={<AddNewDevicePage />} />
@@ -357,10 +357,10 @@ function App() {
         path="/devices/:type/:deviceid/:name/details"
         element={<RoomEnergyUsagePage />}
       />{" "}
-      <Route
+      {/* <Route
         path="/rooms/summary/:roomTitle/setAction"
         element={<RoomDeviceSetActionPage />}
-      />
+      /> */}
     </Routes>
   );
 }

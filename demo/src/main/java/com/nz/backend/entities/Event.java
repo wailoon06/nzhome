@@ -2,18 +2,19 @@ package com.nz.backend.entities;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import com.nz.backend.enums.OnOff;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 
 @Entity
 @Table(name = "event")
@@ -52,7 +53,7 @@ public class Event {
     private Long deviceid;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "onOff", nullable = false)
+    @Column(name = "onoff", nullable = false)
     private OnOff onOff;
 
     // Constructors

@@ -10,7 +10,7 @@ function RoomEnergyUsagePage() {
     setIsCollapsed(!isCollapsed);
   };
 
-  const { roomTitle } = useParams();
+  const { roomTitle, type, deviceid, name } = useParams();
 
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
@@ -125,7 +125,7 @@ function RoomEnergyUsagePage() {
                   </div>{" "}
                   <Link
                     key={roomTitle}
-                    to={`/rooms/summary/${roomTitle}/setAction`}
+                    to={`/devices/${type}/${deviceid}/${name}/details/setAction`}
                   >
                     <div className="p-4 gap-4 flex justify-center items-center">
                       <div className="rounded-lg border-[2px] border-gray-300 bg-black items-center gap-4 p-4 sm:w-[50%] md:w-[35%]">

@@ -2,7 +2,6 @@ package com.nz.backend.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import com.nz.backend.enums.OnOff;
 
 import com.nz.backend.entities.Device;
 
@@ -13,12 +12,12 @@ public class AddEventDTO {
     // private boolean repeat;
     private List<Long> devices;
     private Device deviceid;
-    private OnOff onOff;
+    private String onOff;
 
     public AddEventDTO() {
     }
 
-    public AddEventDTO(String title, String description, LocalDateTime date, OnOff onOff,
+    public AddEventDTO(String title, String description, LocalDateTime date, String onOff,
             List<Long> devices) {
         this.title = title;
         this.description = description;
@@ -59,11 +58,11 @@ public class AddEventDTO {
     // this.repeat = repeat;
     // }
 
-    public OnOff getOnOff() {
+    public String getOnOff() {
         return onOff;
     }
 
-    public void setOnOff(OnOff onOff) {
+    public void setOnOff(String onOff) {
         this.onOff = onOff;
     }
 

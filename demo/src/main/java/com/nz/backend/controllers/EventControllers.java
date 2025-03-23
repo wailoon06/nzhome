@@ -1,24 +1,32 @@
 package com.nz.backend.controllers;
 
-import com.nz.backend.entities.Device;
-import com.nz.backend.entities.Event;
-import com.nz.backend.entities.User;
-import com.nz.backend.entities.Family;
-import com.nz.backend.repo.EventRepo;
-import com.nz.backend.repo.DeviceRepo;
-import com.nz.backend.repo.UserRepo;
-import com.nz.backend.dto.AddEventDTO;
-import com.nz.backend.dto.EventNameDTO;
-import com.nz.backend.enums.OnOff;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import com.nz.backend.services.JwtService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.nz.backend.dto.AddEventDTO;
+import com.nz.backend.dto.EventNameDTO;
+import com.nz.backend.entities.Device;
+import com.nz.backend.entities.Event;
+import com.nz.backend.entities.Family;
+import com.nz.backend.entities.User;
+import com.nz.backend.enums.OnOff;
+import com.nz.backend.repo.DeviceRepo;
+import com.nz.backend.repo.EventRepo;
+import com.nz.backend.repo.UserRepo;
+import com.nz.backend.services.JwtService;
 
 @RestController
 @RequestMapping("/api")
@@ -63,11 +71,15 @@ public class EventControllers {
                 return ResponseEntity.badRequest().body("Invalid device ID: " + deviceId);
             }
 
+            // Added
+            device.setOnOff("On".equals(addEventDTO.getOnOff()) ? OnOff.On : OnOff.Off);
+            deviceRepo.save(device);
+
             Event newEvent = new Event(
                     addEventDTO.getTitle(),
                     addEventDTO.getDescription(),
                     addEventDTO.getDate(),
-                    addEventDTO.getOnOff(),
+                    ("On".equals(addEventDTO.getOnOff()) ? OnOff.On : OnOff.Off), /* Main change */
                     user,
                     family,
                     deviceId);
