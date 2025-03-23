@@ -117,14 +117,14 @@ function UserProfilePage() {
       if (err.response) {
         const status = err.response.status;
         if (status === 401 || status === 403) {
-          console.log("Session expired!");
+          // console.log("Session expired!");
           setErrorMessage("Session expired. Please log in again.");
           
           setTimeout(() => {
             localStorage.removeItem("token");
             localStorage.removeItem("selectedDevice");
             navigate("/login");
-          }, 2000);
+          }, 5000);
         } else {
           setErrorMessage(err.response.data?.toString() || "Error adding users!");
         }
