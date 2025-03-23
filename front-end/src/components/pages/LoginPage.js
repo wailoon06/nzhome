@@ -126,14 +126,14 @@ function LoginPage() {
 
           {/* Redirect Message */}
           {redirectMessage && (
-            <div className="z-[2000] absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-md px-4 py-2 rounded-md shadow-lg animate-fadeIn">
+            <div className="z-[5000] absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-md px-4 py-2 rounded-md shadow-lg animate-fadeIn">
               {redirectMessage}
             </div>
           )}
 
           {/* Error Message */}
           {errorMessage && (
-            <div className="z-[2000] bg-red-600 text-white text-md p-2 rounded-lg shadow-md text-center mt-4">
+            <div className="z-[5000] bg-red-600 text-white text-md p-2 rounded-lg shadow-md text-center mt-4">
               {errorMessage}
             </div>
           )}
