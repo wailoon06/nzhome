@@ -93,7 +93,7 @@ function RoomsNewAccessPage() {
       );
 
       alert("Permission successfully granted!");
-      navigate(`/rooms/devices/${roomid}/${roomTitle}`);
+      navigate(`/${roomTitle}/${roomid}/devices/`);
       localStorage.removeItem("roomid");
     } catch (err) {
       if (err.response && err.response.status === 403) {

@@ -111,12 +111,10 @@ function NewDeviceDetailsPage() {
       }
       );
       
-      // alert("Successfully created!");
-      // localStorage.removeItem("selectedDevice");
-      // navigate(`/devices/new/${name}/test`);
-      // Show success message(added)
+
       setSuccessMessage("Device successfully added!");
       
+
       // Auto-clear success message after 3 seconds(added)
       setTimeout(() => {
         setSuccessMessage("");
@@ -146,6 +144,7 @@ function NewDeviceDetailsPage() {
       setErrorMessage("");
     }, 5000);
   };
+  
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">

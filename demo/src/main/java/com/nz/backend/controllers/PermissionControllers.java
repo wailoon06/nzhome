@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nz.backend.dto.GrantDTO;
-import com.nz.backend.dto.GrantIDDto;
 import com.nz.backend.entities.Permission;
 import com.nz.backend.entities.Room;
 import com.nz.backend.entities.User;
@@ -63,9 +61,6 @@ public class PermissionControllers {
         }
 
         List<User> users = userRepo.findAllById(grantDTO.getUserid());
-        if (users.isEmpty()) {
-            return ResponseEntity.badRequest().body("No valid users found!");
-        }
 
         Room room = roomRepo.findById(grantDTO.getRoomid())
         .orElseThrow(() -> new RuntimeException("Room not found!"));
