@@ -128,7 +128,7 @@ function LoginPage() {
 
           {/* Redirect Message */}
           {redirectMessage && (
-            <div className="absolute top-[-60px] left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-md px-4 py-2 rounded-md shadow-lg animate-fadeIn">
+            <div className="absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-md px-4 py-2 rounded-md shadow-lg animate-fadeIn">
               {redirectMessage}
             </div>
           )}
