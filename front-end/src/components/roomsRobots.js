@@ -93,7 +93,7 @@ function RoomsRobots() {
           localStorage.removeItem("token");
           localStorage.removeItem("selectedDevice");
           navigate("/login");
-        }, 2000);
+        }, 5000);
       } else {
         // setError("An unexpected error occurs");
         setErrorMessage("An unexpected error occurred. Please try again.");//added
@@ -270,7 +270,7 @@ function RoomsRobots() {
                     to={
                       isAddRoom
                         ? "/rooms/new"
-                        : `/rooms/devices/${room.roomid}/${room.roomName}`
+                        : `/${room.roomName}/${room.roomid}/devices/`
                     }
                     onClick={(e) => handleRoomClick(room, e)}
                   >

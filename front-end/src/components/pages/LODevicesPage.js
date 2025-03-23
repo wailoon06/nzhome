@@ -19,6 +19,7 @@ function LODevicesPage() {
   const [deviceStates, setDeviceStates] = useState({});
   const [devicesByRoom, setDevicesByRoom] = useState({});
   const [roomNames, setRoomNames] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");     //added
   
 
   // Language
@@ -48,10 +49,16 @@ function LODevicesPage() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurred");
     } finally {
@@ -122,10 +129,16 @@ function LODevicesPage() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurred");
     } finally {
@@ -171,10 +184,16 @@ function LODevicesPage() {
 
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
     }
   };
@@ -267,6 +286,13 @@ function LODevicesPage() {
             language={language}
           />
         </div>
+
+        {/* Error Message Display (added)*/}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+            {errorMessage}
+          </div>
+        )}
 
         {/* Main Content */}
         <div

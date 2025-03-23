@@ -14,6 +14,7 @@ function UserProfilePage() {
   const [error, setError] = useState(null);
   const [uploadStatus, setUploadStatus] = useState(null);
   const navigate = useNavigate("");
+  const [errorMessage, setErrorMessage] = useState("");     //added
 
 
   // Language 
@@ -114,8 +115,14 @@ function UserProfilePage() {
       if (err.response && (err.response.status === 401 || err.response.status === 403)) {
         // Token expired or invalid - redirect to login
         console.log("Session expired!");
-        localStorage.removeItem('token');
-        navigate('/login');
+        // localStorage.removeItem('token');
+        // navigate('/login');
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
     } finally {
         setLoading(false);
@@ -130,7 +137,7 @@ function UserProfilePage() {
                         <div className="flex flex-col items-center">
                           <svg
                             className="animate-spin h-10 w-10 text-blue-600 mb-2"
-                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns="http://www.w3.org/5000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
                           >
@@ -169,6 +176,13 @@ function UserProfilePage() {
             language={language}
           />
         </div>
+
+         {/* Error Message Display (added)*/}
+         {errorMessage && (
+            <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+              {errorMessage}
+            </div>
+          )}
 
         {/* Main Content */}
         <div

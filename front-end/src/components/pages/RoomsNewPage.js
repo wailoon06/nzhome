@@ -86,7 +86,7 @@ function RoomsNewPage() {
             localStorage.removeItem("token");
             localStorage.removeItem("selectedDevice");
             navigate("/login");
-          }, 2000);
+          }, 5000);
       } else {
         setError("An unexpected error occurs");
       }
@@ -189,7 +189,7 @@ function RoomsNewPage() {
         // Start redirect animation, then navigate (added)
         setTimeout(() => {
           navigate(`/rooms/${roomName}/access`);
-        }, 2000);
+        }, 5000);
         // navigate(`/rooms/${roomName}/access`);
       }
 
@@ -206,7 +206,7 @@ function RoomsNewPage() {
             localStorage.removeItem("token");
             localStorage.removeItem("selectedDevice");
             navigate("/login");
-          }, 2000);
+          }, 5000);
       } else {
         setError("An unexpected error occurs");
       }

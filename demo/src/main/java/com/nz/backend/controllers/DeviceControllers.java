@@ -30,15 +30,16 @@ import com.nz.backend.dto.EmailDTO;
 import com.nz.backend.dto.UpdateDeviceDTO;
 import com.nz.backend.entities.Category;
 import com.nz.backend.entities.Device;
+import com.nz.backend.entities.DevicePermission;
 import com.nz.backend.entities.Energy;
 import com.nz.backend.entities.Family;
 import com.nz.backend.entities.Room;
 import com.nz.backend.entities.User;
 import com.nz.backend.enums.OnOff;
 import com.nz.backend.repo.CategoryRepo;
+import com.nz.backend.repo.DevicePermissionRepo;
 import com.nz.backend.repo.DeviceRepo;
 import com.nz.backend.repo.EnergyRepo;
-import com.nz.backend.repo.FamilyRepo;
 import com.nz.backend.repo.RoomRepo;
 import com.nz.backend.repo.UserRepo;
 import com.nz.backend.services.JwtService;
@@ -63,6 +64,9 @@ public class DeviceControllers {
 
     @Autowired
     private RoomRepo roomRepo;
+
+    @Autowired
+    private DevicePermissionRepo devicePermissionRepo;
     
     @Autowired
     private JwtService jwtService;
@@ -112,6 +116,9 @@ public class DeviceControllers {
                 room); //
 
         deviceRepo.save(newDevice);
+
+        DevicePermission permission = new DevicePermission(user, newDevice, user);
+        devicePermissionRepo.save(permission);
 
         return ResponseEntity.ok("Successfully Added!");
     }
@@ -230,7 +237,7 @@ public class DeviceControllers {
         }
 
         // Get the room
-        Room room = roomRepo.findByRoomName(addNewDeviceDTO.getRoomName());
+        Room room = roomRepo.findByRoomNameAndFamily(addNewDeviceDTO.getRoomName(), userFamily);
         
         List<Device> matchDevices = deviceRepo.findByFamilyAndRoom(userFamily, room);
 

@@ -72,7 +72,7 @@ function NewDeviceDetailsPage() {
             localStorage.removeItem("token");
             localStorage.removeItem("selectedDevice");
             navigate("/login");
-          }, 2000);
+          }, 5000);
         }
 
         // setError("An unexpected error occurs");
@@ -111,12 +111,10 @@ function NewDeviceDetailsPage() {
       }
       );
       
-      // alert("Successfully created!");
-      // localStorage.removeItem("selectedDevice");
-      // navigate(`/devices/new/${name}/test`);
-      // Show success message(added)
+
       setSuccessMessage("Device successfully added!");
       
+
       // Auto-clear success message after 3 seconds(added)
       setTimeout(() => {
         setSuccessMessage("");
@@ -136,7 +134,7 @@ function NewDeviceDetailsPage() {
         setTimeout(() => {//added
           localStorage.clear();
           navigate("/login");
-        }, 2000);
+        }, 5000);
       }
       setErrorMessage("An unexpected error occurred. Please try again.");//added
     } finally {
@@ -146,6 +144,7 @@ function NewDeviceDetailsPage() {
       setErrorMessage("");
     }, 5000);
   };
+  
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">

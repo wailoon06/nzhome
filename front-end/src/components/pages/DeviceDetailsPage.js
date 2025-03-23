@@ -32,6 +32,7 @@ function DeviceDetailsPage() {
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  
   // Handle error
   const handleApiError = (err) => {
     console.error("API Error:", err);
@@ -50,7 +51,7 @@ function DeviceDetailsPage() {
           localStorage.removeItem("token");
           localStorage.removeItem("selectedDevice");
           navigate("/login");
-        }, 2000);
+        }, 5000);
       }
     } else {
       setErrorMessage("An unexpected error occurred. Please try again."); //added
@@ -80,10 +81,16 @@ function DeviceDetailsPage() {
     } catch (err) {
       if (err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurs");
     } finally {
@@ -116,10 +123,16 @@ function DeviceDetailsPage() {
     } catch (err) {
       if (err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurs");
     } finally {
@@ -268,7 +281,7 @@ function DeviceDetailsPage() {
           //added
           localStorage.clear();
           navigate("/login");
-        }, 2000);
+        }, 5000);
       }
       // setError("An unexpected error occurs");
       setErrorMessage("Failed to grant permission. Please try again.");
@@ -325,7 +338,7 @@ function DeviceDetailsPage() {
           //added
           localStorage.clear();
           navigate("/login");
-        }, 2000);
+        }, 5000);
       }
       // setError("An unexpected error occurs");
       setErrorMessage("Failed to remove permission. Please try again."); //added
@@ -369,10 +382,16 @@ function DeviceDetailsPage() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurs");
     } finally {
@@ -869,7 +888,7 @@ function DeviceDetailsPage() {
                   {/* Action Button */}
                   <Link
                     key={name}
-                    to={`/devices/${type}/${name}/details/setAction`}
+                    to={`/devices/${type}/${deviceid}/${name}/details/setAction`}
                     className="block"
                   >
                     <div className="p-4 flex justify-center items-center">

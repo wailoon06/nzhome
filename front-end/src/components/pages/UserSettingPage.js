@@ -110,7 +110,7 @@ function UserSettingPage() {
           localStorage.clear();
           setErrorMessage("");
           // window.location.reload();
-        }, 2000);
+        }, 5000);
       }
     } catch (error) {
       // alert("An error occurred: " + error.message);
@@ -119,7 +119,7 @@ function UserSettingPage() {
       setTimeout(() => {//added
         localStorage.clear();
         setErrorMessage("");
-      }, 2000);
+      }, 5000);
     }
     setIsLoading(false);
   };

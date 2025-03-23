@@ -24,6 +24,7 @@ function Devices() {
   const [roomNames, setRoomNames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");     //added
 
   // const devices = [
   //   { img: "/image/samsung.jpeg", name: "Samsung TV", type: "TV" },
@@ -95,10 +96,16 @@ function Devices() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurred");
     } finally {
@@ -163,10 +170,16 @@ function Devices() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       } else {
         console.error("Error toggling device:", err);
         alert("Failed to toggle device");
@@ -220,10 +233,16 @@ function Devices() {
 
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       } else {
         console.error("Error toggling all devices:", err);
         alert("Failed to toggle all devices");
@@ -276,6 +295,14 @@ function Devices() {
               {" "}
               {translations.devices}
             </h2>
+
+            {/* Error Message Display (added)*/}
+            {errorMessage && (
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+                {errorMessage}
+              </div>
+            )}
+
             <div className="flex space-x-2">
               <button
                 onClick={() => handleToggleAll(true)}
