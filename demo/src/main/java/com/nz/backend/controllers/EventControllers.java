@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nz.backend.dto.AddEventDTO;
+import com.nz.backend.dto.EventDTO;
 import com.nz.backend.dto.EventNameDTO;
 import com.nz.backend.entities.Device;
 import com.nz.backend.entities.Event;
@@ -91,14 +93,30 @@ public class EventControllers {
     }
 
     @GetMapping("/allEvent")
-    public List<Event> getAllEvents() {
-        return eventRepo.findAll();
+    public ResponseEntity<?> getAllEvents(@RequestHeader("Authorization") String token) {
+        // Token Verification
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().body("Invalid token!");
+        }
+
+        String jwtToken = token.substring(7);
+        String email = jwtService.extractEmail(jwtToken);
+
+        // Find the user object
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found!");
+        }
+
+        // Fetch events with device name
+        List<EventDTO> events = eventRepo.findAllWithDeviceNameByUser(user);
+        return ResponseEntity.ok(events);
     }
 
     @DeleteMapping("/deleteEvent")
     public ResponseEntity<?> deleteEvent(
             @RequestHeader("Authorization") String token,
-            @RequestBody EventNameDTO eventNameDTO) {
+            @RequestParam String title) { // ✅ Extract title from query parameter
 
         if (token == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token!");
@@ -111,8 +129,9 @@ public class EventControllers {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         }
+
         // Find the event by title
-        Optional<Event> matchEvent = eventRepo.findByTitle(eventNameDTO.getTitle());
+        Optional<Event> matchEvent = eventRepo.findByTitle(title);
         if (matchEvent.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event not found!");
         }
@@ -138,8 +157,8 @@ public class EventControllers {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         }
 
-        // Fetch events created by this user
-        List<Event> userEvents = eventRepo.findByCreatedBy(user);
+        // Fetch events as EventDTO
+        List<EventDTO> userEvents = eventRepo.findAllWithDeviceNameByUser(user);
 
         return ResponseEntity.ok(userEvents);
     }

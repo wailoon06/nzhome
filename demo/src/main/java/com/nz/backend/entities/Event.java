@@ -9,11 +9,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,8 +37,8 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @Column(nullable = false)
-    private boolean repeat;
+    // @Column(nullable = false)
+    // private boolean repeat;
 
     @ManyToOne
     @JoinColumn(name = "Userid")
@@ -46,11 +48,16 @@ public class Event {
     @JoinColumn(name = "Familyid")
     private Family family;
 
-    @Column
-    private List<Long> devices;
+    // @OneToMany(mappedBy = "event", fetch = FetchType.EAGER) // or FetchType.LAZY
+    // with @Transactional
+    // private List<Long> devices;
 
-    @Column
+    @Column(name = "deviceid")
     private Long deviceid;
+
+    // @ManyToOne
+    // @JoinColumn(name = "deviceid", referencedColumnName = "id")
+    // private Device device;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "onoff", nullable = false)
@@ -104,13 +111,13 @@ public class Event {
         this.date = date;
     }
 
-    public boolean isRepeat() {
-        return repeat;
-    }
+    // public boolean isRepeat() {
+    // return repeat;
+    // }
 
-    public void setRepeat(boolean repeat) {
-        this.repeat = repeat;
-    }
+    // public void setRepeat(boolean repeat) {
+    // this.repeat = repeat;
+    // }
 
     public User getCreatedBy() {
         return createdBy;
@@ -128,17 +135,17 @@ public class Event {
         this.family = family;
     }
 
-    public List<Long> getDevices() {
-        return devices;
-    }
+    // public List<Long> getDevices() {
+    // return devices;
+    // }
 
-    public void setDevices(List<Long> devices) {
-        this.devices = devices;
-    }
+    // public void setDevices(List<Long> devices) {
+    // this.devices = devices;
+    // }
 
-    public Long getDeviceId(int i) {
-        return devices.get(i);
-    }
+    // public Long getDeviceId(int i) {
+    // return devices.get(i);
+    // }
 
     public OnOff getOnOff() {
         return onOff;
@@ -147,4 +154,17 @@ public class Event {
     public void setOnOff(OnOff onOff) {
         this.onOff = onOff;
     }
+
+    public Long getDeviceid() {
+        return deviceid;
+    }
+
+    // public Device getDevice() {
+    // return device;
+    // }
+
+    // public void setDevice(Device device) {
+    // this.device = device;
+    // }
+
 }
