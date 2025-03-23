@@ -14,6 +14,7 @@ function AllUserPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");     //added
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -35,9 +36,15 @@ function AllUserPage() {
       setError(err.response.data.message);
 
       if (err.response.status === 401) {
-        console.log("Session expired!");
-        localStorage.removeItem("token");
-        navigate("/login");
+        // console.log("Session expired!");
+        // localStorage.removeItem("token");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
     }
   };
@@ -126,10 +133,16 @@ function AllUserPage() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurred");
     } finally {
@@ -151,6 +164,13 @@ function AllUserPage() {
             language={language}
           />
         </div>
+
+        {/* Error Message Display (added)*/}
+        {errorMessage && (
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+                {errorMessage}
+              </div>
+        )}
 
         {/* Main Content */}
         <div

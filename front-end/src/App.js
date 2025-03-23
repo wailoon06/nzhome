@@ -52,6 +52,8 @@ function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");     //added
+  
 
   // Language
   const [language, setLanguage] = useState(() => {
@@ -111,9 +113,15 @@ function App() {
       // Handle token expiration or authentication issues
       if (err.response && (err.response.status === 401 || err.response.status === 403)) {
         // Token expired or invalid - redirect to login
-        console.log("Session expired!");
-        localStorage.removeItem('token');
-        navigate('/login');
+        // console.log("Session expired!");
+        // localStorage.removeItem('token');
+        // navigate('/login');
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
     } finally {
         setLoading(false);
@@ -138,6 +146,14 @@ function App() {
                   isCollapsed ? "" : "baseGreen"
                 } rounded-lg min-h-full flex flex-col overflow-y-auto`}
               >
+
+                {/* Error Message Display (added)*/}
+                {errorMessage && (
+                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+                    {errorMessage}
+                  </div>
+                )}
+
                 {/* Sidebar Logo */}
                 <div className="h-[100px] flex items-center justify-center pt-10">
                   <a href="/">
@@ -323,7 +339,7 @@ function App() {
       <Route path="/notification" element={<NotificationPage />} />
       <Route path="/devices" element={<LODevicesPage />} />
       <Route
-        path="/devices/:type/:name/details/setAction"
+        path="/devices/:type/:deviceid/:name/details/setAction"
         element={<ActionSchedulePage />}
       />
       <Route path="/devices/new" element={<AddNewDevicePage />} />
@@ -341,10 +357,10 @@ function App() {
         path="/devices/:type/:deviceid/:name/details"
         element={<RoomEnergyUsagePage />}
       />{" "}
-      <Route
+      {/* <Route
         path="/rooms/summary/:roomTitle/setAction"
         element={<RoomDeviceSetActionPage />}
-      />
+      /> */}
     </Routes>
   );
 }

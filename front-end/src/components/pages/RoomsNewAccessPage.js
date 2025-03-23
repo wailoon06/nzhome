@@ -17,6 +17,7 @@ function RoomsNewAccessPage() {
   const [error, setError] = useState(null);
   const [selectedDevices, setSelectedDevices] = useState([]);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");     //added
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -46,10 +47,16 @@ function RoomsNewAccessPage() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("selectedDevice");
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurs");
     } finally {
@@ -98,9 +105,15 @@ function RoomsNewAccessPage() {
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
-        alert("Session expired!");
-        localStorage.clear();
-        navigate("/login");
+        // alert("Session expired!");
+        // localStorage.clear();
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
       setError("An unexpected error occurs");
     } finally {
@@ -118,6 +131,14 @@ function RoomsNewAccessPage() {
             language={language}
           />
         </div>
+
+        {/* Error Message Display (added)*/}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+            {errorMessage}
+          </div>
+        )}
+
         {/* Main Content */}
         <div
           className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}

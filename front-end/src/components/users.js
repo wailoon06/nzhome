@@ -12,6 +12,7 @@ function Users() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");     //added
 
   // Handle error
   const handleApiError = (err) => {
@@ -22,8 +23,14 @@ function Users() {
       
       if (err.response.status === 401) {
         console.log("Session expired!");
-        localStorage.removeItem("token");
-        navigate("/login");
+        // localStorage.removeItem("token");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
       }
     } 
   };
@@ -99,6 +106,13 @@ function Users() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-white">{translations.allUsers}</h2>
           </div>
+
+          {/* Error Message Display (added)*/}
+          {errorMessage && (
+            <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+              {errorMessage}
+            </div>
+          )}
 
           {loading ? (
             <p className="text-white text-center">Loading...</p>

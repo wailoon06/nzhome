@@ -45,7 +45,7 @@ function RoomsDevicesPage() {
           localStorage.removeItem("token");
           localStorage.removeItem("selectedDevice");
           navigate("/login");
-        }, 2000);
+        }, 5000);
       }
     } else {
       setErrorMessage("An unexpected error occurred. Please try again."); //added
@@ -90,7 +90,7 @@ function RoomsDevicesPage() {
           localStorage.removeItem("token");
           localStorage.removeItem("selectedDevice");
           navigate("/login");
-        }, 2000);
+        }, 5000);
       } else {
         // setError("An unexpected error occurs");
         setErrorMessage("An unexpected error occurred while fetching devices.");
@@ -172,7 +172,7 @@ function RoomsDevicesPage() {
           localStorage.removeItem("token");
           localStorage.removeItem("selectedDevice");
           navigate("/login");
-        }, 2000);
+        }, 5000);
       } else {
         setErrorMessage("Failed to update device state. Please try again.");
         setTimeout(() => {
@@ -319,7 +319,7 @@ function RoomsDevicesPage() {
           //added
           localStorage.clear();
           navigate("/login");
-        }, 2000);
+        }, 5000);
       }
       // setError("An unexpected error occurs");
       setErrorMessage("Failed to grant permission. Please try again.");
@@ -376,7 +376,7 @@ function RoomsDevicesPage() {
           //added
           localStorage.clear();
           navigate("/login");
-        }, 2000);
+        }, 5000);
       }
       // setError("An unexpected error occurs");
       setErrorMessage("Failed to remove permission. Please try again."); //added
