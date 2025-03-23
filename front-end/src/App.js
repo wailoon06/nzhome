@@ -80,14 +80,14 @@ function App() {
       setTimeout(() => {
         localStorage.clear();
         navigate("/login");
-      }, 3000);;
+      }, 5000);;
     } else {
       localStorage.setItem("started", "false"); // Save flag
     }
     setTimeout(() => {//new added
       setlogoutMessage("");
       navigate("/login"); // Redirect after message disappears
-    }, 3000);
+    }, 5000);
   }
 
   const [userDetails, setUserDetails] = useState(null);

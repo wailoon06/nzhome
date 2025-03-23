@@ -129,7 +129,7 @@ function UserProfilePage() {
           setErrorMessage(err.response.data?.toString() || "Error adding users!");
         }
       } else {
-        setErrorMessage("An unexpected error occurred. Please try again.");
+        setError("An unexpected error occurred. Please try again.");
       }
       
       setTimeout(() => {

@@ -54,7 +54,7 @@ function DeviceDetailsPage() {
         }, 5000);
       }
     } else {
-      setErrorMessage("An unexpected error occurred. Please try again."); //added
+      setError("An unexpected error occurred. Please try again."); //added
     }
 
     setTimeout(() => {

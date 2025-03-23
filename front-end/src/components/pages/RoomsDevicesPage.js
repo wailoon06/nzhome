@@ -48,7 +48,7 @@ function RoomsDevicesPage() {
         }, 5000);
       }
     } else {
-      setErrorMessage("An unexpected error occurred. Please try again."); //added
+      setError("An unexpected error occurred. Please try again."); //added
     }
 
     setTimeout(() => {
@@ -93,7 +93,7 @@ function RoomsDevicesPage() {
         }, 5000);
       } else {
         // setError("An unexpected error occurs");
-        setErrorMessage("An unexpected error occurred while fetching devices.");
+        setError("An unexpected error occurred while fetching devices.");
         setTimeout(() => {
           setErrorMessage("");
         }, 5000);

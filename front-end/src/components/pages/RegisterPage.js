@@ -100,14 +100,14 @@ function RegisterPage() {
 
       {/* Success Message */}
       {message && (
-        <div className="absolute top-24 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-sm px-3 py-2 rounded-md">
+        <div className="absolute top-24 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-sm px-3 py-2 rounded-md z-[5000]">
           {message}
         </div>
       )}
 
       {/* Error Message */}
       {error && (
-        <div className="absolute top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-sm px-3 py-2 rounded-md">
+        <div className="absolute top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-sm px-3 py-2 rounded-md z-[5000]">
           {error}
         </div>
       )}

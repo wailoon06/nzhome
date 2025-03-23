@@ -96,7 +96,7 @@ function RoomsRobots() {
         }, 5000);
       } else {
         // setError("An unexpected error occurs");
-        setErrorMessage("An unexpected error occurred. Please try again.");//added
+        setError("An unexpected error occurred. Please try again.");//added
         setTimeout(() => {//added
           setErrorMessage("");
         }, 5000);
@@ -186,7 +186,7 @@ function RoomsRobots() {
       setRobot(robotDevices);
     } catch (err) {
       // setError("An unexpected error occurred");
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setError("An unexpected error occurred. Please try again.");
       setTimeout(() => {
         setErrorMessage("");
       }, 5000);
