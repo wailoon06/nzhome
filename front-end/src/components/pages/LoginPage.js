@@ -106,7 +106,7 @@ function LoginPage() {
       {/* Main Login Container */}
       <div className="relative flex flex-col items-center justify-center h-full">
         {/* Overlay Blur for a Glassmorphism Effect */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
+        <div className="absolute inset-0 backdrop-blur-md"></div>
 
         {/* Login Card */}
         <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl w-[90%] md:w-[40%] lg:w-[30%] p-8 shadow-2xl z-10">
