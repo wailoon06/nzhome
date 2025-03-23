@@ -202,7 +202,7 @@ function CalendarPage() {
       console.log("eventDetails:", eventDetails.toISOString); // Check if token is retrieved correctly
       const adjustedDate = new Date(eventDetails.getTime() + (8 * 60 * 60 * 1000));
 
-console.log("Correct UTC Time:", adjustedDate.toISOString());
+      console.log("Correct UTC Time:", adjustedDate.toISOString());
       const selectedDeviceIds = devices
       .filter(device => selectedDevices.includes(device.name)) // Check if selectedDevices contains device name
       .map(device => device.id); // Extract deviceid
@@ -215,7 +215,7 @@ console.log("Correct UTC Time:", adjustedDate.toISOString());
         date: adjustedDate.toISOString(),
         title: eventTitle,
         description: eventDescription,
-        onOff: onOff ? "On" : "Off",
+        onOff: onOff === "On" ? "On" : "Off",
         devices: selectedDeviceIds
       };
       console.log("Sending event data:", eventData); // Log event data before sending
@@ -333,25 +333,28 @@ console.log("Correct UTC Time:", adjustedDate.toISOString());
   }, []);
   
   // Delete an event by ID
-  const deleteEvent = async (title, deviceId) => {
+  const deleteEvent = async (title) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("No token found! User is not logged in.");
         return;
       }
-      console.log(title);
-      const response = await axios.delete("http://localhost:8080/api/deleteEvent", {
+  
+      console.log("Deleting event:", title);
+  
+      const response = await axios.delete(`http://localhost:8080/api/deleteEvent`, {
         headers: { Authorization: `Bearer ${token}` },
-        data: {title} // Send title
+        params: { title }  // Send title as a query parameter
       });
   
       console.log(response.data);
       fetchUpcomingEvents();
-      // Remove deleted event from UI
-      setEvents((prevEvents) => 
-        prevEvents.filter(event => !(event.title === title && event.deviceid === deviceId))
+  
+      setEvents((prevEvents) =>
+        prevEvents.filter(event => event.title !== title)
       );
+  
     } catch (error) {
       console.error("Error deleting event:", error.response?.data || error.message);
     }
@@ -473,7 +476,7 @@ console.log("Correct UTC Time:", adjustedDate.toISOString());
                     {/* Right Section - DatePicker */}
                     <div id="left" className="bg-gray-100 p-4 rounded-lg shadow-md">
                       <div id="reminder-section">
-                        <h3 className="text-xl font-semibold mb-3">{translations.reminder}</h3>
+                        <h3 className="text-xl font-semibold mb-3">Upcoming Events</h3>
                         {loading ? <p>Loading events...</p> : (
                         <ul id="reminderList" className="max-h-96 overflow-y-auto space-y-2 border rounded-md p-2">
                           {userEvents
@@ -495,15 +498,15 @@ console.log("Correct UTC Time:", adjustedDate.toISOString());
                                   </span>
 
                                   {/* device Status */}
-                                  {event.onOff === "ON" && (
+                                  {event.onOff === "On" && (
                                     <div className="text-sm text-green-600 mt-2">
-                                      <strong>Turn on device </strong> 
+                                      <strong>Turn on {event.deviceName}</strong> 
                                     </div>
                                   )}
 
-                                  {event.onOff === "OFF" && (
+                                  {event.onOff === "Off" && (
                                     <div className="text-sm text-red-600 mt-2">
-                                      <strong>Turn off device</strong>
+                                      <strong>Turn off {event.deviceName}</strong>
                                     </div>
                                   )}
 
@@ -535,7 +538,7 @@ console.log("Correct UTC Time:", adjustedDate.toISOString());
                                 {/* Delete Button */}
                                 <button
                                   className="delete-event text-red-500 hover:text-red-700 text-sm"
-                                  onClick={() => deleteEvent(event.title, event.deviceid)}
+                                  onClick={() => deleteEvent(event.title)}
                                 >
                                   Delete
                                 </button>
