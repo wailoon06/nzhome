@@ -76,8 +76,8 @@ function LoginPage() {
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
-      <div className="flex justify-between items-center relative">
-        <div className="relative w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg flex items-center px-6 py-7 shadow-lg">
+      <div className="flex justify-between items-center relative z-[1000]">
+        <div className="relative w-full bg-black backdrop-blur-xl rounded-lg flex items-center px-6 py-8 shadow-lg">
           {/* Centered Text with Hover Effect */}
           <h1 className="absolute left-1/2 -translate-x-1/2 text-3xl lg:text-4xl font-semibold text-white titleGold">
             <a
@@ -102,11 +102,14 @@ function LoginPage() {
 
       {/* Dark Overlay */}
       <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-[-1]"></div>
-
+      
+      
+      <div className="absolute inset-0 backdrop-blur-md"></div>
+      
+      
       {/* Main Login Container */}
-      <div className="relative flex flex-col items-center justify-center h-full">
+      <div className="relative flex flex-col items-center justify-start h-full mt-10">
         {/* Overlay Blur for a Glassmorphism Effect */}
-        <div className="absolute inset-0 backdrop-blur-md"></div>
 
         {/* Login Card */}
         <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl w-[90%] md:w-[40%] lg:w-[30%] p-8 shadow-2xl z-10">
