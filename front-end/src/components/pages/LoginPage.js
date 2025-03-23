@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import translationsMap from "../locales/translationsMap";
+import bgVideo from "../../video/bg.mp4";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -10,94 +11,134 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirectMessage, setRedirectMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Prevent scrolling when LoginPage is mounted
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto"; // Reset on unmount
+    };
+  }, []);
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  // Language
+  // Language settings
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("language") || "en";
   });
   const translations = translationsMap[language] || translationsMap["en"];
 
-  // Handle submission
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
 
     try {
-      // Post email and password from user for verification
-      const response = await axios.post("http://localhost:8080/api/login", { email, password })
+      const response = await axios.post("http://localhost:8080/api/login", {
+        email,
+        password,
+      });
 
-      // Message for redirecting
-      console.log(response.data);
-      setRedirectMessage(response.data.message || "Login Successful! Redirecting...");
+      setRedirectMessage(
+        response.data.message || "Login Successful! Redirecting..."
+      );
 
-      // Store token
       localStorage.setItem("token", response.data.token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${response.data.token}`;
 
-      // Start redirect animation, then navigate to login page
       setTimeout(() => {
         navigate("/");
         localStorage.setItem("started", "true");
         window.location.reload();
-      }, 2000); // Added missing closing bracket here
-
+      }, 2000);
     } catch (error) {
       console.error("Login error:", error);
-
-      if (error.response) {
-        setErrorMessage(error.response.data || "Invalid credentials. Please try again.");
-      } else {
-        setErrorMessage("Error logging in: " + error.message);
-      }
+      setErrorMessage(
+        error.response?.data || "Invalid credentials. Please try again."
+      );
 
       setTimeout(() => {
         window.location.reload();
-      }, 1000); 
+      }, 1000);
     }
-    
+
     setLoading(false);
   };
 
+  const setStartupFalse = () => {
+    localStorage.setItem("started", "false");
+  };
+
   return (
-    <div className="baseBG border border-black px-4 pt-3 grid grid-rows-[5rem_1fr] flex-1 h-screen">
+    <div className="relative w-full h-screen overflow-hidden">
       <div className="flex justify-between items-center relative">
-        <div className="baseGreen rounded-lg w-full flex items-center px-4 py-4">
-          {/* Centered Text */}
-          <h1 className="flex-grow text-center lg:text-4xl titleGold">
-            <a href="/">{translations.title}</a>
+        <div className="relative w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg flex items-center px-6 py-7 shadow-lg">
+          {/* Centered Text with Hover Effect */}
+          <h1 className="absolute left-1/2 -translate-x-1/2 text-3xl lg:text-4xl font-semibold text-white titleGold">
+            <a
+              href="/"
+              onClick={setStartupFalse}
+              className="hover:text-green-400 transition duration-300"
+            >
+              {translations.title}
+            </a>
           </h1>
         </div>
       </div>
 
-      {/* Show redirect message with animation */}
-      {redirectMessage && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out">
-          {redirectMessage}
-        </div>
-      )}
+      {/* Background Video */}
+      <video
+        className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
+        src={bgVideo}
+        autoPlay
+        loop
+        muted
+      />
 
-      {/* Error Message Display */}
-      {errorMessage && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text- p-2 rounded-md shadow-md mt-2">
-          {errorMessage}
-        </div>
-      )}
-          
-      <div className="baseGreen rounded-lg w-[30%] mt-10 mb-12 mx-auto">
-        <div className="text-center">
-          <img
-            src="./image/NZHome.png"
-            alt="NZ Home Logo"
-            className="w-2/5 mx-auto -mb-6"
-          />
-          <h2 className="mb-4 subtitle text-white">Sign In</h2>
+      {/* Dark Overlay */}
+      <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-[-1]"></div>
 
-          <form onSubmit={handleSubmit}>
+      {/* Main Login Container */}
+      <div className="relative flex flex-col items-center justify-center h-full">
+        {/* Overlay Blur for a Glassmorphism Effect */}
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
+
+        {/* Login Card */}
+        <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl w-[90%] md:w-[40%] lg:w-[30%] p-8 shadow-2xl z-10">
+          {/* Logo */}
+          <div className="text-center mb-6">
+            <img
+              src="./image/NZHome.png"
+              alt="NZ Home Logo"
+              className="w-1/3 mx-auto drop-shadow-lg"
+            />
+          </div>
+
+          <h2 className="text-white text-center text-3xl font-bold tracking-wide">
+            {translations.sign_in}
+          </h2>
+
+          {/* Redirect Message */}
+          {redirectMessage && (
+            <div className="absolute top-[-60px] left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-md px-4 py-2 rounded-md shadow-lg animate-fadeIn">
+              {redirectMessage}
+            </div>
+          )}
+
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="bg-red-600 text-white text-md p-2 rounded-lg shadow-md text-center mt-4">
+              {errorMessage}
+            </div>
+          )}
+
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="mt-6">
             <div className="mb-4">
               <input
                 type="email"
@@ -107,8 +148,8 @@ function LoginPage() {
                 onChange={handleEmailChange}
                 ref={emailRef}
                 required
-                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-                autocomplete="email"
+                className="w-full px-4 py-3 bg-white/20 text-white placeholder-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                autoComplete="email"
               />
             </div>
 
@@ -120,41 +161,44 @@ function LoginPage() {
                 value={password}
                 onChange={handlePasswordChange}
                 required
-                className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
+                className="w-full px-4 py-3 bg-white/20 text-white placeholder-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
               />
             </div>
 
-            <p className="pText mr-[40%] text-white">
-              <a href="/change&password" className="terms">
-                {" "}
+            <div className="text-right mb-4">
+              <Link
+                to="/change&password"
+                className="text-green-300 hover:text-green-400 text-sm transition"
+              >
                 {translations.forgot_password}
-              </a>
-            </p>
+              </Link>
+            </div>
 
             <button
               type="submit"
-              className="button1 bg-green-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
-              // onClick={handleButtonClick}
+              className="w-full py-3 bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold rounded-lg hover:opacity-80 transition duration-200 shadow-lg"
               disabled={loading}
             >
               {loading ? "Loading..." : translations.sign_in}
             </button>
-
-            <div className="flex items-center my-4">
-              <hr className="flex-grow border-t" />
-              <span className="mx-4 text-white">{translations.or}</span>
-              <hr className="flex-grow border-t" />
-            </div>
-
-            <Link to={`/register`}>
-              <button
-                type="button"
-                className="button2 bg-blue-500 text-white mt-7 w-[40%] h-[6%] rounded-[1rem] mx-auto"
-              >
-                {translations.register}
-              </button>
-            </Link>
           </form>
+
+          {/* Divider */}
+          <div className="flex items-center my-6">
+            <hr className="flex-grow border-white/20" />
+            <span className="mx-4 text-white">{translations.or}</span>
+            <hr className="flex-grow border-white/20" />
+          </div>
+
+          {/* Register Button */}
+          <Link to="/register">
+            <button
+              type="button"
+              className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200 shadow-lg"
+            >
+              {translations.register}
+            </button>
+          </Link>
         </div>
       </div>
     </div>
@@ -162,33 +206,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
-// email check
-  // const handleButtonClick = async (event) => {
-  //   event.preventDefault(); // Prevent default form submission
-  //   const theEmail = emailRef.current.value; // Get this from input field
-
-  //   try {
-  //     const { data: exists } = await axios.get(`/api/users/exists`, {
-  //       params: { theEmail },
-  //     });
-
-  //     if (exists) {
-  //       alert("Email already exists!");
-  //     } else {
-  //       navigate("/");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error checking email:", error);
-  //   }
-  // };
-
-  // {/* <div className="mb-4">
-  //             <input
-  //               type="text"
-  //               name="username"
-  //               placeholder="Username"
-  //               required
-  //               className="border rounded-[0.6rem] px-2 py-1 w-[60%]"
-  //             />
-  //           </div> */}
