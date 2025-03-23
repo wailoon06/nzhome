@@ -3,14 +3,19 @@ import { Route, Routes } from "react-router-dom";
 import NZHome2 from "./image/NZHome2.jpg";
 import translationsMap from "./components/locales/translationsMap";
 import bgVideo from "./video/bg.mp4";
+import { GlobeIcon } from "lucide-react";
+
+const languages = [
+  { code: "zh", label: "Chinese" },
+  { code: "ja", label: "Japanese" },
+  { code: "en", label: "English" },
+  { code: "ko", label: "Korean" },
+  { code: "ms", label: "Malay" },
+];
 
 function LandingPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem("language") || "en";
-  });
-  const translations = translationsMap[language] || translationsMap["en"];
 
   const [animate, setAnimate] = useState(false);
 
@@ -27,10 +32,25 @@ function LandingPage() {
     return () => clearTimeout(timeout);
   }, []);
 
-  // const handleGetStarted = () => {
-  //   localStorage.setItem("started", "true"); // Save flag
-  //   window.location.reload();
-  // };
+  //Language
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [language, setLanguage] = useState(
+    () => localStorage.getItem("language") || "en"
+  );
+  const translations = translationsMap[language] || translationsMap["en"];
+
+  const [selectedLang, setSelectedLang] = useState("");
+  const handleLanguageChange = () => {
+    const currentIndex = languages.indexOf(selectedLang);
+    const nextIndex = (currentIndex + 1) % languages.length;
+    const newLang = languages[nextIndex];
+    setSelectedLang(newLang);
+    setLanguage(newLang);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center bg-white">
@@ -63,29 +83,61 @@ function LandingPage() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:space-x-6 lg:space-x-12 justify-center text-[1.2rem] text-white">
             <a href="/about" className="hover:scale-105 hover:text-orange-500">
-              About Us
+              {translations.aboutUs}
             </a>
-            <a href="/contact" className="hover:scale-105 hover:text-orange-500">
-              Contact Us
+            <a
+              href="/contact"
+              className="hover:scale-105 hover:text-orange-500"
+            >
+              {translations.contactUs}
             </a>
           </nav>
 
           {/* Buttons */}
           {/* Buttons */}
           <div className="hidden md:flex space-x-3 ml-auto text-[1.2rem]">
+            {/* Language Dropdown */}
+            <div className="relative hidden md:flex items-center space-x-3 ml-auto text-[1rem] text-white">
+              <div
+                className="p-2 border border-gray-600 rounded-md bg-black flex items-center space-x-2 cursor-pointer"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <GlobeIcon className="w-5 h-5 text-gray-300 hover:text-white" />
+                <span className="font-medium">
+                  {languages.find((l) => l.code === language)?.label}
+                </span>
+              </div>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-[12rem] w-32 bg-black border border-gray-800 rounded-md shadow-lg">
+                  {languages.map((lang) => (
+                    <div
+                      key={lang.code}
+                      className="px-3 py-1 text-sm hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      {lang.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {!localStorage.getItem("token") ? (
               <>
                 <a
                   href="/login"
                   className="hover:scale-105 hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
-                  Login
+                  {translations.loginButton}
                 </a>
                 <a
                   href="/register"
                   className="hover:scale-105 hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
-                  Sign up
+                  {translations.signUp}
                 </a>
               </>
             ) : (
@@ -104,22 +156,22 @@ function LandingPage() {
       {menuOpen && (
         <nav className="relative md:hidden w-full bg-black shadow-md flex flex-col items-center space-y-2 py-4 text-[1.2rem]">
           <a href="#" className="font-bold text-white hover:text-orange-500">
-            Home
+            {translations.home}
           </a>
           <a href="#" className="font-bold text-white hover:text-orange-500">
-            Tools
+            {translations.tools}
           </a>
           <a href="#" className="font-bold text-white hover:text-orange-500">
-            Development
+            {translations.development}
           </a>
           <a href="#" className="font-bold text-white hover:text-orange-500">
-            Contact us
+            {translations.contactUs}
           </a>
           <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
-            Login
+            {translations.loginButton}
           </button>
           <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
-            Sign up
+            {translations.signUp}
           </button>
         </nav>
       )}
@@ -133,18 +185,14 @@ function LandingPage() {
               animate ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            Net Zero Home
+            {translations.netzero}
           </h1>
           <p
             className={`text-1xl md:text-[1.2rem] transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Experience the next generation of smart living with NZ Home, a
-            cutting-edge Net Zero Smart Home designed to revolutionize the way
-            you live. Our advanced technology seamlessly integrates energy
-            efficiency, automation, and sustainability to create a home that’s
-            intelligent, eco-friendly, and cost-effective.
+          {translations.nzp1}
           </p>
           <div className="flex justify-center">
             <a
@@ -154,7 +202,7 @@ function LandingPage() {
                 animate ? "opacity-100" : "opacity-0"
               }`}
             >
-              Get Started
+              {translations.getStarted}
             </a>
           </div>
         </div>
@@ -164,7 +212,7 @@ function LandingPage() {
       <section className="grid md:grid-cols-2 lg:grid-cols-3 relative w-full min-h-screen px-6 py-16 text-white flex items-center text-center">
         <div className="absolute top-6 w-full text-center z-20">
           <h1 className="text-4xl font-bold text-orange-500">
-            Why Choose NZ Home?
+            {translations.whyChoose}
           </h1>
         </div>
 
@@ -178,16 +226,14 @@ function LandingPage() {
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Net Zero Energy Efficiency
+            {translations.netEffi}
           </h2>
           <p
             className={`text-lg mb-6 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            NZ Home is designed to produce as much energy as it consumes, using
-            advanced solar panels, smart energy storage, and AI-driven energy
-            optimization.
+         {translations.nzp2}
           </p>
           {/* <button
             className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
@@ -204,16 +250,14 @@ function LandingPage() {
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Smart Automation
+            {translations.smartAuto}
           </h2>
           <p
             className={`text-lg mb-6 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Control your lighting, heating, cooling, and appliances remotely
-            with our intuitive NZ Home App. Our AI-driven system learns your
-            habits and optimizes energy use to save costs and reduce waste.
+    {translations.nzp3}
           </p>
           {/* <button
             className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
@@ -230,16 +274,14 @@ function LandingPage() {
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Sustainable Energy Management
+            {translations.susEner}
           </h2>
           <p
             className={`text-lg mb-6 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Monitor and manage your energy production and consumption in real
-            time. NZ Home adapts to your lifestyle, ensuring efficiency without
-            compromising comfort.
+       {translations.nzp4}
           </p>
           {/* <button
             className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
@@ -257,16 +299,14 @@ function LandingPage() {
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Security & Connectivity
+            {translations.secConn}
           </h2>
           <p
             className={`text-lg mb-6 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Stay connected and secure with advanced IoT sensors, smart locks,
-            AI-powered surveillance, and voice-controlled automation that keep
-            your home safe and responsive.
+       {translations.nzp5}
           </p>
           {/* <button
             className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${
@@ -284,16 +324,14 @@ function LandingPage() {
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Real-Time Data & Insights
+            {translations.realDataIns}
           </h2>
           <p
             className={`text-lg mb-6 transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            Get detailed reports on your energy usage, appliance efficiency, and
-            environmental impact to make informed decisions for a greener
-            lifestyle.
+       {translations.nzp6}
           </p>
           {/* <button
             className={`hover:bg-gray-800 border bg-orange-500 font-bold text-white px-6 py-3 rounded-full text-xl transition-opacity duration-700 ${

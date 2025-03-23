@@ -24,7 +24,7 @@ function ActionSchedulePage() {
     setIsSwitchOn((prevState) => !prevState);
   };
 
-  const { name, type } = useParams();
+  const { deviceid, name, type } = useParams();
 
   // Handle temperature change (for the dropdown)
   const handleTemperatureChange = (e) => {
@@ -46,7 +46,7 @@ function ActionSchedulePage() {
       activeButton,
     });
 
-    navigate(`/devices/${type}/${name}/details`);
+    navigate(`/devices/${type}/${deviceid}/${name}/details`);
   };
 
   // translations

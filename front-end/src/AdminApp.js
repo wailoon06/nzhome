@@ -27,7 +27,7 @@ import AddNewDevicePage from "./components/pages/AddNewDevicePage";
 import NewDeviceDetailsPage from "./components/pages/NewDeviceDetailsPage";
 import TestConnectionPage from "./components/pages/TestConnectionPage";
 import CameraPage from "./components/pages/CameraPage";
-import AllRoomPage from "./components/pages/AllRoomPage";
+// import AllRoomPage from "./components/pages/AllRoomPage";
 import CalendarPage from "./components/pages/CalendarPage";
 import Bac from "./components/pages/bac";
 import CalendarReport from "./components/pages/calendarReport";

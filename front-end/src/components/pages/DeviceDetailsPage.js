@@ -484,7 +484,7 @@ function DeviceDetailsPage() {
                 <div className="flex items-center mt-5 w-full">
                   <a
                     className="relative pl-4 transition-transform hover:scale-105"
-                    href="/"
+                    href="/devices"
                   >
                     <i className="fa fa-2x fa-arrow-left hover:text-gray-600"></i>
                   </a>
@@ -792,7 +792,7 @@ function DeviceDetailsPage() {
                       <div className="rounded-lg bg-white p-4 shadow-sm w-full">
                         <h2 className="text-lg font-bold mb-4 text-center flex items-center justify-center">
                           <i className="fa fa-bolt mr-2 text-yellow-500"></i>
-                          Energy Consumption Over Time
+                          {translations.energyCOT}
                         </h2>
                         <ResponsiveContainer width="100%" height={300}>
                           <BarChart
@@ -806,7 +806,7 @@ function DeviceDetailsPage() {
                             <Bar
                               dataKey="energy"
                               fill="#BE9D6A"
-                              name="Energy Consumption (kWh)"
+                              name={translations.energyKwh}
                               radius={[4, 4, 0, 0]}
                             />
                           </BarChart>
@@ -819,7 +819,7 @@ function DeviceDetailsPage() {
                   <div className="grid grid-cols-2 p-4 gap-4">
                     <div className="rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors p-4 shadow-sm">
                       <div className="flex flex-col items-center text-center">
-                        <div className="mb-2 font-medium">Yesterday</div>
+                        <div className="mb-2 font-medium">{translations.yesterday}</div>
                         <div className="teal-text text-2xl font-bold mb-2">
                           {todayEnergy
                             ? `${todayEnergy.energyConsumption} kWh`
@@ -874,12 +874,12 @@ function DeviceDetailsPage() {
                   <div className="p-4 flex justify-center items-center">
                     <div className="rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors p-4 shadow-sm sm:w-1/2 md:w-[35%]">
                       <div className="flex flex-col items-center text-center">
-                        <div className="mb-2 font-medium">March Average</div>
+                        <div className="mb-2 font-medium">{translations.thisMonthAverage}</div>
                         <div className="teal-text text-2xl font-bold mb-2">
                           {monthlyAverage} kWh
                         </div>
                         <div className="text-sm text-gray-500">
-                          Daily average consumption
+                          {translations.dailyAverage}
                         </div>
                       </div>
                     </div>

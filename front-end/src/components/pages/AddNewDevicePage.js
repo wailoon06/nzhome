@@ -95,7 +95,7 @@ function AddNewDevicePage() {
                     <div className="grid grid-rows-[auto,1fr] gap-4 mt-[5%]">
                       <div className="text-left font-medium text-lg ml-6">
                         {/* {translations.airConditionerBrand} */}
-                        Air Conditioner
+                        {translations.AirCon}
                       </div>
 
                       {/* Main Content Section */}
@@ -135,7 +135,7 @@ function AddNewDevicePage() {
                     <div className="grid grid-rows-[auto,1fr] gap-4">
                       <div className="text-left font-medium text-lg mt-6 ml-6">
                         {/* {translations.televisionBrand} */}
-                        Television
+                        {translations.TV}
                       </div>
 
                       {/* Main Content Section */}
@@ -174,7 +174,7 @@ function AddNewDevicePage() {
                     {/* Thermostat */}
                     <div className="grid grid-rows-[auto,1fr] gap-4">
                       <div className="text-left font-medium text-lg mt-6 ml-6">
-                        Thermostat
+                      {translations.Thermostat}
                       </div>
 
                       {/* Main Content Section */}
@@ -213,7 +213,7 @@ function AddNewDevicePage() {
                     {/* Light */}
                     <div className="grid grid-rows-[auto,1fr] gap-4">
                       <div className="text-left font-medium text-lg mt-6 ml-6">
-                        Light
+                      {translations.Light}
                       </div>
 
                       {/* Main Content Section */}
@@ -252,7 +252,7 @@ function AddNewDevicePage() {
                     {/* Lock */}
                     <div className="grid grid-rows-[auto,1fr] gap-4">
                       <div className="text-left font-medium text-lg mt-6 ml-6">
-                        Lock
+                      {translations.Lock}
                       </div>
 
                       {/* Main Content Section */}
@@ -291,7 +291,7 @@ function AddNewDevicePage() {
                     {/* Sensor */}
                     <div className="grid grid-rows-[auto,1fr] gap-4">
                       <div className="text-left font-medium text-lg mt-6 ml-6">
-                        Sensor
+                      {translations.Sensor}
                       </div>
 
                       {/* Main Content Section */}
@@ -330,7 +330,7 @@ function AddNewDevicePage() {
                     {/* Camera */}
                     <div className="grid grid-rows-[auto,1fr] gap-4">
                       <div className="text-left font-medium text-lg mt-6 ml-6">
-                        Camera
+                      {translations.Camera}
                       </div>
 
                       {/* Main Content Section */}
@@ -369,7 +369,7 @@ function AddNewDevicePage() {
                     {/* Robot */}
                     <div className="grid grid-rows-[auto,1fr] gap-4">
                       <div className="text-left font-medium text-lg mt-6 ml-6">
-                        Robot
+                      {translations.Robot}
                       </div>
 
                       {/* Main Content Section */}

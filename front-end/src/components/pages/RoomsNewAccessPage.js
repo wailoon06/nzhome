@@ -197,7 +197,7 @@ function RoomsNewAccessPage() {
                         {loading && (
                           <div className="text-center py-12 w-full">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-3"></div>
-                            <p className="text-gray-600 font-medium">Loading users...</p>
+                            <p className="text-gray-600 font-medium">{translations.loadingUsers}</p>
                           </div>
                         )}
 
@@ -205,7 +205,7 @@ function RoomsNewAccessPage() {
                         {error && (
                           <div className="text-center py-12 w-full bg-red-50 rounded-lg border border-red-200">
                             <i className="fas fa-exclamation-circle text-red-500 text-4xl mb-3"></i>
-                            <p className="text-red-500">Error loading users. Please try again.</p>
+                            <p className="text-red-500">{translations.errorLoadUser}</p>
                           </div>
                         )}
 
@@ -217,11 +217,11 @@ function RoomsNewAccessPage() {
                               <div className="flex items-center">
                                 <i className="fas fa-users text-blue-500 mr-3"></i>
                                 <h2 className="text-lg font-medium text-gray-800">
-                                  Select Users
+                                  {translations.selectUser}
                                 </h2>
                               </div>
                               <div className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200">
-                                {selectedUsers.length} selected
+                                {selectedUsers.length} {translations.selected}
                               </div>
                             </div>
 
@@ -230,7 +230,7 @@ function RoomsNewAccessPage() {
                               <div className="relative">
                                 <input
                                   type="text"
-                                  placeholder="Search by name, email or role..."
+                                  placeholder={translations.searchBy}
                                   className="w-full py-2 px-4 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
                                 />
                                 <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
@@ -294,7 +294,7 @@ function RoomsNewAccessPage() {
                                 ) : (
                                   <div className="text-center py-8 w-full bg-gray-50 rounded-lg border border-gray-200">
                                     <i className="fas fa-users text-gray-300 text-4xl mb-2"></i>
-                                    <p className="text-gray-500">No users found.</p>
+                                    <p className="text-gray-500">{translations.noUsers}</p>
                                   </div>
                                 )}
                               </div>

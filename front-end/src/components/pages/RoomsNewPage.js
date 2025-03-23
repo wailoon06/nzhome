@@ -367,7 +367,7 @@ function RoomsNewPage() {
                     {/* Form validation messages */}
                     {!roomName && (
                       <div className="text-sm text-gray-500 text-center">
-                        <p>{translations.roomNameRequired || "Room name is required"}</p>
+                        <p>{translations.roomNameRequired}</p>
                       </div>
                     )}
                   </form>

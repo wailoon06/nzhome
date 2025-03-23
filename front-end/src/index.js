@@ -18,7 +18,7 @@ import RoomPage from "./components/pages/RoomPage";
 import DeviceDetailsPage from "./components/pages/DeviceDetailsPage";
 import UserPage from "./components/pages/UserPage";
 import UserProfilePage from "./components/pages/UserProfilePage";
-import LanguagePage from "./components/pages/LanguagePage";
+import LanguagePage from "./components/pages/NOTHING2";
 import AddUserPage from "./components/pages/AddUserPage";
 import InternetUsagePage from "./components/pages/InternetUsagePage";
 import ElectricUsagePage from "./components/pages/ElectricUsagePage";
@@ -34,7 +34,7 @@ import AddNewDevicePage from "./components/pages/AddNewDevicePage";
 import NewDeviceDetailsPage from "./components/pages/NewDeviceDetailsPage";
 import TestConnectionPage from "./components/pages/TestConnectionPage";
 import CameraPage from "./components/pages/CameraPage";
-import AllRoomPage from "./components/pages/AllRoomPage";
+// import AllRoomPage from "./components/pages/AllRoomPage";
 import CalendarPage from "./components/pages/CalendarPage";
 import CalendarReport from "./components/pages/calendarReport";
 import RoomsNewPage from "./components/pages/RoomsNewPage";
@@ -43,8 +43,8 @@ import ViewSpecificDevicePage from "./components/pages/ViewSpecificDevicePage";
 import ViewSpecificDeviceDatePage from "./components/pages/ViewSpecificDeviceDatePage";
 import ViewSpecificDeviceReportPage from "./components/pages/ViewSpecificDeviceReportPage";
 import RoomsDevicesPage from "./components/pages/RoomsDevicesPage";
-import RoomEnergyUsagePage from "./components/pages/RoomEnergyUsagePage";
-import RoomDeviceSetActionPage from "./components/pages/RoomDeviceSetActionPage";
+import RoomEnergyUsagePage from "./components/pages/NOTHING4";
+import RoomDeviceSetActionPage from "./components/pages/NOTHING3";
 
 import translationsMap from "./components/locales/translationsMap";
 
@@ -103,7 +103,7 @@ const Root = () => {
           element={<TestConnectionPage />}
         />
         <Route path="/camera" element={<CameraPage />} />
-        <Route path="/rooms" element={<AllRoomPage />} />
+        {/* <Route path="/rooms" element={<AllRoomPage />} /> */}
         {/* <Route path="/electric/rooms/:name" element={<AllRoomPage />} /> */}
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/calendar/report" element={<CalendarReport />} />
