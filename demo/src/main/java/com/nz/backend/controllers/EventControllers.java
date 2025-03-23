@@ -76,6 +76,13 @@ public class EventControllers {
             // Added
             device.setOnOff("On".equals(addEventDTO.getOnOff()) ? OnOff.On : OnOff.Off);
             deviceRepo.save(device);
+            System.out.println(addEventDTO.getTitle());
+            System.out.println(addEventDTO.getDescription());
+            System.out.println(addEventDTO.getDate());
+            System.out.println(user);
+            System.out.println(addEventDTO.getOnOff());
+            System.out.println(family);
+            System.out.println(deviceId);
 
             Event newEvent = new Event(
                     addEventDTO.getTitle(),
