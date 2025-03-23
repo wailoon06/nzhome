@@ -65,10 +65,10 @@ function AboutPage() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:space-x-6 lg:space-x-12 justify-center text-[1.2rem] text-white">
             <a href="/about" className="hover:text-orange-500">
-              About Us
+              {translations.aboutUs}
             </a>
             <a href="/contact" className="hover:text-orange-500">
-              Contact Us
+            {translations.contactUs}
             </a>
           </nav>
 
@@ -80,13 +80,13 @@ function AboutPage() {
                   href="/login"
                   className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
-                  Login
+                  {translations.loginButton}
                 </a>
                 <a
                   href="/register"
                   className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
-                  Sign up
+                  {translations.signUp}
                 </a>
               </>
             ) : (
@@ -105,19 +105,19 @@ function AboutPage() {
       {menuOpen && (
         <nav className="relative md:hidden w-full bg-black shadow-md flex flex-col items-center space-y-2 py-4 text-[1.2rem]">
           <a href="#" className="font-bold text-white hover:text-orange-500">
-            Home
+          {translations.home}
           </a>
           <a
             href="/contact"
             className="font-bold text-white hover:text-orange-500"
           >
-            Contact Us
+            {translations.contactUs}
           </a>
           <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
-            Login
+          {translations.loginButton}
           </button>
           <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
-            Sign up
+          {translations.signUp}
           </button>
         </nav>
       )}
@@ -130,73 +130,62 @@ function AboutPage() {
               animate ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            About Us
+            {translations.aboutUs}
           </h1>
           <p
             className={`text-1xl md:text-[1.2rem] transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            At NZ Home, we believe in creating sustainable, energy-efficient,
-            and smart living spaces for the future. Our mission is to lead the
-            way in integrating cutting-edge technology, energy-saving solutions,
-            and eco-friendly designs into every home we build. We strive to
-            create homes that are not only smarter but also environmentally
-            responsible and cost-effective for homeowners.
+         {translations.aboutUsp1}
           </p>
         </div>
 
         <div className="mt-8 w-full md:w-1/2 lg:w-2/3 space-y-4">
-          <h2 className="text-2xl font-semibold text-orange-500">Our Vision</h2>
+          <h2 className="text-2xl font-semibold text-orange-500">{translations.vision}</h2>
           <p className="text-lg text-white">
-            To revolutionize the way people experience their homes, making them
-            smarter, more energy-efficient, and ultimately reducing their carbon
-            footprint.
+          {translations.aboutUsp2}
           </p>
 
           <br />
 
           <h2 className="text-2xl font-semibold text-orange-500 mt-9">
-            Our Values
+            {translations.value}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mt-6">
             {/* Value 1 */}
             <div className="flex flex-col items-center p-6 bg-gray-800 text-white rounded-lg shadow-lg transition-all hover:scale-105 transform hover:bg-orange-500">
               <FaHandshake className="text-4xl mb-4" />
-              <h3 className="text-xl font-semibold">Collaboration</h3>
+              <h3 className="text-xl font-semibold">{translations.collaboration}</h3>
               <p className="text-center mt-2">
-                We believe in the power of teamwork, fostering partnerships to
-                achieve common goals.
+              {translations.aboutUsp3}
               </p>
             </div>
 
             {/* Value 2 */}
             <div className="flex flex-col items-center p-6 bg-gray-800 text-white rounded-lg shadow-lg transition-all hover:scale-105 transform hover:bg-green-500">
               <FaLeaf className="text-4xl mb-4" />
-              <h3 className="text-xl font-semibold">Sustainability</h3>
+              <h3 className="text-xl font-semibold">{translations.susta}</h3>
               <p className="text-center mt-2">
-                We are committed to environmental responsibility, ensuring that
-                our work respects nature.
+              {translations.aboutUsp4}
               </p>
             </div>
 
             {/* Value 3 */}
             <div className="flex flex-col items-center p-6 bg-gray-800 text-white rounded-lg shadow-lg transition-all hover:scale-105 transform hover:bg-blue-500">
               <FaLightbulb className="text-4xl mb-4" />
-              <h3 className="text-xl font-semibold">Innovation</h3>
+              <h3 className="text-xl font-semibold">{translations.inno}</h3>
               <p className="text-center mt-2">
-                We embrace creativity and innovation to provide cutting-edge
-                solutions that push boundaries.
+              {translations.aboutUsp5}
               </p>
             </div>
 
             {/* Value 4 */}
             <div className="flex flex-col items-center p-6 bg-gray-800 text-white rounded-lg shadow-lg transition-all hover:scale-105 transform hover:bg-purple-500">
               <FaPeopleCarry className="text-4xl mb-4" />
-              <h3 className="text-xl font-semibold">Community</h3>
+              <h3 className="text-xl font-semibold">{translations.comm}</h3>
               <p className="text-center mt-2">
-                We value people and work to build strong, inclusive communities
-                through mutual support.
+              {translations.aboutUsp6}
               </p>
             </div>
           </div>

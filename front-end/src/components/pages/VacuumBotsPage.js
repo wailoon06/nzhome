@@ -195,7 +195,7 @@ function VacuumBotsPage() {
                           className={`font-bold rounded-md border border-gray-300 p-4 mt-4 flex items-center justify-center text-center text-lg w-[92%] 
                             ${isRunning ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 cursor-pointer"}`}
                         >
-                          {hasStarted ? translations.resume : "Start"}
+                          {hasStarted ? translations.resume : translations.start}
                         </button>
                           <button
                             onClick={handleStop}

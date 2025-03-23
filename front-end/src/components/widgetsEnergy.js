@@ -1,10 +1,9 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import translationsMap from "../components/locales/translationsMap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 
 function WidgetsEnergy() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -24,8 +23,8 @@ function WidgetsEnergy() {
   const [error, setError] = useState(null); // Add missing state
   const [loading, setLoading] = useState(false); // Add missing state
   const navigate = useNavigate(); // Ensure navigate is defined
-  const [errorMessage, setErrorMessage] = useState("");     //added
-  
+  const [errorMessage, setErrorMessage] = useState(""); //added
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -34,52 +33,57 @@ function WidgetsEnergy() {
       navigate("/login");
       return;
     }
-  
+
     const interval = setInterval(() => {
       // Generate a random speed between 20 and 50 Mbps
       const newSpeed = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
       setNetworkSpeed(newSpeed);
     }, 1000); // Update every second
-  
+
     return () => clearInterval(interval); // Cleanup on unmount
   }, [navigate]);
-  
+
   // Handle getting user details
   const [userDetails, setUserDetails] = useState(null);
 
   const fetchUserDetails = async () => {
     setLoading(true);
-    
+
     try {
       // Get token
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8080/api/getUserDetails', {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/getUserDetails",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      
+      );
+
       setUserDetails(response.data);
-  
     } catch (err) {
-      console.error('Error fetching user details:', err);
-      setError(err.message || 'Failed to load user details');
-      
+      console.error("Error fetching user details:", err);
+      setError(err.message || "Failed to load user details");
+
       // Handle token expiration or authentication issues
-      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+      if (
+        err.response &&
+        (err.response.status === 401 || err.response.status === 403)
+      ) {
         // Token expired or invalid - redirect to login
         console.log("Session expired!");
         // localStorage.removeItem('token');
         // navigate('/login');
         setErrorMessage("Session expired. Please log in again.");
-          
+
         setTimeout(() => {
           localStorage.clear();
           navigate("/login");
         }, 5000);
       }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -91,7 +95,7 @@ function WidgetsEnergy() {
   const fetchCameraDetails = async () => {
     setLoading(true);
     setError(null);
-  
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
@@ -100,10 +104,12 @@ function WidgetsEnergy() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+
       // Filter only devices with categoryName === 'Robot'
-      const camera = response.data.filter(device => device.category.categoryName === "Camera");
-  
+      const camera = response.data.filter(
+        (device) => device.category.categoryName === "Camera"
+      );
+
       setCamera(camera);
     } catch (err) {
       setError("An unexpected error occurred");
@@ -111,7 +117,7 @@ function WidgetsEnergy() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchCameraDetails();
   }, []);
@@ -127,17 +133,17 @@ function WidgetsEnergy() {
             className="rounded-lg mb-4"
             style={{ height: "170px" }}
           />
-          <a href="/camera">
-            {camera && camera.length > 0 ? (
+          {camera && camera.length > 0 ? (
+            <a href="/camera">
               <div className="relative bg-white text-gray-800 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center cursor-pointer">
                 {translations.checkCamera}
               </div>
-            ) : (
-              <div className="relative bg-gray-400 text-gray-600 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center">
-                {translations.checkCamera}
-              </div>
-            )}
-          </a>
+            </a>
+          ) : (
+            <div className="relative bg-gray-400 text-gray-600 rounded-full text-[12px] md:text-[15px] lg:text-[18px] py-2 px-4 flex justify-center items-center cursor-not-allowed">
+              {translations.checkCamera}
+            </div>
+          )}
         </div>
 
         {/* Error Message Display (added)*/}
@@ -190,7 +196,7 @@ function WidgetsEnergy() {
                     {networkSpeed} Mbps {/* Use dynamic state */}
                   </div>
                 </a>
-                </div>
+              </div>
             </div>
           </div>
         </a>

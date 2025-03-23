@@ -60,10 +60,10 @@ function ContactPage() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:space-x-6 lg:space-x-12 justify-center text-[1.2rem] text-white">
             <a href="/about" className="hover:text-orange-500">
-              About Us
+            {translations.aboutUs}
             </a>
             <a href="/contact" className="hover:text-orange-500">
-              Contact Us
+            {translations.contactUs}
             </a>
           </nav>
 
@@ -75,13 +75,13 @@ function ContactPage() {
                   href="/login"
                   className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
-                  Login
+                   {translations.loginButton}
                 </a>
                 <a
                   href="/register"
                   className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
-                  Sign up
+                   {translations.signUp}
                 </a>
               </>
             ) : (
@@ -100,19 +100,19 @@ function ContactPage() {
       {menuOpen && (
         <nav className="relative md:hidden w-full bg-black shadow-md flex flex-col items-center space-y-2 py-4 text-[1.2rem]">
           <a href="#" className="font-bold text-white hover:text-orange-500">
-            Home
+          {translations.home}
           </a>
           <a
             href="/contact"
             className="font-bold text-white hover:text-orange-500"
           >
-            Contact Us
+             {translations.contactUs}
           </a>
           <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
-            Login
+          {translations.loginButton}
           </button>
           <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
-            Sign up
+          {translations.signUp}
           </button>
         </nav>
       )}
@@ -125,15 +125,14 @@ function ContactPage() {
               animate ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            Contact Us
+             {translations.contactUs}
           </h1>
           <p
             className={`text-1xl md:text-[1.2rem] transition-opacity ${
               animate ? "opacity-100" : "opacity-0"
             }`}
           >
-            We’d love to hear from you! Whether you have questions, feedback, or
-            need support, feel free to reach out to us.
+            {translations.contactp1}
           </p>
         </div>
 
@@ -141,7 +140,7 @@ function ContactPage() {
           <form className="space-y-4" action="#" method="POST">
             <div className="flex flex-col">
               <label htmlFor="name" className="text-lg font-semibold">
-                Name
+                {translations.name}
               </label>
               <input
                 type="text"
@@ -154,7 +153,7 @@ function ContactPage() {
 
             <div className="flex flex-col">
               <label htmlFor="email" className="text-lg font-semibold">
-                Email Address
+                {translations.email}
               </label>
               <input
                 type="email"
@@ -167,7 +166,7 @@ function ContactPage() {
 
             <div className="flex flex-col">
               <label htmlFor="message" className="text-lg font-semibold">
-                Message
+                {translations.message}
               </label>
               <textarea
                 id="message"
@@ -182,7 +181,7 @@ function ContactPage() {
               type="submit"
               className="mt-6 px-6 py-3 bg-orange-500 text-white font-bold rounded-full"
             >
-              Send Message
+              {translations.sendMess}
             </button>
           </form>
         </div>

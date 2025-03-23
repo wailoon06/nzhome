@@ -246,10 +246,10 @@ function InternetUsagePage() {
                 <h2 className="text-center text-2xl mb-4">{translations.internetUsageChart}</h2>
                   {/* Title */}
                     <h2 className="text-center text-2xl font-bold mb-4">
-                      Monthly Internet Usage (MB)
+                      {translations.monthlyInternet}
                     </h2>
                   {loading ? (
-                    <p className="text-center">Loading...</p>
+                    <p className="text-center">{translations.loading}</p>
                   ) : error ? (
                     <p className="text-center text-red-500">{error}</p>
                   ) : (

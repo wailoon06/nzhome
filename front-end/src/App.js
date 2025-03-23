@@ -14,7 +14,7 @@ import RoomPage from "./components/pages/RoomPage";
 import DeviceDetailsPage from "./components/pages/DeviceDetailsPage";
 import UserPage from "./components/pages/UserPage";
 import UserProfilePage from "./components/pages/UserProfilePage";
-import LanguagePage from "./components/pages/LanguagePage";
+import LanguagePage from "./components/pages/NOTHING2";
 import AddUserPage from "./components/pages/AddUserPage";
 import InternetUsagePage from "./components/pages/InternetUsagePage";
 import ElectricUsagePage from "./components/pages/ElectricUsagePage";
@@ -30,7 +30,7 @@ import AddNewDevicePage from "./components/pages/AddNewDevicePage";
 import NewDeviceDetailsPage from "./components/pages/NewDeviceDetailsPage";
 import TestConnectionPage from "./components/pages/TestConnectionPage";
 import CameraPage from "./components/pages/CameraPage";
-import AllRoomPage from "./components/pages/AllRoomPage";
+// import AllRoomPage from "./components/pages/AllRoomPage";
 import CalendarPage from "./components/pages/CalendarPage";
 import CalendarReport from "./components/pages/calendarReport";
 import RoomsNewPage from "./components/pages/RoomsNewPage";
@@ -39,8 +39,8 @@ import ViewSpecificDevicePage from "./components/pages/ViewSpecificDevicePage";
 import ViewSpecificDeviceDatePage from "./components/pages/ViewSpecificDeviceDatePage";
 import ViewSpecificDeviceReportPage from "./components/pages/ViewSpecificDeviceReportPage";
 import RoomsDevicesPage from "./components/pages/RoomsDevicesPage";
-import RoomEnergyUsagePage from "./components/pages/RoomEnergyUsagePage";
-import RoomDeviceSetActionPage from "./components/pages/RoomDeviceSetActionPage";
+import RoomEnergyUsagePage from "./components/pages/NOTHING4";
+import RoomDeviceSetActionPage from "./components/pages/NOTHING3";
 
 import translationsMap from "./components/locales/translationsMap";
 
@@ -52,8 +52,7 @@ function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");     //added
-  
+  const [errorMessage, setErrorMessage] = useState(""); //added
 
   // Language
   const [language, setLanguage] = useState(() => {
@@ -70,61 +69,67 @@ function App() {
   const [logoutMessage, setlogoutMessage] = useState("");
 
   const logOut = async () => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
 
     if (token) {
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
       // alert("Logout Successfully!");
       setlogoutMessage("Logout Successful! Redirecting...");
       localStorage.setItem("started", "false");
       setTimeout(() => {
         localStorage.clear();
         navigate("/login");
-      }, 3000);;
+      }, 3000);
     } else {
       localStorage.setItem("started", "false"); // Save flag
     }
-    setTimeout(() => {//new added
+    setTimeout(() => {
+      //new added
       setlogoutMessage("");
       navigate("/login"); // Redirect after message disappears
     }, 3000);
-  }
+  };
 
   const [userDetails, setUserDetails] = useState(null);
 
   const fetchUserDetails = async () => {
     setLoading(true);
-    
+
     try {
       // Get token
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8080/api/getUserDetails', {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/getUserDetails",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      
+      );
+
       setUserDetails(response.data);
-  
     } catch (err) {
-      console.error('Error fetching user details:', err);
-      setError(err.message || 'Failed to load user details');
-      
+      console.error("Error fetching user details:", err);
+      setError(err.message || "Failed to load user details");
+
       // Handle token expiration or authentication issues
-      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+      if (
+        err.response &&
+        (err.response.status === 401 || err.response.status === 403)
+      ) {
         // Token expired or invalid - redirect to login
         // console.log("Session expired!");
         // localStorage.removeItem('token');
         // navigate('/login');
         setErrorMessage("Session expired. Please log in again.");
-          
+
         setTimeout(() => {
           localStorage.clear();
           navigate("/login");
         }, 5000);
       }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -146,7 +151,6 @@ function App() {
                   isCollapsed ? "" : "baseGreen"
                 } rounded-lg min-h-full flex flex-col overflow-y-auto`}
               >
-
                 {/* Error Message Display (added)*/}
                 {errorMessage && (
                   <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
@@ -222,10 +226,7 @@ function App() {
                   </div>
                 </a>
 
-                <button
-                  onClick={logOut}
-                  className="mt-auto mb-[20%]"
-                >
+                <button onClick={logOut} className="mt-auto mb-[20%]">
                   <div className="flex flex-col items-center justify-center px-4 py-2">
                     <i
                       className={`fas fa-sign-out-alt text-white text-2xl ${
@@ -258,9 +259,9 @@ function App() {
             </div>
 
             {logoutMessage && (
-            <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-[2000]">
-              {logoutMessage}
-            </div>
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-[2000]">
+                {logoutMessage}
+              </div>
             )}
 
             {/* Main Content */}
@@ -346,13 +347,16 @@ function App() {
       <Route path="/devices/new/:name" element={<NewDeviceDetailsPage />} />
       <Route path="/devices/new/:name/test" element={<TestConnectionPage />} />
       <Route path="/camera" element={<CameraPage />} />
-      <Route path="/rooms" element={<AllRoomPage />} />
+      {/* <Route path="/rooms" element={<AllRoomPage />} /> */}
       {/* <Route path="/electric/rooms/:name" element={<AllRoomPage />} /> */}
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/calendar/report" element={<CalendarReport />} />
       <Route path="/rooms/new" element={<RoomsNewPage />} />
       <Route path="/rooms/:roomTitle/access" element={<RoomsNewAccessPage />} />
-      <Route path="/:roomTitle/:roomid/devices" element={<RoomsDevicesPage />} />
+      <Route
+        path="/:roomTitle/:roomid/devices"
+        element={<RoomsDevicesPage />}
+      />
       <Route
         path="/devices/:type/:deviceid/:name/details"
         element={<RoomEnergyUsagePage />}

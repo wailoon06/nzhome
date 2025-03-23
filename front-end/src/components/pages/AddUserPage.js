@@ -246,7 +246,7 @@ function UserProfilePage() {
                     // onClick={() => navigate("/users")}
                     className="bg-blue-500 text-white p-4 rounded-lg"
                   >
-                    Submit
+                    {translations.submit}
                   </button>
                 </div>
               </form>

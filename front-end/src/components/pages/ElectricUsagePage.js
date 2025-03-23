@@ -355,7 +355,7 @@ function ElectricUsagePage() {
                       >
                         <div className="items-center gap-4">
                           <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">Generate Report</div>
+                            <div className="mb-2">{translations.generate_report}</div>
                           </div>
                         </div>
                       </div>

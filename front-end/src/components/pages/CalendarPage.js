@@ -476,7 +476,7 @@ function CalendarPage() {
                     {/* Right Section - DatePicker */}
                     <div id="left" className="bg-gray-100 p-4 rounded-lg shadow-md">
                       <div id="reminder-section">
-                        <h3 className="text-xl font-semibold mb-3">Upcoming Events</h3>
+                        <h3 className="text-xl font-semibold mb-3">{translations.upEvent}</h3>
                         {loading ? <p>Loading events...</p> : (
                         <ul id="reminderList" className="max-h-96 overflow-y-auto space-y-2 border rounded-md p-2">
                           {userEvents

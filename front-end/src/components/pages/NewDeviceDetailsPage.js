@@ -18,10 +18,9 @@ function NewDeviceDetailsPage() {
   const [selectedRoom, setSelectedRoom] = useState("");
   const code = ["12345"];
   const [serialCode, setSerialCode] = useState("");
-  const [isValid, setIsValid] = useState(null); 
+  const [isValid, setIsValid] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  
 
   const toggleSwitch = () => {
     setIsSwitchOn((prevState) => !prevState);
@@ -31,7 +30,7 @@ function NewDeviceDetailsPage() {
 
   // Handle the check validity button click
   const handleCheckValidity = (e) => {
-    e.preventDefault();  
+    e.preventDefault();
 
     if (code.includes(serialCode.trim())) {
       setIsValid(true);
@@ -66,9 +65,10 @@ function NewDeviceDetailsPage() {
           // localStorage.removeItem("token");
           // localStorage.removeItem("selectedDevice");
           // navigate("/login");
-          setErrorMessage("Session expired. Please log in again.");//added
-        
-          setTimeout(() => {//added
+          setErrorMessage("Session expired. Please log in again."); //added
+
+          setTimeout(() => {
+            //added
             localStorage.removeItem("token");
             localStorage.removeItem("selectedDevice");
             navigate("/login");
@@ -76,18 +76,19 @@ function NewDeviceDetailsPage() {
         }
 
         // setError("An unexpected error occurs");
-        setErrorMessage("An unexpected error occurred. Please try again.");//added
+        setErrorMessage("An unexpected error occurred. Please try again."); //added
       } finally {
         setLoading(false);
       }
-      setTimeout(() => {//added
+      setTimeout(() => {
+        //added
         setErrorMessage("");
       }, 5000);
     };
 
     fetchRoomList();
   }, [navigate]);
-  
+
   // Handle the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,33 +96,30 @@ function NewDeviceDetailsPage() {
     setError(null);
 
     try {
-      const token = localStorage.getItem('token');
-      const selectedDevice = JSON.parse(localStorage.getItem('selectedDevice'));
+      const token = localStorage.getItem("token");
+      const selectedDevice = JSON.parse(localStorage.getItem("selectedDevice"));
 
       const response = await axios.post(
-      "http://localhost:8080/api/addDevice",
-      { 
-        deviceName: selectedDevice.name, 
-        categoryName: selectedDevice.category, 
-        roomName: selectedRoom,
-        picture: selectedDevice.img
-      }, 
-      {
-        headers: { Authorization: `Bearer ${token}` }  
-      }
+        "http://localhost:8080/api/addDevice",
+        {
+          deviceName: selectedDevice.name,
+          categoryName: selectedDevice.category,
+          roomName: selectedRoom,
+          picture: selectedDevice.img,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      
 
       setSuccessMessage("Device successfully added!");
-      
 
       // Auto-clear success message after 3 seconds(added)
       setTimeout(() => {
         setSuccessMessage("");
         localStorage.removeItem("selectedDevice");
         navigate(`/devices/new/${name}/test`);
-      }, 3000);  
-
+      }, 3000);
     } catch (err) {
       if (err.response.status === 403) {
         console.log("Session expired!");
@@ -129,22 +127,23 @@ function NewDeviceDetailsPage() {
         // localStorage.removeItem("token");
         // localStorage.removeItem("selectedDevice");
         // navigate("/login");
-        setErrorMessage("Session expired. Please log in again.");//added
-        
-        setTimeout(() => {//added
+        setErrorMessage("Session expired. Please log in again."); //added
+
+        setTimeout(() => {
+          //added
           localStorage.clear();
           navigate("/login");
         }, 5000);
       }
-      setErrorMessage("An unexpected error occurred. Please try again.");//added
+      setErrorMessage("An unexpected error occurred. Please try again."); //added
     } finally {
       setLoading(false);
     }
-    setTimeout(() => {//added
+    setTimeout(() => {
+      //added
       setErrorMessage("");
     }, 5000);
   };
-  
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -234,7 +233,7 @@ function NewDeviceDetailsPage() {
                       onChange={(e) => setSelectedRoom(e.target.value)}
                     >
                       <option value="" disabled>
-                        {translationsMap.en.select}
+                        {translations.select}
                       </option>
                       {loading ? (
                         <option value="" disabled>
@@ -251,20 +250,6 @@ function NewDeviceDetailsPage() {
                           No Rooms Found
                         </option>
                       )}
-                      {/* <option value="" disabled>
-                        {translations.select}
-                      </option>
-                      {[
-                        `${translations.living_room}`,
-                        `${translations.kitchen}`,
-                        `${translations.bedroom}`,
-                        `${translations.bathroom}`,
-                        `${translations.garage}`,
-                      ].map((room) => (
-                        <option key={room} value={room}>
-                          {room}
-                        </option>
-                      ))} */}
                     </select>
                   </div>
 
@@ -304,11 +289,15 @@ function NewDeviceDetailsPage() {
                     <button
                       type="submit"
                       className={`rounded-lg text-sm sm:text-base w-full mb-2 text-center sm:w-[15%] md:w-[15%] h-[3rem] flex justify-center items-center ${
-                        isValid ? "bg-black text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                        selectedRoom && isValid
+                          ? "bg-black text-white"
+                          : "bg-gray-400 text-gray-700 cursor-not-allowed"
                       }`}
-                      disabled={!isValid}
+                      disabled={!selectedRoom || !isValid}
                     >
-                      <div className="text-1xl text-white">{translations.done}</div>
+                      <div className="text-1xl text-white">
+                        {translations.done}
+                      </div>
                     </button>
                   </div>
                 </form>

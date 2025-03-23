@@ -102,11 +102,9 @@ function LoginPage() {
 
       {/* Dark Overlay */}
       <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-[-1]"></div>
-      
-      
+
       <div className="absolute inset-0 backdrop-blur-md"></div>
-      
-      
+
       {/* Main Login Container */}
       <div className="relative flex flex-col items-center justify-start h-full mt-10">
         {/* Overlay Blur for a Glassmorphism Effect */}
@@ -128,14 +126,14 @@ function LoginPage() {
 
           {/* Redirect Message */}
           {redirectMessage && (
-            <div className="absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-md px-4 py-2 rounded-md shadow-lg animate-fadeIn">
+            <div className="z-[2000] absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-md px-4 py-2 rounded-md shadow-lg animate-fadeIn">
               {redirectMessage}
             </div>
           )}
 
           {/* Error Message */}
           {errorMessage && (
-            <div className="bg-red-600 text-white text-md p-2 rounded-lg shadow-md text-center mt-4">
+            <div className="z-[2000] bg-red-600 text-white text-md p-2 rounded-lg shadow-md text-center mt-4">
               {errorMessage}
             </div>
           )}
@@ -146,7 +144,7 @@ function LoginPage() {
               <input
                 type="email"
                 name="email"
-                placeholder="Email"
+                placeholder={translations.email}
                 value={email}
                 onChange={handleEmailChange}
                 ref={emailRef}
@@ -160,7 +158,7 @@ function LoginPage() {
               <input
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder={translations.password}
                 value={password}
                 onChange={handlePasswordChange}
                 required
