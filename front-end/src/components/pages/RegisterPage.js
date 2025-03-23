@@ -72,7 +72,7 @@ function RegisterPage() {
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <div className="flex justify-between items-center relative">
-        <div className="relative w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg flex items-center px-6 py-7 shadow-lg">
+        <div className="relative w-full bg-black backdrop-blur-xl rounded-lg flex items-center px-6 py-7 shadow-lg">
           {/* Centered Text with Hover Effect */}
           <h1 className="absolute left-1/2 -translate-x-1/2 text-3xl lg:text-4xl font-semibold text-white titleGold">
             <a
