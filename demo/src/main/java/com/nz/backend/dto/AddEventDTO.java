@@ -3,15 +3,12 @@ package com.nz.backend.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.nz.backend.entities.Device;
-
 public class AddEventDTO {
     private String title;
     private String description;
     private LocalDateTime date;
     // private boolean repeat;
     private List<Long> devices;
-    private Device deviceid;
     private String onOff;
 
     public AddEventDTO() {
