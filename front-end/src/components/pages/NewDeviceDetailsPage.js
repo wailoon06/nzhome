@@ -76,7 +76,7 @@ function NewDeviceDetailsPage() {
         }
 
         // setError("An unexpected error occurs");
-        setErrorMessage("An unexpected error occurred. Please try again."); //added
+        setError("An unexpected error occurred. Please try again.");//added
       } finally {
         setLoading(false);
       }
@@ -135,7 +135,7 @@ function NewDeviceDetailsPage() {
           navigate("/login");
         }, 5000);
       }
-      setErrorMessage("An unexpected error occurred. Please try again."); //added
+      setErrorMessage("An unexpected error occurred. Please try again.");//added
     } finally {
       setLoading(false);
     }

@@ -28,9 +28,13 @@ function WidgetsEnergy() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      setError("Authorization token missing.");
+      setErrorMessage("Authorization token missing.");
       setLoading(false);
-      navigate("/login");
+      // navigate("/login");
+      setTimeout(() => {//added
+        localStorage.clear();
+        navigate("/login");
+      }, 5000);
       return;
     }
 

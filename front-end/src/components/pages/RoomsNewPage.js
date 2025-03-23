@@ -82,11 +82,11 @@ function RoomsNewPage() {
         // navigate("/login");
         setErrorMessage("Session expired. Please log in again.");
           
-          setTimeout(() => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("selectedDevice");
-            navigate("/login");
-          }, 5000);
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("selectedDevice");
+          navigate("/login");
+        }, 5000);
       } else {
         setError("An unexpected error occurs");
       }
@@ -202,11 +202,11 @@ function RoomsNewPage() {
         // navigate("/login");
         setErrorMessage("Session expired. Please log in again.");
           
-          setTimeout(() => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("selectedDevice");
-            navigate("/login");
-          }, 5000);
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("selectedDevice");
+          navigate("/login");
+        }, 5000);
       } else {
         setError("An unexpected error occurs");
       }
