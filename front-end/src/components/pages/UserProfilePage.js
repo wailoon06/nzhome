@@ -161,9 +161,15 @@ function UserProfilePage() {
                         </div>
                       </div>)
 
-  if (error) return (<div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text-lg font-semibold px-6 py-3 rounded-lg shadow-lg animate-bounce">
-                      <span className="mr-2">⚠️</span> Error: {error}
-                    </div>)
+  // if (error) return (<div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text-lg font-semibold px-6 py-3 rounded-lg shadow-lg animate-bounce">
+  //                     <span className="mr-2">⚠️</span> Error: {error}
+  //                   </div>)//error changed to setErrorMessage
+
+    {errorMessage && (
+      <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text-lg font-semibold px-6 py-3 rounded-lg shadow-lg animate-bounce">
+        <span className="mr-2">⚠️</span> Error: {errorMessage}
+      </div>
+    )}
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
