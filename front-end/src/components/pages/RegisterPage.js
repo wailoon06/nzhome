@@ -72,7 +72,7 @@ function RegisterPage() {
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <div className="flex justify-between items-center relative">
-        <div className="relative w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg flex items-center px-6 py-7 shadow-lg">
+        <div className="relative w-full bg-black backdrop-blur-xl rounded-lg flex items-center px-6 py-7 shadow-lg">
           {/* Centered Text with Hover Effect */}
           <h1 className="absolute left-1/2 -translate-x-1/2 text-3xl lg:text-4xl font-semibold text-white titleGold">
             <a
@@ -112,7 +112,7 @@ function RegisterPage() {
         </div>
       )}
 
-      <div className="relative w-full flex flex-col items-center justify-center">
+      <div className="relative w-full flex flex-col items-center justify-center backdrop-blur-md">
         {/* Registration Container */}
         <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl w-[80%] sm:w-[60%] lg:w-[35%] mt-10 mb-12 mx-auto p-6 shadow-xl">
           {/* Logo */}

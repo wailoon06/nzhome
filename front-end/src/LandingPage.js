@@ -62,10 +62,10 @@ function LandingPage() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:space-x-6 lg:space-x-12 justify-center text-[1.2rem] text-white">
-            <a href="/about" className="hover:text-orange-500">
+            <a href="/about" className="hover:scale-105 hover:text-orange-500">
               About Us
             </a>
-            <a href="/contact" className="hover:text-orange-500">
+            <a href="/contact" className="hover:scale-105 hover:text-orange-500">
               Contact Us
             </a>
           </nav>
@@ -77,13 +77,13 @@ function LandingPage() {
               <>
                 <a
                   href="/login"
-                  className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
+                  className="hover:scale-105 hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
                   Login
                 </a>
                 <a
                   href="/register"
-                  className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
+                  className="hover:scale-105 hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
                   Sign up
                 </a>
@@ -150,7 +150,7 @@ function LandingPage() {
             <a
               href="/login"
               // onClick={handleGetStarted}
-              className={`hover:bg-gray-800 flex justify-center items-center font-bold bg-orange-500 mt-10 rounded-full px-6 py-2 border border-white text-white w-full h-[50%] md:w-[40%] transition-opacity ${
+              className={`hover:scale-105 hover:bg-gray-800 flex justify-center items-center font-bold bg-orange-500 mt-10 rounded-full px-6 py-2 border border-white text-white w-full h-[50%] md:w-[40%] transition-opacity ${
                 animate ? "opacity-100" : "opacity-0"
               }`}
             >
