@@ -39,7 +39,7 @@ public class Room {
     @JoinColumn(name = "familyid")
     private Family family;
 
-    @Column
+    @Column(columnDefinition = "text")
     private String picture;
 
     // Constructors

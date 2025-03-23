@@ -50,8 +50,8 @@ public class User {
     protected void onCreate() {
         createddate = LocalDate.now();
     }  
-
-    @Column
+    
+    @Column(columnDefinition = "text")
     private String picture;
 
 
