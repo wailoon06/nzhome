@@ -52,8 +52,8 @@ function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");     //added
-  
+  const [errorMessage, setErrorMessage] = useState("");   
+  const [redirectMessage, setRedirectMessage] = useState("");    
 
   // Language
   const [language, setLanguage] = useState(() => {
@@ -139,6 +139,13 @@ function App() {
         path="/"
         element={
           <div className="baseBG p-2 grid grid-cols-[auto_1fr] h-full">
+            {/* Redirect Message Display (added)*/}
+            {redirectMessage && (
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+                {redirectMessage}
+              </div>
+            )}
+
             <div className="relative flex">
               {/* Sidebar */}
               <div
@@ -147,15 +154,24 @@ function App() {
                 } rounded-lg min-h-full flex flex-col overflow-y-auto`}
               >
 
-                {/* Error Message Display (added)*/}
+                {/* Error Message Display */}
                 {errorMessage && (
                   <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
                     {errorMessage}
                   </div>
                 )}
 
+
                 {/* Sidebar Logo */}
-                <div className="h-[100px] flex items-center justify-center pt-10">
+                <div className="h-[100px] flex items-center justify-center pt-10"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setRedirectMessage("Redirecting...");
+                    setTimeout(() => {
+                    window.location.href = "/"; // Then navigate
+                    }, 2000);
+                  }}
+                >
                   <a href="/">
                     <img
                       src="./image/NZHome2.png"
@@ -166,7 +182,15 @@ function App() {
                 </div>
                 {/* Sidebar Items */}
                 <a href="/devices">
-                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
+                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setRedirectMessage("Redirecting...");
+                      setTimeout(() => {
+                      window.location.href = "/devices"; // Then navigate
+                      }, 2000);
+                    }}
+                  >
                     <i
                       className={`fas fa-layer-group text-white text-2xl ${
                         isCollapsed ? "hidden" : "block"
@@ -180,7 +204,16 @@ function App() {
                   </div>
                 </a>
                 <a href="/electric">
-                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
+                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setRedirectMessage("Redirecting...");
+                      setTimeout(() => {
+                      window.location.href = "/electric"; // Then navigate
+                      }, 2000);
+                    }}
+                  
+                  >
                     <i
                       className={`fas fa-bolt text-white text-2xl ${
                         isCollapsed ? "hidden" : "block"
@@ -194,7 +227,16 @@ function App() {
                   </div>
                 </a>
                 <a href="/internet">
-                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
+                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setRedirectMessage("Redirecting...");
+                      setTimeout(() => {
+                      window.location.href = "/internet"; // Then navigate
+                      }, 2000);
+                    }}
+
+                  >
                     <i
                       className={`fas fa-chart-pie text-white text-2xl ${
                         isCollapsed ? "hidden" : "block"
@@ -208,7 +250,15 @@ function App() {
                   </div>
                 </a>
                 <a href="/calendar">
-                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8">
+                  <div className="flex flex-col items-center justify-center px-4 py-2 pt-8"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setRedirectMessage("Redirecting...");
+                      setTimeout(() => {
+                      window.location.href = "/calendar"; // Then navigate
+                      }, 2000);
+                    }}
+                  >
                     <i
                       className={`fas fa-wind text-white text-2xl ${
                         isCollapsed ? "hidden" : "block"
