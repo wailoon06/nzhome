@@ -271,5 +271,10 @@
   "postmess": "メッセージを投稿",
 
   "old_password": "旧パスワード",
-  "new_password": "新しいパスワード"
+  "new_password": "新しいパスワード",
+
+  "nextweek": "来週 →",
+  "prevweek": "← 前の週",
+  "weekof": "〜の週",
+  "selectgraph": "グラフの種類を選択"
 }

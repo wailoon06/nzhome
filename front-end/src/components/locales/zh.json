@@ -272,5 +272,10 @@
   "postmess": "发布消息",
 
   "old_password": "旧密码",
-  "new_password": "新密码"
+  "new_password": "新密码",
+
+  "nextweek": "下周 →",
+  "prevweek": "← 上周",
+  "weekof": "第...周",
+  "selectgraph": "选择图表类型"
 }

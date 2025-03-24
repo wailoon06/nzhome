@@ -271,5 +271,10 @@
   "postmess": "메시지 게시",
 
   "old_password": "기존 비밀번호",
-  "new_password": "새 비밀번호"
+  "new_password": "새 비밀번호",
+
+  "nextweek": "다음 주 →",
+  "prevweek": "← 지난 주",
+  "weekof": "~ 주",
+  "selectgraph": "그래프 유형 선택"
 }

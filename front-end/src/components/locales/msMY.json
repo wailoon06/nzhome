@@ -272,5 +272,10 @@
   "postmess": "Hantar Mesej",
 
   "old_password": "Kata Laluan Lama",
-  "new_password": "Kata Laluan Baru"
+  "new_password": "Kata Laluan Baru",
+
+  "nextweek": "Minggu Depan →",
+  "prevweek": "← Minggu Sebelumnya",
+  "weekof": "Minggu bagi",
+  "selectgraph": "Pilih jenis graf"
 }

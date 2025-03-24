@@ -516,9 +516,9 @@ function ElectricUsagePage() {
               onClick={() => changeWeek(-1)}
               className="px-4 py-2 bg-gray-300 rounded-lg"
             >
-              ← Previous Week
+              {translations.prevweek}
             </button>
-            <h2 className="text-lg font-semibold">{`Week of ${currentWeekStart}`}</h2>
+            <h2 className="text-lg font-semibold">{`${translations.weekof} ${currentWeekStart}`}</h2>
             <button
               onClick={() => changeWeek(1)}
               className="px-4 py-2 bg-gray-300 rounded-lg"
@@ -526,7 +526,7 @@ function ElectricUsagePage() {
                 currentWeekStart === getWeekStart(new Date().toISOString())
               }
             >
-              Next Week →
+              {translations.nextweek}
             </button>
           </div>
           <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-cols justify-center items-center p-3">
@@ -642,7 +642,7 @@ function ElectricUsagePage() {
       );
     }
     if (!graphType) {
-      return <div className="text-gray-500">Select a graph type</div>;
+      return <div className="text-gray-500">{translations.selectgraph}</div>;
     }
   };
 
@@ -655,9 +655,9 @@ function ElectricUsagePage() {
               onClick={() => changeWeek(-1)}
               className="px-4 py-2 bg-gray-300 rounded-lg"
             >
-              ← Previous Week
+              {translations.prevweek}
             </button>
-            <h2 className="text-lg font-semibold">{`Week of ${currentWeekStart}`}</h2>
+            <h2 className="text-lg font-semibold">{`${translations.weekof} ${currentWeekStart}`}</h2>
             <button
               onClick={() => changeWeek(1)}
               className="px-4 py-2 bg-gray-300 rounded-lg"
@@ -665,7 +665,7 @@ function ElectricUsagePage() {
                 currentWeekStart === getWeekStart(new Date().toISOString())
               }
             >
-              Next Week →
+              {translations.nextweek}
             </button>
           </div>
           <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-cols justify-center items-center p-3">
@@ -698,7 +698,7 @@ function ElectricUsagePage() {
                 <Bar
                   dataKey="totalGeneration"
                   fill="#BE9D6A"
-                  name="Energy Generation (kWh)"
+                  name={translations.energy_generation_W}
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -781,7 +781,7 @@ function ElectricUsagePage() {
       );
     }
     if (!graphType) {
-      return <div className="text-gray-500">Select a graph type</div>;
+      return <div className="text-gray-500">{translations.selectgraph}</div>;
     }
   };
 
@@ -1017,18 +1017,8 @@ function ElectricUsagePage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <Link to={"/electric/date"}>
-                        <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
-                          <div className="items-center gap-4">
-                            <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">
-                                {translations.view_specific_devices}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
+                    <div className="grid grid-cols-1 gap-4">
+      
                       <div
                         className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col p-3 cursor-pointer"
                         onClick={generatePDF}
