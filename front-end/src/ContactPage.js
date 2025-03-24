@@ -95,6 +95,44 @@ function ContactPage() {
 
           {/* Buttons */}
           <div className="hidden md:flex space-x-3 ml-auto text-[1.2rem]">
+            {/* Language Dropdown */}
+            <div className="z-[10000] relative hidden md:flex items-center space-x-3 ml-auto text-[1rem] text-white">
+              <div
+                className="p-2 border border-gray-600 rounded-md bg-black flex items-center space-x-2 cursor-pointer"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <GlobeIcon className="w-5 h-5 text-gray-300 hover:text-white" />
+                <span className="font-medium">
+                  {languages.find((l) => l.code === language)?.label}
+                </span>
+              </div>
+
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-[12rem] w-32 bg-black border border-gray-800 rounded-md shadow-lg"
+                  >
+                    {languages.map((lang) => (
+                      <div
+                        key={lang.code}
+                        className="px-3 py-1 text-sm hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        {lang.label}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {!localStorage.getItem("token") ? (
               <>
                 <a

@@ -98,7 +98,7 @@ function LandingPage() {
           {/* Buttons */}
           <div className="hidden md:flex space-x-3 ml-auto text-[1.2rem]">
             {/* Language Dropdown */}
-            <div className="z-[10000] fixed hidden md:flex items-center space-x-3 ml-auto text-[1rem] text-white">
+            <div className="z-[10000] relative hidden md:flex items-center space-x-3 ml-auto text-[1rem] text-white">
               <div
                 className="p-2 border border-gray-600 rounded-md bg-black flex items-center space-x-2 cursor-pointer"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
