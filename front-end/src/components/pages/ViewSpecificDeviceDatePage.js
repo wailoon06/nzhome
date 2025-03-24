@@ -14,6 +14,8 @@ function ViewSpecificDeviceDatePage() {
 
   const [selectedDate, setSelectedDate] = useState(null); // Manage date state
 
+  localStorage.setItem("date", selectedDate);
+  
   const formatDateToLocal = (date) => {
     if (!date) return "";
     const offset = date.getTimezoneOffset();
