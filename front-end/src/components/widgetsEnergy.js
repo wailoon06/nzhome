@@ -149,6 +149,12 @@ function WidgetsEnergy() {
         );
         
         const data = response.data;
+        if (!data.length) {
+          setMonthlyConsumption(0);
+          setDailyConsumption(0);
+          setTotalGeneration(0);
+          return;
+        }
 
         const monthly = data.reduce((sum, device) => {
           const monthlyConsumption = device.energyRecords
@@ -325,13 +331,6 @@ function WidgetsEnergy() {
                 </div>
               </div>
             </a>
-
-            {/* Overlay Div */}
-            {userDetails?.role === "User" && (
-              <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
-                <i className="fas fa-lock text-white text-2xl"></i>
-              </div>
-            )}
           </div>
 
           {/* This Month Energy Usage */}
@@ -357,14 +356,6 @@ function WidgetsEnergy() {
                   </span>
                 </div>
               </div>
-            
-
-            {/* Overlay Div */}
-            {userDetails?.role === "User" && (
-              <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
-                <i className="fas fa-lock text-white text-2xl"></i>
-              </div>
-            )}
           </div>
         </div>
 
@@ -392,13 +383,6 @@ function WidgetsEnergy() {
                 </div>
               </div>
             </a>
-
-            {/* Overlay Div */}
-            {userDetails?.role === "User" && (
-              <div className="absolute top-0 left-0 w-full h-full lockBG flex justify-center items-center rounded-xl z-10">
-                <i className="fas fa-lock text-white text-2xl"></i>
-              </div>
-            )}
           </div>
         </div>
       </div>

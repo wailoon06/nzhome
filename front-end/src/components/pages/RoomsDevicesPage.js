@@ -76,7 +76,26 @@ function RoomsDevicesPage() {
         }
       );
 
-      setDeviceDetails(response.data);
+      const allDevices = response.data;
+      const authorisedDevices = [];
+  
+      for (const device of allDevices) {
+        try {
+          // Validate device permission
+          await axios.post(
+            "http://localhost:8080/api/validateDevicePermission",
+            { deviceid: device.deviceid },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+  
+          // If device is authorized, add it to the list and skip room permission check
+          authorisedDevices.push(device);
+        } catch (err) {
+          console.log(`No permission for device ${device.deviceid}`);
+        }
+      }
+  
+      setDeviceDetails(authorisedDevices);
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
@@ -401,6 +420,45 @@ function RoomsDevicesPage() {
   const openAddUserModal = () => setIsAddUserOpen(true);
   const closeAddUserModal = () => setIsAddUserOpen(false);
 
+  const [userRole, setUserRole] = useState("");
+  const fetchUserRole = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/getUserDetails",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setUserRole(response.data.role);
+    } catch (err) {
+      if (err.response.status === 403) {
+        console.log("Session expired!");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
+      }
+      setError("An unexpected error occurs");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserRole();
+  }, []);
+
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
       <div className="p-2 grid grid-cols-[auto_1fr] h-full">
@@ -454,11 +512,12 @@ function RoomsDevicesPage() {
                   {/* Users */}
                   <div className="p-4 flex justify-end items-center">
                     {/* Trigger Button */}
-                    <button type="button" onClick={openModal}>
-                      {/* {translations.view_all} */}
-                      <i className="fas fa-user text-2xl mr-5 text-3xl"></i>
-                    </button>
-
+                    {userRole === "Owner" && (
+                      <button type="button" onClick={openModal}>
+                        {/* {translations.view_all} */}
+                        <i className="fas fa-user text-2xl mr-5 text-3xl"></i>
+                      </button>
+                    )}
                     {/* Users Modal */}
                     {isOpen && (
                       <div
@@ -555,14 +614,17 @@ function RoomsDevicesPage() {
                           </div>
 
                           {/* add user */}
-                          <div className="flex justify-center mt-8 pt-4 border-t">
-                            <button
-                              onClick={openAddUserModal}
-                              className="bg-blue-500 text-white py-3 px-6 rounded-lg text-base font-medium flex items-center hover:bg-blue-600 transition shadow-sm hover:shadow"
-                            >
-                              <i className="fas fa-user-plus mr-2"></i> Add User
-                            </button>
-                          </div>
+                          {userRole === "Owner" && (
+                            <div className="flex justify-center mt-8 pt-4 border-t">
+                              <button
+                                onClick={openAddUserModal}
+                                className="bg-blue-500 text-white py-3 px-6 rounded-lg text-base font-medium flex items-center hover:bg-blue-600 transition shadow-sm hover:shadow"
+                              >
+                                <i className="fas fa-user-plus mr-2"></i> Add
+                                User
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -718,9 +780,11 @@ function RoomsDevicesPage() {
                     )}
 
                     {/* Add device */}
-                    <a href="/devices/new">
-                      <i className="fas fa-plus text-3xl"></i>
-                    </a>
+                    {userRole === "Owner" && (
+                      <a href="/devices/new">
+                        <i className="fas fa-plus text-3xl"></i>
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

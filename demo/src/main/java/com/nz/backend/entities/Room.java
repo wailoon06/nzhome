@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -20,7 +21,7 @@ public class Room {
     @Column(name = "RoomID")
     private Long roomid;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String roomName;
 
     @OneToOne
@@ -35,7 +36,7 @@ public class Room {
         createdTime = LocalDateTime.now();
     }  
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "familyid")
     private Family family;
 
