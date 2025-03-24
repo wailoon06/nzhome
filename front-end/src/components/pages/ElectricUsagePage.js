@@ -620,10 +620,13 @@ function ElectricUsagePage() {
         </>
       );
     }
+    if (!graphType) {
+      return <div className="text-gray-500">Select a graph type</div>;
+    }
   };
 
   const generationChartSelection = () => {
-    if (graphType === "Week") {
+    if (graphType === "Week1") {
       return (
         <>
           <div className="flex justify-between w-full mb-3">
@@ -682,7 +685,7 @@ function ElectricUsagePage() {
           </div>
         </>
       );
-    } else if (graphType === "Month") {
+    } else if (graphType === "Month1") {
       return (
         <>
           <div className="flex justify-between w-full mb-3"></div>
@@ -713,7 +716,7 @@ function ElectricUsagePage() {
           </div>
         </>
       );
-    } else if (graphType === "Day") {
+    } else if (graphType === "Day1") {
       return (
         <>
           <div className="flex justify-between w-full mb-3"></div>
@@ -755,6 +758,9 @@ function ElectricUsagePage() {
           </div>
         </>
       );
+    }
+    if (!graphType) {
+      return <div className="text-gray-500">Select a graph type</div>;
     }
   };
 
@@ -965,13 +971,13 @@ function ElectricUsagePage() {
                                 <option value="" disabled>
                                   {translations.select}
                                 </option>
-                                <option value="Month">
+                                <option value="Month1">
                                   {translations.month}
                                 </option>
-                                <option value="Week">
+                                <option value="Week1">
                                   {translations.week}
                                 </option>
-                                <option value="Day">{translations.day}</option>
+                                <option value="Day1">{translations.day}</option>
                               </select>
                             </div>
                             <div className="items-center gap-2">
@@ -982,17 +988,24 @@ function ElectricUsagePage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <Link to={"/electric/date"}>
+                        <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
+                          <div className="items-center gap-4">
+                            <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
+                              <div className="mb-2">
+                                {translations.view_specific_devices}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
                       <div
                         className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col p-3 cursor-pointer"
                         onClick={generatePDF}
                       >
-                        <div className="items-center gap-4">
-                          <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                            <div className="mb-2">
-                              {translations.generate_report}
-                            </div>
-                          </div>
+                        <div className="text-center text-gray-700 font-semibold">
+                          {translations.generate_report}
                         </div>
                       </div>
                     </div>
