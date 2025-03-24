@@ -28,6 +28,7 @@ function ElectricUsagePage() {
   });
 
   const translations = translationsMap[language] || translationsMap["en"];
+  const [errorMessage, setErrorMessage] = useState("");     //added
 
   const generatePDF = async () => {
     // Extract text from the specific section
@@ -198,7 +199,12 @@ function ElectricUsagePage() {
 
         setYtdGeneration(parseFloat(yesterdayGeneration.toFixed(2)));
       } catch (err) {
-        alert("Error!");
+        // alert("Error!");
+        setErrorMessage("Error!");
+          
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
       } finally {
         setLoading(false);
       }
@@ -262,7 +268,12 @@ function ElectricUsagePage() {
 
         /* Generation */
       } catch (err) {
-        alert("Error!");
+        // alert("Error!");
+        setErrorMessage("Error!");
+          
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
       } finally {
         setLoading(false);
       }
@@ -358,7 +369,12 @@ function ElectricUsagePage() {
 
         setGraphEnergyWeek(weekDays);
       } catch (err) {
-        alert("Error!");
+        // alert("Error!");
+        setErrorMessage("Error!");
+          
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
       } finally {
         setLoading(false);
       }
@@ -481,7 +497,12 @@ function ElectricUsagePage() {
         console.log("Processed month data:", processedData);
         setGraphEnergyMonth(processedData);
       } catch (err) {
-        alert("Error fetching energy data!");
+        // alert("Error fetching energy data!");
+        setErrorMessage("Error fetching energy data!");
+          
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
         console.error(err);
       } finally {
         setLoading(false);
@@ -515,9 +536,9 @@ function ElectricUsagePage() {
               onClick={() => changeWeek(-1)}
               className="px-4 py-2 bg-gray-300 rounded-lg"
             >
-              ← Previous Week
+              {translations.prevweek}
             </button>
-            <h2 className="text-lg font-semibold">{`Week of ${currentWeekStart}`}</h2>
+            <h2 className="text-lg font-semibold">{`${translations.weekof} ${currentWeekStart}`}</h2>
             <button
               onClick={() => changeWeek(1)}
               className="px-4 py-2 bg-gray-300 rounded-lg"
@@ -525,7 +546,7 @@ function ElectricUsagePage() {
                 currentWeekStart === getWeekStart(new Date().toISOString())
               }
             >
-              Next Week →
+              {translations.nextweek}
             </button>
           </div>
           <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-cols justify-center items-center p-3">
@@ -658,9 +679,9 @@ function ElectricUsagePage() {
               onClick={() => changeWeek(-1)}
               className="px-4 py-2 bg-gray-300 rounded-lg"
             >
-              ← Previous Week
+              {translations.prevweek}
             </button>
-            <h2 className="text-lg font-semibold">{`Week of ${currentWeekStart}`}</h2>
+            <h2 className="text-lg font-semibold">{`${translations.weekof} ${currentWeekStart}`}</h2>
             <button
               onClick={() => changeWeek(1)}
               className="px-4 py-2 bg-gray-300 rounded-lg"
@@ -668,7 +689,7 @@ function ElectricUsagePage() {
                 currentWeekStart === getWeekStart(new Date().toISOString())
               }
             >
-              Next Week →
+              {translations.nextweek}
             </button>
           </div>
           <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-cols justify-center items-center p-3">
@@ -701,7 +722,7 @@ function ElectricUsagePage() {
                 <Bar
                   dataKey="totalGeneration"
                   fill="#BE9D6A"
-                  name="Energy Generation (kWh)"
+                  name={translations.energy_generation_W}
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -802,6 +823,14 @@ function ElectricUsagePage() {
             language={language}
           />
         </div>
+
+        {/* Error Message Display (added)*/}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+            {errorMessage}
+          </div>
+        )}
+
         {/* Main Content */}
         <div
           className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
@@ -1027,18 +1056,8 @@ function ElectricUsagePage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <Link to={"/electric/date"}>
-                        <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
-                          <div className="items-center gap-4">
-                            <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">
-                                {translations.view_specific_devices}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
+                    <div className="grid grid-cols-1 gap-4">
+      
                       <div
                         className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col p-3 cursor-pointer"
                         onClick={generatePDF}

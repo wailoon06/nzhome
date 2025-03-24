@@ -14,7 +14,7 @@ function AllUserPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState("");     //added
+  const [errorMessage, setErrorMessage] = useState(""); //added
   const [successMessage, setSuccessMessage] = useState(""); //added
 
   // Add confirm dialog state
@@ -45,7 +45,7 @@ function AllUserPage() {
         // localStorage.removeItem("token");
         // navigate("/login");
         setErrorMessage("Session expired. Please log in again.");
-          
+
         setTimeout(() => {
           localStorage.clear();
           navigate("/login");
@@ -84,14 +84,13 @@ function AllUserPage() {
   const showConfirm = (email) => {
     setEmailToDelete(email);
     setConfirmMessage("Are you sure you want to delete this user?");
-    
+
     // Auto-hide after 10 seconds
     setTimeout(() => {
       setConfirmMessage("");
       setEmailToDelete("");
     }, 10000);
   };
-  
 
   // // Handle delete submission
   // const handleDelete = async (email) => {
@@ -100,8 +99,8 @@ function AllUserPage() {
   //     return;
   //   }
 
-   // Handle confirm actions
-   const handleConfirmYes = async () => {
+  // Handle confirm actions
+  const handleConfirmYes = async () => {
     setConfirmMessage("");
     setLoading(true);
 
@@ -126,7 +125,7 @@ function AllUserPage() {
       // alert(response.data.message);
       // Show success message(added)
       setSuccessMessage(response.data.message || "User deleted successfully");
-      
+
       // Auto-hide success message after 3 seconds(added)
       setTimeout(() => {
         setSuccessMessage("");
@@ -172,7 +171,7 @@ function AllUserPage() {
         // localStorage.removeItem("selectedDevice");
         // navigate("/login");
         setErrorMessage("Session expired. Please log in again.");
-          
+
         setTimeout(() => {
           localStorage.clear();
           navigate("/login");
@@ -199,8 +198,8 @@ function AllUserPage() {
           />
         </div>
 
-         {/* Success Message Display */}
-         {successMessage && (
+        {/* Success Message Display */}
+        {successMessage && (
           <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-50">
             {successMessage}
           </div>
@@ -208,23 +207,23 @@ function AllUserPage() {
 
         {/* Error Message Display (added)*/}
         {errorMessage && (
-              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
-                {errorMessage}
-              </div>
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+            {errorMessage}
+          </div>
         )}
 
-         {/* Confirm Dialog Display */}
-         {confirmMessage && (
+        {/* Confirm Dialog Display */}
+        {confirmMessage && (
           <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50 flex flex-col items-center">
             <div className="mb-2">{confirmMessage}</div>
             <div className="flex space-x-4">
-              <button 
+              <button
                 onClick={handleConfirmYes}
                 className="bg-green-500 text-white px-3 py-1 rounded-md"
               >
                 Yes
               </button>
-              <button 
+              <button
                 onClick={handleConfirmNo}
                 className="bg-gray-500 text-white px-3 py-1 rounded-md"
               >
@@ -233,7 +232,6 @@ function AllUserPage() {
             </div>
           </div>
         )}
-
 
         {/* Main Content */}
         <div
@@ -257,14 +255,16 @@ function AllUserPage() {
                 <h1 className="text-center lg:text-4xl w-full ml-[-4%]">
                   {translations.allUsers}
                 </h1>
-                {userRole === "Owner" && (<a href="/profile/AddUser">
-                  <i className="fas fa-plus text-2xl"></i>
-                </a>)}
+                {userRole === "Owner" && (
+                  <a href="/profile/AddUser">
+                    <i className="fas fa-plus text-2xl"></i>
+                  </a>
+                )}
               </div>
 
               {loading && (
                 <div className="text-center py-8">
-                  <p>Loading users...</p>
+                  <p>{translations.loadingUsers}</p>
                 </div>
               )}
 
@@ -288,12 +288,12 @@ function AllUserPage() {
                         className="grid grid-cols-[auto,1fr,auto] rounded-md border border-gray-500 bg-white p-4 mt-4 items-center justify-center text-center text-lg w-[85%] gap-4"
                       >
                         <h2>
-                          {user.username} ({user.role})
+                          <strong>{user.username}</strong> ({user.role})
                         </h2>
                         <div className="text-[14px] sm:text-2xl text-right">
                           {user.email}
                         </div>
-                        {(userRole === "Owner" && user.role !== "Owner") && (
+                        {userRole === "Owner" && user.role !== "Owner" && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -310,7 +310,7 @@ function AllUserPage() {
                   : !loading &&
                     !error && (
                       <div className="text-center py-8">
-                        <p>No users found.</p>
+                        <p>{translations.noUsers}</p>
                       </div>
                     )}
               </div>

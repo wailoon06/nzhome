@@ -30,6 +30,7 @@ function ActionSchedulePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   // Handle temperature change (for the dropdown)
   const handleTemperatureChange = (e) => {
     setTemperature(e.target.value);
@@ -72,8 +73,15 @@ function ActionSchedulePage() {
         }
       );
 
-      alert("Changed successfully!");
-      navigate(`/devices/${type}/${deviceid}/${name}/details`);
+      // alert("Changed successfully!");
+      // navigate(`/devices/${type}/${deviceid}/${name}/details`);
+      
+      setSuccessMessage("Changed successfully!");
+      
+      setTimeout(() => {
+        navigate(`/devices/${type}/${deviceid}/${name}/details`);
+      }, 3000);
+
 
     } catch (err) {
       console.error("Failed to update device state:", err);
@@ -113,6 +121,21 @@ function ActionSchedulePage() {
             language={language}
           />
         </div>
+
+        {/* Success Message Display (added)*/}
+        {successMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-md p-2 rounded-md shadow-md transition-opacity duration-500 ease-in-out z-50">
+            {successMessage}
+          </div>
+        )}
+
+        {/* Error Message Display (added)*/}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+            {errorMessage}
+          </div>
+        )}
+
         {/* Main Content */}
         <div
           className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}

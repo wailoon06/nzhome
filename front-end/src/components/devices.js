@@ -24,7 +24,7 @@ function Devices() {
   const [roomNames, setRoomNames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");     //added
+  const [errorMessage, setErrorMessage] = useState(""); //added
 
   // const devices = [
   //   { img: "/image/samsung.jpeg", name: "Samsung TV", type: "TV" },
@@ -41,19 +41,19 @@ function Devices() {
   const fetchDeviceDetails = async () => {
     setLoading(true);
     setError(null);
-  
+
     try {
       const token = localStorage.getItem("token");
-  
+
       // Step 1: Get all devices
       const response = await axios.get(
         "http://localhost:8080/api/getAllDevice",
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+
       const allDevices = response.data;
       const authorisedDevices = [];
-  
+
       for (const device of allDevices) {
         try {
           // Validate device permission
@@ -62,37 +62,47 @@ function Devices() {
             { deviceid: device.deviceid },
             { headers: { Authorization: `Bearer ${token}` } }
           );
-  
+
           // If device is authorized, add it to the list and skip room permission check
           authorisedDevices.push(device);
         } catch (err) {
           console.log(`No permission for device ${device.deviceid}`);
         }
       }
-  
+
       setDeviceDetails(authorisedDevices);
-  
+
       // Step 2: Organize authorized devices by room
       const deviceRooms = {};
       const rooms = [];
-  
-      authorisedDevices.forEach(device => {
-        const roomName = device.room.roomName;
-  
+
+      // authorisedDevices.forEach(device => {
+      //   const roomName = device.room.roomName;
+
+      //   if (!deviceRooms[roomName]) {
+      //     deviceRooms[roomName] = [];
+      //     rooms.push(roomName);
+      //   }
+
+      //   deviceRooms[roomName].push(device);
+      // });
+
+      authorisedDevices.forEach((device) => {
+        const roomName = device.room?.roomName || "Unassigned"; // Handle null rooms
+
         if (!deviceRooms[roomName]) {
           deviceRooms[roomName] = [];
           rooms.push(roomName);
         }
-  
+
         deviceRooms[roomName].push(device);
       });
-  
+
       // Sort room names alphabetically
       rooms.sort((a, b) => a.localeCompare(b));
-  
+
       setRoomNames(rooms);
       setDevicesByRoom(deviceRooms);
-  
     } catch (err) {
       if (err.response && err.response.status === 403) {
         console.log("Session expired!");
@@ -101,7 +111,7 @@ function Devices() {
         // localStorage.removeItem("selectedDevice");
         // navigate("/login");
         setErrorMessage("Session expired. Please log in again.");
-          
+
         setTimeout(() => {
           localStorage.clear();
           navigate("/login");
@@ -112,24 +122,42 @@ function Devices() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchDeviceDetails();
   }, []);
 
-  const filteredDevices = deviceDetails.filter((device) => {
-    const matchesSearch = device.deviceName
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesFilter =
-      filter === "all" ||
-      (filter === "active" && device.onOff === "On") ||
-      (filter === "inactive" && device.onOff === "Off");
+  // const filteredDevices = deviceDetails.filter((device) => {
+  //   const matchesSearch = device.deviceName
+  //     .toLowerCase()
+  //     .includes(searchQuery.toLowerCase());
+  //   const matchesFilter =
+  //     filter === "all" ||
+  //     (filter === "active" && device.onOff === "On") ||
+  //     (filter === "inactive" && device.onOff === "Off");
 
-    return matchesSearch && matchesFilter;
-  }).sort((a, b) => 
-    a.room.roomName.localeCompare(b.room.roomName, undefined, { sensitivity: 'base' })
-  );
+  //   return matchesSearch && matchesFilter;
+  // }).sort((a, b) =>
+  //   a.room.roomName.localeCompare(b.room.roomName, undefined, { sensitivity: 'base' })
+  // );
+
+  const filteredDevices = deviceDetails
+    .filter((device) => {
+      const matchesSearch = device.deviceName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "active" && device.onOff === "On") ||
+        (filter === "inactive" && device.onOff === "Off");
+
+      return matchesSearch && matchesFilter;
+    })
+    .sort((a, b) => {
+      const roomA = a.room?.roomName || "Unknown"; // Handle missing room
+      const roomB = b.room?.roomName || "Unknown";
+      return roomA.localeCompare(roomB, undefined, { sensitivity: "base" });
+    });
 
   const prevItems = () => {
     if (currentIndex === 0) return; // Prevent going to invalid index
@@ -175,7 +203,7 @@ function Devices() {
         // localStorage.removeItem("selectedDevice");
         // navigate("/login");
         setErrorMessage("Session expired. Please log in again.");
-          
+
         setTimeout(() => {
           localStorage.clear();
           navigate("/login");
@@ -238,7 +266,7 @@ function Devices() {
         // localStorage.removeItem("selectedDevice");
         // navigate("/login");
         setErrorMessage("Session expired. Please log in again.");
-          
+
         setTimeout(() => {
           localStorage.clear();
           navigate("/login");

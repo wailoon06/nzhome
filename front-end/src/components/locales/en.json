@@ -274,5 +274,11 @@
 "postmess": "Post Message",
 
 "old_password": "Old Password",
-"new_password": "New Password"
+"new_password": "New Password",
+
+"nextweek": "Next Week →",
+"prevweek": "← Previous Week",
+"weekof": "Week of",
+"selectgraph": "Select a graph type"
+
 }
