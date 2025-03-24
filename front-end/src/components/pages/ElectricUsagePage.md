@@ -87,9 +87,10 @@ function ElectricUsagePage() {
     link.click();
   };
 
+
   /*---------------------------------------------------------------------------------------*/
 
-  /*------ Display for total ------*/
+    /*------ Display for total ------*/
 
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
@@ -118,7 +119,7 @@ function ElectricUsagePage() {
         );
 
         const data = response.data;
-
+        
         /*------ Total energy consumption in a month ------*/
         const monthly = data.reduce((sum, device) => {
           const monthlyConsumption = device.energyRecords
@@ -134,7 +135,7 @@ function ElectricUsagePage() {
           return sum + monthlyConsumption;
         }, 0);
 
-        setMonthlyConsumption(monthly);
+        setMonthlyConsumption(monthly); 
 
         /*------ Total energy consumption for today ------*/
         const daily = data.reduce((sum, device) => {
@@ -152,26 +153,21 @@ function ElectricUsagePage() {
           return sum + dailyConsumption;
         }, 0);
 
-        setDailyConsumption(parseFloat(daily.toFixed(2)));
+        setDailyConsumption(daily);
 
         /*------ Total energy consumption for yesterday ------*/
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1); // Move back one day
-        yesterday.setHours(0, 0, 0, 0); // Normalize time to 00:00:00
-
-        const yesterdayConsumption = data.reduce((sum, device) => {
-          const deviceConsumption = device.energyRecords
+        const yesterday = data.reduce((sum, device) => {
+          const yesterdayConsumption = device.energyRecords
             .filter((record) => {
               const recordDate = new Date(record.date);
-              recordDate.setHours(0, 0, 0, 0); // Normalize time for accurate date comparison
-              return recordDate.getTime() === yesterday.getTime();
+              return recordDate.getDate() - 1 === today.getDate() - 1;
             })
-            .reduce((acc, record) => acc + (record.energyConsumption || 0), 0); // Sum per device
+            .reduce((acc, record) => acc + record.energyConsumption, 0); // Sum per device
 
-          return sum + deviceConsumption;
+          return sum + yesterdayConsumption;
         }, 0);
 
-        setYesterdayConsumption(parseFloat(yesterdayConsumption.toFixed(2)));
+        setYesterdayConsumption(yesterday);
 
         /*------ Total energy generation in a month ------*/
         const generation = data.reduce((sum, device) => {
@@ -199,12 +195,14 @@ function ElectricUsagePage() {
     fetchConsumption();
   }, []);
 
+
   /*------------------------------------------------------------------------------- */
 
-  /*------- Graph ------*/
 
-  /*------- Energy By Date -------*/
-  const [graphEnergyDay, setGraphEnergyDay] = useState([]);
+  /*------- For graph ------*/
+
+
+  const [graphEnergyAnnual, setGraphEnergyAnnual] = useState([]);
 
   useEffect(() => {
     const fetchGraph = async () => {
@@ -221,42 +219,73 @@ function ElectricUsagePage() {
         );
 
         const data = response.data;
-
+        
         /*------ Total energy consumption, grouped by date ------*/
         const groupedByDate = {};
-
+    
         // Process each device's energy records
-        data.forEach((deviceData) => {
-          deviceData.energyRecords.forEach((record) => {
+        data.forEach(deviceData => {
+          deviceData.energyRecords.forEach(record => {
             const date = record.date;
-
+            
             if (!groupedByDate[date]) {
               groupedByDate[date] = {
                 date,
                 totalConsumption: 0,
-                totalGeneration: 0,
+                totalGeneration: 0
               };
             }
-
+            
             // Add this device's consumption and generation to the date totals
-            groupedByDate[date].totalConsumption +=
-              record.energyConsumption || 0;
+            groupedByDate[date].totalConsumption += record.energyConsumption || 0;
             groupedByDate[date].totalGeneration += record.energyGeneration || 0;
           });
         });
+        
+        const processedData = Object.values(groupedByDate).sort((a, b) => 
+          new Date(a.date) - new Date(b.date)
+        );
+        
+        setGraphEnergyAnnual(processedData);
 
-        const processedData = Object.values(groupedByDate).sort(
-          (a, b) => new Date(a.date) - new Date(b.date)
+        /*------------------------------------------------------------------------------------------*/
+
+        /*------ Total energy consumption, grouped by week ------*/
+        const groupedByWeek = {};
+
+        // Process each device's energy records
+        data.forEach(deviceData => {
+            deviceData.energyRecords.forEach(record => {
+                const weekStart = getWeekStart(record.date);
+
+                if (!groupedByWeek[weekStart]) {
+                    groupedByWeek[weekStart] = {
+                        weekStart,
+                        totalConsumption: 0,
+                        totalGeneration: 0
+                    };
+                }
+
+                groupedByWeek[weekStart].totalConsumption += record.energyConsumption || 0;
+                groupedByWeek[weekStart].totalGeneration += record.energyGeneration || 0;
+            });
+        });
+
+        // Convert to array and sort by week start date
+        const processedData2 = Object.values(groupedByWeek).sort(
+            (a, b) => new Date(a.weekStart) - new Date(b.weekStart)
         );
 
-        setGraphEnergyDay(processedData);
+        // Filter data for the selected week
+        const filteredData = processedData2.filter(item => item.weekStart === currentWeekStart);
 
+        setGraphEnergyWeek(filteredData);
       } catch (err) {
         alert("Error!");
       } finally {
         setLoading(false);
       }
-    };
+    }    
 
     fetchGraph();
   }, []);
@@ -274,21 +303,21 @@ function ElectricUsagePage() {
     const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Adjust to Monday start
     const weekStart = new Date(date.setDate(diff));
     return weekStart.toISOString().split("T")[0]; // Format as YYYY-MM-DD
-  }
+  };
 
   const changeWeek = (direction) => {
     const newDate = new Date(currentWeekStart);
     newDate.setDate(newDate.getDate() + direction * 7); // Move forward or backward by 7 days
     setCurrentWeekStart(getWeekStart(newDate.toISOString()));
   };
-
+  
   useEffect(() => {
     const fetchGraphWeek = async () => {
       setLoading(true);
       setError(false);
 
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");  
         const response = await axios.get(
           "http://localhost:8080/api/getEnergyFam",
           {
@@ -302,7 +331,7 @@ function ElectricUsagePage() {
         const weekStartDate = new Date(currentWeekStart);
         const weekEndDate = new Date(weekStartDate);
         weekEndDate.setDate(weekStartDate.getDate() + 6);
-
+        
         // Create an array for each day of the week
         const weekDays = [];
         for (let i = 0; i < 7; i++) {
@@ -313,172 +342,38 @@ function ElectricUsagePage() {
             date: dayStr,
             formattedDate: `${day.getDate()}/${day.getMonth() + 1}`,
             totalConsumption: 0,
-            totalGeneration: 0,
+            totalGeneration: 0
           });
         }
-
+        
         // Process each device's energy records for the current week
-        data.forEach((deviceData) => {
-          deviceData.energyRecords.forEach((record) => {
+        data.forEach(deviceData => {
+          deviceData.energyRecords.forEach(record => {
             const recordDate = record.date.split("T")[0]; // Format as YYYY-MM-DD
             const recordDateObj = new Date(recordDate);
-
+            
             // Check if the record is within the selected week
-            if (
-              recordDateObj >= weekStartDate &&
-              recordDateObj <= weekEndDate
-            ) {
+            if (recordDateObj >= weekStartDate && recordDateObj <= weekEndDate) {
               // Find the corresponding day in our weekDays array
-              const dayIndex = Math.floor(
-                (recordDateObj - weekStartDate) / (24 * 60 * 60 * 1000)
-              );
+              const dayIndex = Math.floor((recordDateObj - weekStartDate) / (24 * 60 * 60 * 1000));
               if (dayIndex >= 0 && dayIndex < 7) {
-                weekDays[dayIndex].totalConsumption +=
-                  record.energyConsumption || 0;
-                weekDays[dayIndex].totalGeneration +=
-                  record.energyGeneration || 0;
+                weekDays[dayIndex].totalConsumption += record.energyConsumption || 0;
+                weekDays[dayIndex].totalGeneration += record.energyGeneration || 0;
               }
             }
           });
         });
-
+        
         setGraphEnergyWeek(weekDays);
       } catch (err) {
         alert("Error!");
       } finally {
         setLoading(false);
       }
-    };
+    }    
 
     fetchGraphWeek();
   }, [currentWeekStart]);
-
-
-  /*------ Energy by year ------*/
-
-  // const [graphBy]
-
-
-
-
-
-
-
-  /*---------------------------------------------------------------------------------------------------------------------*/
-
-
-  const [graphType, setGraphType] = useState(null);
-
-  // Function to handle graph type change
-  const handleGraphTypeChange = (e) => {
-    setGraphType(e.target.value);
-  };
-
-  const chartSelection = () => {
-    if (graphType === "Week") {
-      return (
-        <>
-          <div className="flex justify-between w-full mb-3">
-            <button
-              onClick={() => changeWeek(-1)}
-              className="px-4 py-2 bg-gray-300 rounded-lg"
-            >
-              ← Previous Week
-            </button>
-            <h2 className="text-lg font-semibold">{`Week of ${currentWeekStart}`}</h2>
-            <button
-              onClick={() => changeWeek(1)}
-              className="px-4 py-2 bg-gray-300 rounded-lg"
-              disabled={
-                currentWeekStart === getWeekStart(new Date().toISOString())
-              }
-            >
-              Next Week →
-            </button>
-          </div>
-          <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-cols justify-center items-center p-3">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={graphEnergyWeek}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <XAxis dataKey="formattedDate" tick={{ fontSize: 12 }} />
-                <YAxis />
-                <Tooltip
-                  cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
-                  formatter={(value) => {
-                    // Format the value to show exactly 2 decimal places
-                    return value.toFixed(2);
-                  }}
-                  labelFormatter={(value) => {
-                    // Find the full date from the formattedDate
-                    const entry = graphEnergyWeek.find(
-                      (item) => item.formattedDate === value
-                    );
-                    if (entry) {
-                      const date = new Date(entry.date);
-                      return date.toLocaleDateString(); // Return a nicely formatted full date
-                    }
-                    return value;
-                  }}
-                />
-                <Legend />
-                <Bar
-                  dataKey="totalConsumption"
-                  fill="#BE9D6A"
-                  name={translations.energyKwh}
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </>
-      );
-    } else if (graphType === "Month") {
-    } else if (graphType === "Day") {
-      return (
-        <>
-          <div className="flex justify-between w-full mb-3"></div>
-          <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-cols justify-center items-center p-3">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={graphEnergyDay}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                <YAxis />
-                <Tooltip
-                  cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
-                  formatter={(value) => {
-                    // Format the value to show exactly 2 decimal places
-                    return value.toFixed(2);
-                  }}
-                  labelFormatter={(value) => {
-                    // Find the full date from the formattedDate
-                    const entry = graphEnergyWeek.find(
-                      (item) => item.formattedDate === value
-                    );
-                    if (entry) {
-                      const date = new Date(entry.date);
-                      return date.toLocaleDateString(); // Return a nicely formatted full date
-                    }
-                    return value;
-                  }}
-                />
-                <Legend />
-                <Bar
-                  dataKey="totalConsumption"
-                  fill="#BE9D6A"
-                  name={translations.energyKwh}
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </>
-      );
-    }
-  };
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -541,7 +436,7 @@ function ElectricUsagePage() {
                           {/* Month Display */}
                           <text
                             x="50"
-                            y="47"
+                            y="40"
                             fontSize="14"
                             textAnchor="middle"
                             fill="black"
@@ -554,7 +449,7 @@ function ElectricUsagePage() {
                           {/* Day Display */}
                           <text
                             x="50"
-                            y="72"
+                            y="65"
                             fontSize="24"
                             textAnchor="middle"
                             fill="black"
@@ -594,7 +489,7 @@ function ElectricUsagePage() {
                           {/* Month Display */}
                           <text
                             x="50"
-                            y="47"
+                            y="40"
                             fontSize="14"
                             textAnchor="middle"
                             fill="black"
@@ -607,7 +502,7 @@ function ElectricUsagePage() {
                           {/* Day Display */}
                           <text
                             x="50"
-                            y="72"
+                            y="65"
                             fontSize="24"
                             textAnchor="middle"
                             fill="black"
@@ -626,22 +521,66 @@ function ElectricUsagePage() {
                     </div>
                   </div>
                   <div className="justify-center items-center p-3 gap-2">
-                    <div className="mb-3">
-                      <label htmlFor="graph-type" className="mr-2 font-medium">
-                        Graph Type:
-                      </label>
-                      <select
-                        id="graph-type"
-                        value={graphType}
-                        onChange={handleGraphTypeChange}
-                        className="px-3 py-2 border border-gray-300 rounded-lg bg-white"
-                      >
-                        <option value="Month">Month</option>
-                        <option value="Week">Week</option>
-                        <option value="Day">Day</option>
-                      </select>
+                    <div className="items-center gap-2">
+                      <div className="flex justify-between w-full mb-3">
+                        <button
+                          onClick={() => changeWeek(-1)}
+                          className="px-4 py-2 bg-gray-300 rounded-lg"
+                        >
+                          ← Previous Week
+                        </button>
+                        <h2 className="text-lg font-semibold">{`Week of ${currentWeekStart}`}</h2>
+                        <button
+                          onClick={() => changeWeek(1)}
+                          className="px-4 py-2 bg-gray-300 rounded-lg"
+                          disabled={
+                            currentWeekStart ===
+                            getWeekStart(new Date().toISOString())
+                          }
+                        >
+                          Next Week →
+                        </button>
+                      </div>
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-cols justify-center items-center p-3">
+                        <ResponsiveContainer width="100%" height={300}>
+                          <BarChart
+                            data={graphEnergyWeek}
+                            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                          >
+                            <XAxis
+                              dataKey="formattedDate"
+                              tick={{ fontSize: 12 }}
+                            />
+                            <YAxis />
+                            <Tooltip
+                              cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
+                              formatter={(value) => { 
+                                // Format the value to show exactly 2 decimal places
+                                return value.toFixed(2); 
+                              }}
+                              labelFormatter={(value) => {
+                                // Find the full date from the formattedDate
+                                const entry = graphEnergyWeek.find(
+                                  (item) => item.formattedDate === value
+                                );
+                                if (entry) {
+                                  const date = new Date(entry.date);
+                                  return date.toLocaleDateString(); // Return a nicely formatted full date
+                                }
+                                return value;
+                              }}
+                            />
+                            <Legend />
+                            <Bar
+                              dataKey="totalConsumption"
+                              fill="#BE9D6A"
+                              name={translations.energyKwh}
+                              radius={[4, 4, 0, 0]}
+                            />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
                     </div>
-                    <div className="items-center gap-2">{chartSelection()}</div>
                   </div>
                 </div>
                 {/* ===================== */}
@@ -652,6 +591,155 @@ function ElectricUsagePage() {
                         {translations.energy_consumption_kWh}
                       </div>
                     </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 justify-center items-center p-3">
+                      {/* Dynamically added blocks */}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today}</div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today}</div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today} </div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today} </div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today} </div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today} </div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today} </div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today} </div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
+                          <img
+                            src=""
+                            alt=""
+                            className="border border-black rounded-lg mb-4 mx-auto"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
+                            <div className="mb-2">{translations.today} </div>
+                            <div className="teal-text text-2xl w-full mb-2">
+                              10.5 kWh
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {/* More blocks will automatically adjust */}
+                    </div> 
                   </div>
                 </div>
                 {/* ===================== */}
