@@ -90,7 +90,7 @@
   "view_specific_devices": "查看特定设备",
 
   "network": "网络",
-  "internet_used": "已用互联网 / MB",
+  "internet_used": "已用互联网 / GB",
   "monthly": "每月",
   "next_payment_date": "下次付款日期",
 
@@ -208,7 +208,7 @@
   "thisMonthAverage": "本月平均",
   "dailyAverage": "每日平均能耗",
 
-  "monthlyInternet": "每月互联网使用量 (MB)",
+  "monthlyInternet": "每月互联网使用量 (GB)",
   "loading": "加载中...",
 
   "loadingUsers": "正在加载用户...",
