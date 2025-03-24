@@ -795,6 +795,17 @@ function ElectricUsagePage() {
               {/* ==================== */}
               <div className="grid grid-rows-[auto,1fr] mt-2 gap-4">
                 <div className="grid grid-rows-[auto,1fr] gap-4">
+                  {/* ===================== */}
+                  <div className="justify-center items-center p-3 h-full">
+                    <div className="grid grid-rows-[auto,1fr]">
+                      <div className="flex flex-col items-center">
+                        <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 w-[50%]">
+                          {translations.energy_consumption_kWh}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* ===================== */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
                       <div className="grid sm:grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-4">
@@ -842,7 +853,7 @@ function ElectricUsagePage() {
                           </text>
                         </svg>
                         <div className="grid grid-rows-2 teal-text text-sm sm:text-base w-full mb-2 text-center">
-                          <div className="mb-2">Yesterday</div>
+                          <div className="mb-2">{translations.yesterday}</div>
                           <div className="teal-text text-2xl w-full mb-2">
                             {yesterdayConsumption} kWh
                           </div>
@@ -925,16 +936,7 @@ function ElectricUsagePage() {
                     <div className="items-center gap-2">{chartSelection()}</div>
                   </div>
                 </div>
-                {/* ===================== */}
-                <div className="justify-center items-center p-3 h-full">
-                  <div className="grid grid-rows-[auto,1fr]">
-                    <div className="flex flex-col items-center">
-                      <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 w-[50%]">
-                        {translations.energy_consumption_kWh}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
                 {/* ===================== */}
                 <div className="justify-center items-center p-3 h-full">
                   <div className="grid grid-rows-[auto,1fr]">
@@ -946,7 +948,7 @@ function ElectricUsagePage() {
                     <div className="justify-center items-center p-3 gap-2">
                       <div className="items-center gap-2">
                         <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-cols justify-center items-center p-3">
-                          <div className="justify-center items-center p-3 gap-2">
+                          <div className="w-full justify-center items-center p-3 gap-2">
                             <div className="mb-3">
                               <label
                                 htmlFor="graph-type"
@@ -960,7 +962,9 @@ function ElectricUsagePage() {
                                 onChange={handleGenerationGraphTypeChange}
                                 className="px-3 py-2 border border-gray-300 rounded-lg bg-white"
                               >
-                                <option value="" disabled>Select</option>
+                                <option value="" disabled>
+                                  Select
+                                </option>
                                 <option value="Month">Month</option>
                                 <option value="Week">Week</option>
                                 <option value="Day">Day</option>
