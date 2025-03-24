@@ -33,6 +33,7 @@ import com.nz.backend.entities.Device;
 import com.nz.backend.entities.DevicePermission;
 import com.nz.backend.entities.Energy;
 import com.nz.backend.entities.Family;
+import com.nz.backend.entities.Permission;
 import com.nz.backend.entities.Room;
 import com.nz.backend.entities.User;
 import com.nz.backend.enums.OnOff;
@@ -40,6 +41,7 @@ import com.nz.backend.repo.CategoryRepo;
 import com.nz.backend.repo.DevicePermissionRepo;
 import com.nz.backend.repo.DeviceRepo;
 import com.nz.backend.repo.EnergyRepo;
+import com.nz.backend.repo.PermissionRepo;
 import com.nz.backend.repo.RoomRepo;
 import com.nz.backend.repo.UserRepo;
 import com.nz.backend.services.JwtService;
@@ -64,6 +66,9 @@ public class DeviceControllers {
 
     @Autowired
     private RoomRepo roomRepo;
+
+    @Autowired
+    private PermissionRepo permissionRepo;
 
     @Autowired
     private DevicePermissionRepo devicePermissionRepo;
@@ -100,7 +105,6 @@ public class DeviceControllers {
         Category category = categoryRepo.findByCategoryname(addNewDeviceDTO.getCategoryName());
         Family family = user.getFamily();
         Room room = roomRepo.findByRoomNameAndFamily(addNewDeviceDTO.getRoomName(), family);
-        
 
         // Warranty Expiration Date
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -118,8 +122,36 @@ public class DeviceControllers {
 
         deviceRepo.save(newDevice);
 
-        DevicePermission permission = new DevicePermission(user, newDevice, user);
-        devicePermissionRepo.save(permission);
+        // Create initial permission for device owner if it doesn't exist
+        Optional<DevicePermission> ownerPermission = devicePermissionRepo.findFirstByUserAndDevice(user, newDevice);
+        if (ownerPermission.isEmpty()) {
+            DevicePermission permission = new DevicePermission(user, newDevice, user);
+            devicePermissionRepo.save(permission);
+        }
+
+        List<User> users = userRepo.findByFamilyFamilyid(family.getFamilyid());
+
+
+        // Grant permissions to users who have room access
+        for (User familyMember : users) {
+            // Skip if it's the device owner
+            if (familyMember.getUserId().equals(user.getUserId())) {
+                continue;
+            }
+
+            List<Permission> roomPermissions = permissionRepo.findByUserAndRoom(familyMember, room);
+            
+            if (!roomPermissions.isEmpty()) {
+                // Check if device permission already exists
+                Optional<DevicePermission> existingPermission = 
+                    devicePermissionRepo.findFirstByUserAndDevice(familyMember, newDevice);
+                
+                if (existingPermission.isEmpty()) {
+                    DevicePermission devicePermission = new DevicePermission(familyMember, newDevice, user);
+                    devicePermissionRepo.save(devicePermission);
+                }
+            }
+        }
 
         return ResponseEntity.ok("Successfully Added!");
     }

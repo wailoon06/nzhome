@@ -1,6 +1,7 @@
 package com.nz.backend.controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,9 +97,10 @@ public class PermissionControllers {
         Room room = roomRepo.findById(grantDTO.getRoomid())
         .orElseThrow(() -> new RuntimeException("Room not found!"));
         
-        Permission permission = permissionRepo.findByUserAndRoom(user, room);
-        if (permission == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No permission found for this user in this room.");
+        Optional<Permission> permission = permissionRepo.findFirstByUserAndRoom(user, room);
+        if (permission.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("No permission found for this user in this room.");
         }
         
         return ResponseEntity.ok("");
@@ -167,8 +169,10 @@ public class PermissionControllers {
             if (user.getRole().equals(owner.getRole())) {
                 return ResponseEntity.badRequest().body("You are the owner!");
             }
-            Permission permission = permissionRepo.findByUserAndRoom(user, room);
-            permissionRepo.delete(permission);
+            Optional<Permission> permissionOpt = permissionRepo.findFirstByUserAndRoom(user, room);
+            if (permissionOpt.isPresent()) {
+                permissionRepo.delete(permissionOpt.get());
+            }
         }
 
         return ResponseEntity.ok("Permission deleted successfully!");

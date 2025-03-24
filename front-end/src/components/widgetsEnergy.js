@@ -170,7 +170,7 @@ function WidgetsEnergy() {
           return sum + monthlyConsumption;
         }, 0);
 
-        setMonthlyConsumption(monthly); // Format to 2 decimal places
+        setMonthlyConsumption(parseFloat(monthly.toFixed(2))); // Format to 2 decimal places
 
         const daily = data.reduce((sum, device) => {
           const dailyConsumption = device.energyRecords
@@ -187,7 +187,7 @@ function WidgetsEnergy() {
           return sum + dailyConsumption;
         }, 0);
 
-        setDailyConsumption(parseFloat(daily.toFixed(2)));  // Format to 2 decimal places
+        setDailyConsumption(  );  // Format to 2 decimal places
 
         const generation = data.reduce((sum, device) => {
           const monthGeneration = device.energyRecords

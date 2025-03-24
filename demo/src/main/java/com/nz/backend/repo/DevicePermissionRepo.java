@@ -1,6 +1,7 @@
 package com.nz.backend.repo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,6 +14,8 @@ public interface DevicePermissionRepo extends JpaRepository<DevicePermission, Lo
     boolean existsByUserAndDevice(User user, Device device);
 
     DevicePermission findByUserAndDevice(User user, Device device);
+
+    Optional<DevicePermission> findFirstByUserAndDevice(User user, Device device);
 
     List<DevicePermission> findByDevice(Device device);
 }

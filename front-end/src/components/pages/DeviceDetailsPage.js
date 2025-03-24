@@ -822,7 +822,7 @@ function DeviceDetailsPage() {
                         <div className="mb-2 font-medium">{translations.yesterday}</div>
                         <div className="teal-text text-2xl font-bold mb-2">
                           {todayEnergy
-                            ? `${todayEnergy.energyConsumption} kWh`
+                            ? `${parseFloat(todayEnergy.energyConsumption.toFixed(2))} kWh`
                             : "N/A"}
                         </div>
                         {todayEnergy && yesterdayEnergy && (
@@ -863,7 +863,7 @@ function DeviceDetailsPage() {
                         </div>
                         <div className="teal-text text-2xl font-bold mb-2">
                           {yesterdayEnergy
-                            ? `${yesterdayEnergy.energyConsumption} kWh`
+                            ? `${parseFloat(yesterdayEnergy.energyConsumption.toFixed(2))} kWh`
                             : "N/A"}
                         </div>
                       </div>
