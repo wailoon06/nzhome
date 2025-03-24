@@ -32,6 +32,12 @@ function InternetUsagePage() {
   const [networkSpeed, setNetworkSpeed] = useState(500);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(2023);
+  const [selectedMonth, setSelectedMonth] = useState(1); // Default to January
+
+  // Handle year and month changes
+  const handleYearChange = (e) => setSelectedYear(Number(e.target.value));
+  const handleMonthChange = (e) => setSelectedMonth(Number(e.target.value));
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -139,6 +145,21 @@ function InternetUsagePage() {
   // Colors for Pie Chart
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF6384", "#36A2EB"];
 
+  // Generate random data for three months starting from the selected year and month
+  const generateRandomData = () => {
+    return Array.from({ length: 3 }, (_, i) => {
+      const month = selectedMonth + i;
+      const year = selectedYear + Math.floor((month - 1) / 12);
+      const adjustedMonth = ((month - 1) % 12) + 1;
+      return {
+        name: `${year}-${adjustedMonth.toString().padStart(2, "0")}`,
+        value: Math.floor(Math.random() * (80 - 60 + 1)) + 60, // Random value between 60 and 80
+      };
+    });
+  };
+
+  // Use generated random data for the pie chart
+  const pieChartData = generateRandomData();
 
   return (
     <div className="baseBG font-sans leading-normal tracking-normal h-screen overflow-hidden">
@@ -166,6 +187,7 @@ function InternetUsagePage() {
                   {translations.internetUsage}
                 </h1>
               </div>
+          
               {/* ==================== */}
               <div className="grid grid-cols-2 mt-2 gap-4">
                 <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col justify-center items-center p-3 h-full">
@@ -245,7 +267,7 @@ function InternetUsagePage() {
                 {/* Pie chart section */}
                 <h2 className="text-center text-2xl mb-4">{translations.internetUsageChart}</h2>
                   {/* Title */}
-                    <h2 className="text-center text-2xl font-bold mb-4">
+                    <h2 className="text-center text-2xl font-bold mb-4 pr-44">
                       {translations.monthlyInternet}
                     </h2>
                   {loading ? (
@@ -253,23 +275,45 @@ function InternetUsagePage() {
                   ) : error ? (
                     <p className="text-center text-red-500">{error}</p>
                   ) : (
-                    <div className="flex justify-center">
+                    <div className="flex justify-center items-center gap-2">
                       <PieChart width={400} height={400}>
                         <Pie
-                          data={internetUsageData}
+                          data={pieChartData}
                           cx="50%"
                           cy="50%"
                           outerRadius={120}
                           dataKey="value"
                           label
                         >
-                          {internetUsageData.map((entry, index) => (
+                          {pieChartData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
                         <Tooltip />
                         <Legend />
                       </PieChart>
+                      <div className="flex justify-center gap-4 mt-4">
+                      <select
+                        className="border border-gray-300 rounded px-2 py-1 text-sm"
+                        value={selectedYear}
+                        onChange={handleYearChange}
+                      >
+                        <option value={2023}>2023</option>
+                        <option value={2024}>2024</option>
+                        <option value={2025}>2025</option>
+                      </select>
+                      <select
+                        className="border border-gray-300 rounded px-2 py-1 text-sm"
+                        value={selectedMonth}
+                        onChange={handleMonthChange}
+                      >
+                        {Array.from({ length: 12 }, (_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            {new Date(0, i).toLocaleString("default", { month: "long" })}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     </div>
                   )}
               </div>
