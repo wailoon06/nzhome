@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import translationsMap from "../locales/translationsMap";
 import Sidebar from "./Sidebar";
 import MainContentHeader from "./MainContentHeader";
+import axios from "axios";
+import { useEffect } from "react";
 
 function ActionSchedulePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -24,8 +26,10 @@ function ActionSchedulePage() {
     setIsSwitchOn((prevState) => !prevState);
   };
 
-  const { deviceid, name, type } = useParams();
-
+  const { deviceid, name, type } = useParams(); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   // Handle temperature change (for the dropdown)
   const handleTemperatureChange = (e) => {
     setTemperature(e.target.value);
@@ -34,10 +38,11 @@ function ActionSchedulePage() {
   // Handle button click to toggle the active state
   const handleButtonClick = (button) => {
     setActiveButton(button);
+
   };
 
   // Handle the form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Submit logic here (e.g., sending data to DB)
     console.log("Form submitted with data:", {
@@ -45,8 +50,49 @@ function ActionSchedulePage() {
       isSwitchOn,
       activeButton,
     });
+    setLoading(true);
+    setError(null);
 
-    navigate(`/devices/${type}/${deviceid}/${name}/details`);
+    if (!activeButton) {
+      console.error("No button selected.");
+      setErrorMessage("Please select On or Off before submitting.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(
+        "http://localhost:8080/api/OnOff",
+        {
+          deviceid: deviceid,
+          state: activeButton,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      alert("Changed successfully!");
+      navigate(`/devices/${type}/${deviceid}/${name}/details`);
+
+    } catch (err) {
+      console.error("Failed to update device state:", err);
+      if (err.response && err.response.status === 403) {
+        console.log("Session expired!");
+        // alert("Session expired!");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("selectedDevice");
+        // navigate("/login");
+        setErrorMessage("Session expired. Please log in again.");
+          
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 5000);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   // translations
@@ -146,9 +192,9 @@ function ActionSchedulePage() {
 
                   <div className="grid grid-cols-2 gap-6 p-5">
                     <div
-                      onClick={() => handleButtonClick("on")}
+                      onClick={() => handleButtonClick("On")}
                       className={`border border-gray-300 h-[3rem] rounded-lg text-sm sm:text-base text-center flex justify-center items-center cursor-pointer transition-all ${
-                        activeButton === "on"
+                        activeButton === "On"
                           ? "bg-gray-600 text-white"
                           : "bg-white text-black"
                       }`}
@@ -157,9 +203,9 @@ function ActionSchedulePage() {
                     </div>
 
                     <div
-                      onClick={() => handleButtonClick("off")}
+                      onClick={() => handleButtonClick("Off")}
                       className={`border border-gray-300 h-[3rem] rounded-lg text-sm sm:text-base text-center flex justify-center items-center cursor-pointer transition-all ${
-                        activeButton === "off"
+                        activeButton === "Off"
                           ? "bg-gray-600 text-white"
                           : "bg-white text-black"
                       }`}
