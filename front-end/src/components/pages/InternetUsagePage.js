@@ -210,10 +210,10 @@ function InternetUsagePage() {
                         </div>
                         <div className="grid grid-cols-2 w-full" >
                           <div className="teal-text text-2xl w-full mb-2">
-                            {todayInternetUsage} MB
+                            {todayInternetUsage} GB
                           </div>
                           <div className="teal-text text-2xl w-full mb-2">
-                            {monthlyInternetUsage} MB
+                            {monthlyInternetUsage} GB
                           </div>
                         </div>
                       </div>

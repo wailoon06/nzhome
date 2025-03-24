@@ -90,7 +90,7 @@
   "view_specific_devices": "View Specific Devices",
 
   "network": "Network",
-  "internet_used": "Internet Used / MB",
+  "internet_used": "Internet Used / GB",
   "monthly": "Monthly",
   "next_payment_date": "Next Payment Date",
 
@@ -207,7 +207,7 @@
   "thisMonthAverage": "This Month's Average",
   "dailyAverage": "Daily average consumption",
 
-  "monthlyInternet": "Monthly Internet Usage (MB)",
+  "monthlyInternet": "Monthly Internet Usage (GB)",
   "loading": "Loading...",
 
   "loadingUsers": "Loading Users...",

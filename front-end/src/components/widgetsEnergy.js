@@ -126,6 +126,89 @@ function WidgetsEnergy() {
     fetchCameraDetails();
   }, []);
 
+  const [monthlyConsumption, setMonthlyConsumption] = useState(0);
+  const [dailyConsumption, setDailyConsumption] = useState(0);
+  const [totalGeneration, setTotalGeneration] = useState(0);
+  const today = new Date();
+  const currentMonth = today.getMonth() + 1;
+  const currentYear = today.getFullYear();
+
+  useEffect(() => {
+    const fetchConsumption= async () => {
+      setLoading(true);
+      setError(false);
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          "http://localhost:8080/api/getEnergyFam",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        
+        const data = response.data;
+
+        const monthly = data.reduce((sum, device) => {
+          const monthlyConsumption = device.energyRecords
+            .filter((record) => {
+              const recordDate = new Date(record.date);
+              return (
+                recordDate.getMonth() + 1 === currentMonth &&
+                recordDate.getFullYear() === currentYear
+              );
+            })
+            .reduce((acc, record) => acc + record.energyConsumption, 0); // Sum per device
+
+          return sum + monthlyConsumption;
+        }, 0);
+
+        setMonthlyConsumption(monthly); // Format to 2 decimal places
+
+        const daily = data.reduce((sum, device) => {
+          const dailyConsumption = device.energyRecords
+            .filter((record) => {
+              const recordDate = new Date(record.date);
+              return (
+                recordDate.getFullYear() === currentYear &&
+                recordDate.getMonth() + 1 === currentMonth &&
+                recordDate.getDate() === today.getDate()
+              );
+            })
+            .reduce((acc, record) => acc + record.energyConsumption, 0); // Sum per device
+
+          return sum + dailyConsumption;
+        }, 0);
+
+        setDailyConsumption(daily); // Format to 2 decimal places
+
+        const generation = data.reduce((sum, device) => {
+          const monthGeneration = device.energyRecords
+            .filter((record) => {
+              const recordDate = new Date(record.date);
+              return (
+                recordDate.getFullYear() === today.getFullYear() &&
+                recordDate.getMonth() === today.getMonth()
+              );
+            })
+            .reduce((acc, record) => acc + record.energyGeneration, 0); // Sum per device
+
+          return sum + monthGeneration;
+        }, 0);
+
+        setTotalGeneration(generation); // Format to 2 decimal places
+
+      } catch (err) {
+        alert("Error!");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConsumption();
+  }, []);
+  
+
   return (
     <div className="grid grid-cols-2 p-4 gap-4 mb-4">
       {/* Widgets */}
@@ -236,7 +319,7 @@ function WidgetsEnergy() {
                 </span>
                 <div className="ml-auto font-bold w-full sm:w-auto text-left sm:text-right truncate">
                   <span className="block sm:inline text-xs sm:text-sm md:text-lg">
-                    28.6 kWh
+                    {dailyConsumption} kWh
                   </span>
                 </div>
               </div>
@@ -262,7 +345,7 @@ function WidgetsEnergy() {
                 </span>
                 <div className="ml-auto font-bold w-full sm:w-auto text-left sm:text-right truncate">
                   <span className="block sm:inline text-xs sm:text-sm md:text-lg">
-                    325.37 kWh
+                    {monthlyConsumption} kWh
                   </span>
                 </div>
               </div>
@@ -296,7 +379,7 @@ function WidgetsEnergy() {
                 {/* Energy Value */}
                 <div className="ml-auto font-bold w-full sm:w-auto text-left sm:text-right truncate">
                   <span className="block sm:inline text-xs sm:text-sm md:text-base">
-                    400 kWh
+                    {totalGeneration} kWh
                   </span>
                 </div>
               </div>

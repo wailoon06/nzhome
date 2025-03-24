@@ -90,7 +90,7 @@
   "view_specific_devices": "Lihat Peranti Spesifik",
 
   "network": "Rangkaian",
-  "internet_used": "Internet Digunakan / MB",
+  "internet_used": "Internet Digunakan / GB",
   "monthly": "Bulanan",
   "next_payment_date": "Tarikh Pembayaran Seterusnya",
 
@@ -208,7 +208,7 @@
   "thisMonthAverage": "Purata Bulan Ini",
   "dailyAverage": "Purata penggunaan harian",
 
-  "monthlyInternet": "Penggunaan Internet Bulanan (MB)",
+  "monthlyInternet": "Penggunaan Internet Bulanan (GB)",
   "loading": "Memuatkan...",
 
   "loadingUsers": "Memuatkan Pengguna...",

@@ -1,6 +1,7 @@
 package com.nz.backend.controllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,15 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nz.backend.dto.DeviceEnergyTotalDTO;
 import com.nz.backend.dto.EnergyDTO;
 import com.nz.backend.entities.Energy;
+import com.nz.backend.entities.Family;
 import com.nz.backend.entities.User;
 import com.nz.backend.repo.DeviceRepo;
 import com.nz.backend.repo.EnergyRepo;
@@ -72,7 +72,7 @@ public class EnergyControllers {
     }
 
     @GetMapping("/getEnergyFam")
-    public ResponseEntity<List<EnergyDTO>> getEnergyFam(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> getTotalEnergyFam(@RequestHeader("Authorization") String token) {
 
         // Token Verification
         if (token == null) {
@@ -88,23 +88,49 @@ public class EnergyControllers {
             return ResponseEntity.badRequest().body(null);
         }
 
-        List<Energy> energyData = energyRepo.findByFamily(user.getFamily());
-        if (energyData.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        // Get the user's family
+        Family family = user.getFamily();
+
+        // Find all energy data with the same family
+        List<Energy> energyRecords = energyRepo.findByFamily(family);
+        if (energyRecords.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyMap()); // No energy data
         }
 
-        List<EnergyDTO> energyDTOList = energyData.stream()
-        .map(energy -> new EnergyDTO(
-            energy.getEnergyId(),
-            energy.getDate(),
-            energy.getEnergyConsumption(),
-            energy.getEnergyGeneration(),
-            energy.getDevice().getDeviceid(),
-            energy.getDevice().getDeviceName(),
-            energy.getDevice().getRoom().getRoomName()
-        ))
-        .collect(Collectors.toList());
+        // For the energy records, if they have same deviceid, place the energy consumption and generation in the same json array
+        // For example, the response will have [{deviceid: deviceid, familyid: familyid. {date: date, energyComsumption: energyConsumption}, (date:date, energyConsumption: energyConsumption)}]
+        
+        // Group energy records by deviceId
+        Map<Long, Map<String, Object>> groupedEnergy = new HashMap<>();
 
-        return ResponseEntity.ok(energyDTOList);
+        for (Energy energy : energyRecords) {
+            Long deviceId = energy.getDevice().getDeviceid();
+
+            // Create a new structure if the device is not in the map
+            groupedEnergy.putIfAbsent(deviceId, new HashMap<>());
+            Map<String, Object> deviceData = groupedEnergy.get(deviceId);
+
+            // Set device and family details only once
+            deviceData.put("deviceId", deviceId);
+            deviceData.put("familyId", energy.getDevice().getFamily().getFamilyid());
+
+            // Retrieve or initialize the list of energy records for this device
+            List<Map<String, Object>> energyList = (List<Map<String, Object>>) deviceData.get("energyRecords");
+            if (energyList == null) {
+                energyList = new ArrayList<>();
+                deviceData.put("energyRecords", energyList);
+            }
+
+            // Add energy consumption and generation data
+            Map<String, Object> energyData = new HashMap<>();
+            energyData.put("date", energy.getDate());
+            energyData.put("energyConsumption", energy.getEnergyConsumption());
+            energyData.put("energyGeneration", energy.getEnergyGeneration());
+
+            energyList.add(energyData);
+        }
+
+        // Convert map values to a list for JSON serialization
+        return ResponseEntity.ok(new ArrayList<>(groupedEnergy.values()));
     }
 }

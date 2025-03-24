@@ -90,7 +90,7 @@
   "view_specific_devices": "특정 장치 보기",
 
   "network": "네트워크",
-  "internet_used": "사용한 인터넷 / MB",
+  "internet_used": "사용한 인터넷 / GB",
   "monthly": "매월",
   "next_payment_date": "다음 결제일",
 
@@ -207,7 +207,7 @@
   "thisMonthAverage": "이번 달 평균",
   "dailyAverage": "일일 평균 소비량",
 
-  "monthlyInternet": "월간 인터넷 사용량 (MB)",
+  "monthlyInternet": "월간 인터넷 사용량 (GB)",
   "loading": "로딩 중...",
 
   "loadingUsers": "사용자 불러오는 중...",
