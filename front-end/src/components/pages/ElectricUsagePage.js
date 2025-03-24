@@ -988,18 +988,8 @@ function ElectricUsagePage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <Link to={"/electric/date"}>
-                        <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
-                          <div className="items-center gap-4">
-                            <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">
-                                {translations.view_specific_devices}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
+                    <div className="grid grid-cols-1 gap-4">
+      
                       <div
                         className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col p-3 cursor-pointer"
                         onClick={generatePDF}
