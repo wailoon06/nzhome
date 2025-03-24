@@ -206,7 +206,7 @@ function WidgetsEnergy() {
         setTotalGeneration(parseFloat(generation.toFixed(2))); // Format to 2 decimal places
 
       } catch (err) {
-        alert("Error!");
+        // alert("Error!");
       } finally {
         setLoading(false);
       }
@@ -217,7 +217,7 @@ function WidgetsEnergy() {
   
 
   return (
-    <div className="grid grid-cols-2 p-4 gap-4 mb-4">
+    <div className="grid sm:grid-cols-1 md:grid-cols-2 p-4 gap-4 mb-4">
       {/* Widgets */}
       <div>
         <div className="baseGreen2 rounded-lg mb-4 p-4 flex flex-col justify-center">
