@@ -200,7 +200,7 @@ function WidgetsEnergy() {
         setTotalGeneration(parseFloat(generation.toFixed(2))); // Format to 2 decimal places
 
       } catch (err) {
-        alert("Error!");
+        // alert("Error!");
       } finally {
         setLoading(false);
       }
