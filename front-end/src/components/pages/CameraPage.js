@@ -27,7 +27,7 @@ function CameraPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:8080/api/getAllDevice",
+        "https://humdrum-beef-production.up.railway.app/api/getAllDevice",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -44,7 +44,7 @@ function CameraPage() {
         try {
           // Use your existing validatePermission endpoint
           await axios.post(
-            "http://localhost:8080/api/validateDevicePermission",
+            "https://humdrum-beef-production.up.railway.app/api/validateDevicePermission",
             { deviceid: camera.deviceid },
             { headers: { Authorization: `Bearer ${token}` } }
           );

@@ -34,7 +34,7 @@ function SelectRobotPage() {
   
       // Step 1: Get all devices
       const response = await axios.get(
-        "http://localhost:8080/api/getAllDevice",
+        "https://humdrum-beef-production.up.railway.app/api/getAllDevice",
         { headers: { Authorization: `Bearer ${token}` } }
       );
   
@@ -45,7 +45,7 @@ function SelectRobotPage() {
         try {
           // Validate device permission
           await axios.post(
-            "http://localhost:8080/api/validateDevicePermission",
+            "https://humdrum-beef-production.up.railway.app/api/validateDevicePermission",
             { deviceid: device.deviceid },
             { headers: { Authorization: `Bearer ${token}` } }
           );

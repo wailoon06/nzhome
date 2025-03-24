@@ -63,7 +63,7 @@ function ActionSchedulePage() {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        "http://localhost:8080/api/OnOff",
+        "https://humdrum-beef-production.up.railway.app/api/OnOff",
         {
           deviceid: deviceid,
           state: activeButton,

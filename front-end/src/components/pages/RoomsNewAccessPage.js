@@ -40,7 +40,7 @@ function RoomsNewAccessPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8080/api/getUserFam", {
+      const response = await axios.get("https://humdrum-beef-production.up.railway.app/api/getUserFam", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -90,7 +90,7 @@ function RoomsNewAccessPage() {
       const roomid = localStorage.getItem("roomid");
 
       const response = await axios.post(
-        "http://localhost:8080/api/grantPermission",
+        "https://humdrum-beef-production.up.railway.app/api/grantPermission",
         {
           userid: selectedUsers,
           roomid: roomid,

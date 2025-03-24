@@ -67,7 +67,7 @@ function CalendarPage() {
         return;
       }
 
-      const response = await axios.get("http://localhost:8080/api/getAllDevice", {
+      const response = await axios.get("https://humdrum-beef-production.up.railway.app/api/getAllDevice", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -93,7 +93,7 @@ function CalendarPage() {
         try {
           // Use your existing validatePermission endpoint
           await axios.post(
-            "http://localhost:8080/api/validatePermission",
+            "https://humdrum-beef-production.up.railway.app/api/validatePermission",
             { roomid: roomId },
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -221,7 +221,7 @@ function CalendarPage() {
       console.log("Sending event data:", eventData); // Log event data before sending
   
       const response = await axios.post(
-        "http://localhost:8080/api/addEvent",
+        "https://humdrum-beef-production.up.railway.app/api/addEvent",
         eventData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -300,7 +300,7 @@ function CalendarPage() {
       setLoading(true); // Show loader
 
       // Fetch user events from backend
-      const response = await fetch("http://localhost:8080/api/getUserEvents", {
+      const response = await fetch("https://humdrum-beef-production.up.railway.app/api/getUserEvents", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -343,7 +343,7 @@ function CalendarPage() {
   
       console.log("Deleting event:", title);
   
-      const response = await axios.delete(`http://localhost:8080/api/deleteEvent`, {
+      const response = await axios.delete(`https://humdrum-beef-production.up.railway.app/api/deleteEvent`, {
         headers: { Authorization: `Bearer ${token}` },
         params: { title }  // Send title as a query parameter
       });

@@ -37,7 +37,7 @@ function LoginPage() {
     setErrorMessage("");
 
     try {
-      const response = await axios.post("http://localhost:8080/api/login", {
+      const response = await axios.post("https://humdrum-beef-production.up.railway.app/api/login", {
         email,
         password,
       });

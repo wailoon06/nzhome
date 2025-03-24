@@ -64,7 +64,7 @@ function UserProfilePage() {
       const responses = await Promise.all(
         filteredRows.map((row) =>
           axios
-            .post("http://localhost:8080/api/registerUser", row, {
+            .post("https://humdrum-beef-production.up.railway.app/api/registerUser", row, {
               headers: { Authorization: `Bearer ${token}` },
             })
             // .then((response) => {

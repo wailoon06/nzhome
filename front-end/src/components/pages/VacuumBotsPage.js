@@ -34,7 +34,7 @@ function VacuumBotsPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:8080/api/getAllDevice",
+        "https://humdrum-beef-production.up.railway.app/api/getAllDevice",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

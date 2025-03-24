@@ -58,7 +58,7 @@ function WidgetsEnergy() {
       // Get token
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:8080/api/getUserDetails",
+        "https://humdrum-beef-production.up.railway.app/api/getUserDetails",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -104,7 +104,7 @@ function WidgetsEnergy() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:8080/api/getAllDevice",
+        "https://humdrum-beef-production.up.railway.app/api/getAllDevice",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -142,7 +142,7 @@ function WidgetsEnergy() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://localhost:8080/api/getEnergyFam",
+          "https://humdrum-beef-production.up.railway.app/api/getEnergyFam",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

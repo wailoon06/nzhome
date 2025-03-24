@@ -63,7 +63,7 @@ function AllUserPage() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://localhost:8080/api/getUserFam",
+          "https://humdrum-beef-production.up.railway.app/api/getUserFam",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -110,7 +110,7 @@ function AllUserPage() {
 
       // Delete user
       const response = await axios.delete(
-        `http://localhost:8080/api/deleteUserFam`,
+        `https://humdrum-beef-production.up.railway.app/api/deleteUserFam`,
         {
           headers: { Authorization: `Bearer ${token}` },
           data: { email: emailToDelete },
@@ -156,7 +156,7 @@ function AllUserPage() {
 
       // Step 1: Get all devices
       const response = await axios.get(
-        "http://localhost:8080/api/getUserDetails",
+        "https://humdrum-beef-production.up.railway.app/api/getUserDetails",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

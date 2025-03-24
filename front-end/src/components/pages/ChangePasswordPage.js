@@ -40,7 +40,7 @@ function ChangePasswordPage() {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http://localhost:8080/api/getUserDetails", {
+        .get("https://humdrum-beef-production.up.railway.app/api/getUserDetails", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -96,7 +96,7 @@ function ChangePasswordPage() {
 
       axios
         .put(
-          "http://localhost:8080/api/changePassword",
+          "https://humdrum-beef-production.up.railway.app/api/changePassword",
           { email: userDetails.email, oldPassword, newPassword },
           { headers: { Authorization: `Bearer ${token}` } }
         )
@@ -144,7 +144,7 @@ function ChangePasswordPage() {
       }
 
       axios
-        .put("http://localhost:8080/api/forgetPassword", {
+        .put("https://humdrum-beef-production.up.railway.app/api/forgetPassword", {
           email,
           oldPassword,
           newPassword,

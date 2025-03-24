@@ -53,7 +53,7 @@ function NewDeviceDetailsPage() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://localhost:8080/api/getAllRoomName",
+          "https://humdrum-beef-production.up.railway.app/api/getAllRoomName",
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -100,7 +100,7 @@ function NewDeviceDetailsPage() {
       const selectedDevice = JSON.parse(localStorage.getItem("selectedDevice"));
 
       const response = await axios.post(
-        "http://localhost:8080/api/addDevice",
+        "https://humdrum-beef-production.up.railway.app/api/addDevice",
         {
           deviceName: selectedDevice.name,
           categoryName: selectedDevice.category,

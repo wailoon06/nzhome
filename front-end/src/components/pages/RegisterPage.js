@@ -36,7 +36,7 @@ function RegisterPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/registerOwner",
+        "https://humdrum-beef-production.up.railway.app/api/registerOwner",
         { username, email, password, familyName, code }
       );
       console.log(response.data);

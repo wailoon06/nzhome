@@ -71,7 +71,7 @@ function DeviceDetailsPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:8080/api/getUserDetails",
+        "https://humdrum-beef-production.up.railway.app/api/getUserDetails",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -112,7 +112,7 @@ function DeviceDetailsPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:8080/api/getDeviceDetails",
+        "https://humdrum-beef-production.up.railway.app/api/getDeviceDetails",
         { deviceid: deviceid },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -161,7 +161,7 @@ function DeviceDetailsPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8080/api/getUserFam", {
+      const response = await axios.get("https://humdrum-beef-production.up.railway.app/api/getUserFam", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -185,7 +185,7 @@ function DeviceDetailsPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:8080/api/getUserWithDevicePermission",
+        "https://humdrum-beef-production.up.railway.app/api/getUserWithDevicePermission",
         {
           deviceid: deviceid,
         },
@@ -245,7 +245,7 @@ function DeviceDetailsPage() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:8080/api/grantDevicePermission",
+        "https://humdrum-beef-production.up.railway.app/api/grantDevicePermission",
         {
           userid: selectedUsers,
           deviceid: deviceid,
@@ -306,7 +306,7 @@ function DeviceDetailsPage() {
       const token = localStorage.getItem("token");
 
       const response = await axios.delete(
-        "http://localhost:8080/api/deleteDevicePermission",
+        "https://humdrum-beef-production.up.railway.app/api/deleteDevicePermission",
         {
           headers: { Authorization: `Bearer ${token}` },
           data: {
@@ -373,7 +373,7 @@ function DeviceDetailsPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8080/api/getEnergy", {
+      const response = await axios.get("https://humdrum-beef-production.up.railway.app/api/getEnergy", {
         headers: { Authorization: `Bearer ${token}` },
         params: { deviceid: deviceid },
       });
