@@ -86,7 +86,7 @@
 
   "overall_energy_usage": "Overall Energy Usage",
   "energy_consumption_kWh": "Energy Consumption / kWh",
-  "energy_generation_W": "Energy Generation / W",
+  "energy_generation_W": "Energy Generation / kWh",
   "view_specific_devices": "View Specific Devices",
 
   "network": "Network",

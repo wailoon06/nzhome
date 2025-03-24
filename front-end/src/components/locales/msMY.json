@@ -86,7 +86,7 @@
 
   "overall_energy_usage": "Penggunaan Tenaga Keseluruhan",
   "energy_consumption_kWh": "Penggunaan Tenaga / kWh",
-  "energy_generation_W": "Penjanaan Tenaga / W",
+  "energy_generation_W": "Penjanaan Tenaga / kWh",
   "view_specific_devices": "Lihat Peranti Spesifik",
 
   "network": "Rangkaian",

@@ -86,7 +86,7 @@
 
   "overall_energy_usage": "总体能源使用",
   "energy_consumption_kWh": "能源消耗 / kWh",
-  "energy_generation_W": "能源生成 / W",
+  "energy_generation_W": "能源生成 / kWh",
   "view_specific_devices": "查看特定设备",
 
   "network": "网络",

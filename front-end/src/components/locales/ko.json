@@ -86,7 +86,7 @@
 
   "overall_energy_usage": "전체 에너지 사용",
   "energy_consumption_kWh": "에너지 소비 / kWh",
-  "energy_generation_W": "에너지 생성 / W",
+  "energy_generation_W": "에너지 생성 / kWh",
   "view_specific_devices": "특정 장치 보기",
 
   "network": "네트워크",

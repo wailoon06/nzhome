@@ -86,7 +86,7 @@
 
   "overall_energy_usage": "全体のエネルギー使用",
   "energy_consumption_kWh": "エネルギー消費 / kWh",
-  "energy_generation_W": "エネルギー生成 / W",
+  "energy_generation_W": "エネルギー生成 / kWh",
   "view_specific_devices": "特定のデバイスを表示",
 
   "network": "ネットワーク",
