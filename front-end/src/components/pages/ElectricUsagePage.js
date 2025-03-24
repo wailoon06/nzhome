@@ -28,6 +28,7 @@ function ElectricUsagePage() {
   });
 
   const translations = translationsMap[language] || translationsMap["en"];
+  const [errorMessage, setErrorMessage] = useState("");     //added
 
   const generatePDF = async () => {
     // Extract text from the specific section
@@ -190,7 +191,12 @@ function ElectricUsagePage() {
 
         setYtdGeneration(parseFloat(yesterdayGeneration.toFixed(2)));
       } catch (err) {
-        alert("Error!");
+        // alert("Error!");
+        setErrorMessage("Error!");
+          
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
       } finally {
         setLoading(false);
       }
@@ -250,7 +256,12 @@ function ElectricUsagePage() {
 
         /* Generation */
       } catch (err) {
-        alert("Error!");
+        // alert("Error!");
+        setErrorMessage("Error!");
+          
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
       } finally {
         setLoading(false);
       }
@@ -342,7 +353,12 @@ function ElectricUsagePage() {
 
         setGraphEnergyWeek(weekDays);
       } catch (err) {
-        alert("Error!");
+        // alert("Error!");
+        setErrorMessage("Error!");
+          
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
       } finally {
         setLoading(false);
       }
@@ -461,7 +477,12 @@ function ElectricUsagePage() {
         console.log("Processed month data:", processedData);
         setGraphEnergyMonth(processedData);
       } catch (err) {
-        alert("Error fetching energy data!");
+        // alert("Error fetching energy data!");
+        setErrorMessage("Error fetching energy data!");
+          
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
         console.error(err);
       } finally {
         setLoading(false);
@@ -774,6 +795,14 @@ function ElectricUsagePage() {
             language={language}
           />
         </div>
+
+        {/* Error Message Display (added)*/}
+        {errorMessage && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white p-2 rounded-md shadow-md mt-2 z-50">
+            {errorMessage}
+          </div>
+        )}
+
         {/* Main Content */}
         <div
           className={`main-content flex flex-col flex-1 transition-all duration-300 overflow-y-auto`}
