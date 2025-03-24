@@ -4,9 +4,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import translationsMap from "../components/locales/translationsMap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+   
 function WidgetsEnergy() {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [redirectMessage, setRedirectMessage] = useState("");  
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -337,8 +338,15 @@ function WidgetsEnergy() {
 
           <div className="relative">
             {/* Main Container */}
-            <a href="#">
-              <div className="flex flex-wrap items-center p-2 rounded-xl bg-gray-200 mb-3 overflow-hidden relative">
+            
+              <div className="flex flex-wrap items-center p-2 rounded-xl bg-gray-200 mb-3 overflow-hidden relative"
+              onClick={(e) => {
+                      e.preventDefault();
+                      setRedirectMessage("Redirecting...");
+                      setTimeout(() => {
+                      window.location.href = "/electric"; // Then navigate
+                      }, 2000);
+                    }}>
                 <i className="fas fa-bolt text-lg mr-3"></i>
                 <span className="text-sm sm:text-base">
                   {translations.thisMonth}
@@ -349,7 +357,7 @@ function WidgetsEnergy() {
                   </span>
                 </div>
               </div>
-            </a>
+            
 
             {/* Overlay Div */}
             {userDetails?.role === "User" && (

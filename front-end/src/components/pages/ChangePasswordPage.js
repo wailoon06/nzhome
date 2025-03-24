@@ -98,7 +98,7 @@ function ChangePasswordPage() {
           )
           .then((response) => {
             console.log(response.data);
-            alert("Password successfully change!");
+            // alert("Password successfully change!");
             setSuccessMessage("Password successfully changed! Redirecting..."); //new added
             setLoading(false);
             // navigate("/profile");
