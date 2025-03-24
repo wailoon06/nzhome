@@ -354,6 +354,14 @@ function CalendarPage() {
       setEvents((prevEvents) =>
         prevEvents.filter(event => event.title !== title)
       );
+
+      // Show success message
+    setSuccessMessage(`Event "${title}" successfully deleted!`);
+    
+    // Auto-clear success message after 3 seconds
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
   
     } catch (error) {
       console.error("Error deleting event:", error.response?.data || error.message);
