@@ -121,6 +121,14 @@ function ElectricUsagePage() {
 
         const data = response.data;
 
+        if (!data.length) {
+          setDailyConsumption(0);
+          setYesterdayConsumption(0);
+          setTodayGeneration(0);
+          setYtdGeneration(0);
+          return;
+        }
+
         /*------ Total energy consumption for today ------*/
         const daily = data.reduce((sum, device) => {
           const dailyConsumption = device.energyRecords
@@ -226,6 +234,10 @@ function ElectricUsagePage() {
         );
 
         const data = response.data;
+        if (!data.length) {
+          setGraphEnergyMonth([]);
+          return;
+        }
         const groupedByDate = {};
 
         // Process each device's energy records
@@ -306,6 +318,10 @@ function ElectricUsagePage() {
         );
 
         const data = response.data;
+        if (!data.length) {
+          setGraphEnergyWeek([]);
+          return;
+        }
 
         // Calculate week end date (7 days from start)
         const weekStartDate = new Date(currentWeekStart);
@@ -386,6 +402,10 @@ function ElectricUsagePage() {
         );
 
         const data = response.data;
+        if (!data.length) {
+          setGraphEnergyMonth([]);
+          return;
+        }
 
         /*------ Total energy consumption, grouped by month ------*/
         // Initialize the object to hold data grouped by month
@@ -641,9 +661,13 @@ function ElectricUsagePage() {
         </>
       );
     }
-    if (!graphType) {
-      return <div className="text-gray-500">{translations.selectgraph}</div>;
-    }
+    if (!graphEnergyWeek?.length && !graphEnergyMonth?.length && !graphEnergyDay?.length) {
+        return (
+          <div className="text-center p-4">
+            <p className="text-gray-500">No energy data available</p>
+          </div>
+        );
+      }
   };
 
   const generationChartSelection = () => {
@@ -780,8 +804,12 @@ function ElectricUsagePage() {
         </>
       );
     }
-    if (!graphType) {
-      return <div className="text-gray-500">{translations.selectgraph}</div>;
+    if (!graphEnergyWeek?.length && !graphEnergyMonth?.length && !graphEnergyDay?.length) {
+      return (
+        <div className="text-center p-4">
+          <p className="text-gray-500">No energy data available</p>
+        </div>
+      );
     }
   };
 
@@ -817,6 +845,17 @@ function ElectricUsagePage() {
 
             {/* <!-- Main Content --> */}
             <div id="reportGen" class="flex flex-col flex-1 gap-4">
+            {loading && (
+      <div className="text-center p-4">
+        <p>Loading energy data...</p>
+      </div>
+    )}
+
+    {error && (
+      <div className="text-center p-4 text-red-500">
+        <p>{error}</p>
+      </div>
+    )}
               {/* Internet Usage Section */}
               <div className="grid grid-cols-[auto,1fr] items-center mt-5 w-full">
                 <a className="relative pl-4" href="/">

@@ -591,7 +591,7 @@ function CalendarPage() {
                         >
                           <div
                             className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                              onOff === "Off" ? "translate-x-6" : "translate-x-0"
+                              onOff === "On" ? "translate-x-6" : "translate-x-0"
                             }`}
                           ></div>
                         </div>

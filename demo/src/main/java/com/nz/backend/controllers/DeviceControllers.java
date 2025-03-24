@@ -98,8 +98,9 @@ public class DeviceControllers {
         }
 
         Category category = categoryRepo.findByCategoryname(addNewDeviceDTO.getCategoryName());
-        Room room = roomRepo.findByRoomName(addNewDeviceDTO.getRoomName());
         Family family = user.getFamily();
+        Room room = roomRepo.findByRoomNameAndFamily(addNewDeviceDTO.getRoomName(), family);
+        
 
         // Warranty Expiration Date
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
