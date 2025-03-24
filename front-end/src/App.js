@@ -114,24 +114,24 @@ function App() {
       setError(err.message || "Failed to load user details");
 
       // Handle token expiration or authentication issues
-      if (
-        err.response &&
-        (err.response.status === 401 || err.response.status === 403)
-      ) {
+      // if (
+      //   err.response &&
+      //   (err.response.status === 401 || err.response.status === 403)
+      // ) {
         // Token expired or invalid - redirect to login
         // console.log("Session expired!");
         // localStorage.removeItem('token');
         // navigate('/login');
-        setErrorMessage("Session expired. Please log in again.");
+        // setErrorMessage("Session expired. Please log in again.");
 
-        setTimeout(() => {
-          localStorage.clear();
-          navigate("/login");
-        }, 5000);
+        // setTimeout(() => {
+        //   localStorage.clear();
+        //   navigate("/login");
+        // }, 5000);
       }
-    } finally {
-      setLoading(false);
-    }
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   useEffect(() => {
