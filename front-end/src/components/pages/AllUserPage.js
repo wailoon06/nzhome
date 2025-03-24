@@ -290,7 +290,7 @@ function AllUserPage() {
                         <h2>
                           {user.username} ({user.role})
                         </h2>
-                        <div className="text-[14px] sm:text-2xl font-bold text-right">
+                        <div className="text-[14px] sm:text-2xl text-right">
                           {user.email}
                         </div>
                         {(userRole === "Owner" && user.role !== "Owner") && (
@@ -300,7 +300,7 @@ function AllUserPage() {
                               // handleDelete(user.email);
                               showConfirm(user.email);
                             }}
-                            className="text-red-500 text-xl font-bold px-2"
+                            className="text-red-500 text-xl px-2"
                           >
                             <i className="fas fa-times"></i>
                           </button>

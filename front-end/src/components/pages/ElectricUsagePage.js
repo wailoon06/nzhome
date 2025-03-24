@@ -917,7 +917,7 @@ function ElectricUsagePage() {
                   <div className="justify-center items-center p-3 gap-2">
                     <div className="mb-3">
                       <label htmlFor="graph-type" className="mr-2 font-medium">
-                        Group by:
+                        {translations.groupby}
                       </label>
                       <select
                         id="graph-type"
@@ -926,11 +926,11 @@ function ElectricUsagePage() {
                         className="px-3 py-2 border border-gray-300 rounded-lg bg-white"
                       >
                         <option value="" disabled>
-                          Select
+                          {translations.select}
                         </option>
-                        <option value="Month">Month</option>
-                        <option value="Week">Week</option>
-                        <option value="Day">Day</option>
+                        <option value="Month">{translations.month}</option>
+                        <option value="Week">{translations.week}</option>
+                        <option value="Day">{translations.day}</option>
                       </select>
                     </div>
                     <div className="items-center gap-2">{chartSelection()}</div>
@@ -954,7 +954,7 @@ function ElectricUsagePage() {
                                 htmlFor="graph-type"
                                 className="mr-2 font-medium"
                               >
-                                Graph Type:
+                                {translations.graphtype}
                               </label>
                               <select
                                 id="graph-type"
@@ -963,11 +963,15 @@ function ElectricUsagePage() {
                                 className="px-3 py-2 border border-gray-300 rounded-lg bg-white"
                               >
                                 <option value="" disabled>
-                                  Select
+                                  {translations.select}
                                 </option>
-                                <option value="Month">Month</option>
-                                <option value="Week">Week</option>
-                                <option value="Day">Day</option>
+                                <option value="Month">
+                                  {translations.month}
+                                </option>
+                                <option value="Week">
+                                  {translations.week}
+                                </option>
+                                <option value="Day">{translations.day}</option>
                               </select>
                             </div>
                             <div className="items-center gap-2">
@@ -978,18 +982,7 @@ function ElectricUsagePage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <Link to={"/electric/date"}>
-                        <div className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col bg-white p-3 rounded-lg">
-                          <div className="items-center gap-4">
-                            <div className="teal-text text-sm sm:text-base w-full mb-2 text-center">
-                              <div className="mb-2">
-                                {translations.view_specific_devices}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
+                    <div className="grid grid-cols-1 gap-4">
                       <div
                         className="rounded-lg border-[2px] border-gray-300 bg-white flex flex-col p-3 cursor-pointer"
                         onClick={generatePDF}

@@ -226,14 +226,14 @@ function UserSettingPage() {
                       onClick={() => setIsOpen(!isOpen)}
                       className="px-4 py-2 font-bold text-lg w-full"
                     >
-                      Help & Feedback
+                      {translations.helpfeed}
                     </button>
                     {isOpen && (
                       <div className="mt-4 flex flex-col items-center w-full">
                         <textarea
                           className="w-full max-w-lg p-2 border rounded-md teal-text"
                           rows="4"
-                          placeholder="Type your message here..."
+                          placeholder={translations.typemess}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                         ></textarea>
@@ -242,7 +242,7 @@ function UserSettingPage() {
                           className="mt-2 px-4 py-2 bg-green-500 text-white rounded-md w-full max-w-lg"
                           disabled={isLoading}
                         >
-                          {isLoading ? "Posting..." : "Post Message"}
+                          {isLoading ? translations.posting : translations.postmess}
                         </button>
                       </div>
                     )}

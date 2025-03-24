@@ -258,5 +258,19 @@
   "contactp1": "Kami ingin mendengar daripada anda! Sama ada anda mempunyai soalan, maklum balas, atau memerlukan sokongan, jangan ragu untuk menghubungi kami.",
   "name": "Nama",
   "message": "Mesej",
-  "sendMess": "Hantar Mesej"
+  "sendMess": "Hantar Mesej",
+
+  "month": "Bulan",
+  "week": "Minggu",
+  "day": "Hari",
+  "groupby": "Kumpulkan mengikut :",
+  "graphtype": "Jenis Graf :",
+
+  "helpfeed": "Bantuan & Maklum Balas",
+  "typemess": "Taip mesej anda di sini...",
+  "posting": "Sedang menghantar...",
+  "postmess": "Hantar Mesej",
+
+  "old_password": "Kata Laluan Lama",
+  "new_password": "Kata Laluan Baru"
 }

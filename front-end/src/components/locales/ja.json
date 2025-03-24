@@ -257,5 +257,19 @@
   "contactp1": "ご質問やご意見、サポートが必要な場合は、お気軽にお問い合わせください。",
   "name": "名前",
   "message": "メッセージ",
-  "sendMess": "メッセージを送信"
+  "sendMess": "メッセージを送信",
+
+  "month": "月",
+  "week": "週",
+  "day": "日",
+  "groupby": "グループ化：",
+  "graphtype": "グラフの種類：",
+
+  "helpfeed": "ヘルプ＆フィードバック",
+  "typemess": "ここにメッセージを入力してください...",
+  "posting": "投稿中...",
+  "postmess": "メッセージを投稿",
+
+  "old_password": "旧パスワード",
+  "new_password": "新しいパスワード"
 }
