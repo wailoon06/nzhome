@@ -216,9 +216,9 @@ function UserSettingPage() {
                     onClick={() => handleNavigation("#")}
                     className="rounded-md border border-gray-500 bg-white p-4 mt-4 flex items-center justify-center text-center text-lg w-[96%]"
                   >
-                    <span className="font-bold">
+                    <a href="/notification" className="font-bold">
                       {translations.notifications}
-                    </span>
+                    </a>
                   </div>
 
                   <div className="w-[96%] mt-4 p-2 border border-gray-500 rounded-md bg-white text-center">

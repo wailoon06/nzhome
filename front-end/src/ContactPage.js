@@ -3,14 +3,20 @@ import { Route, Routes } from "react-router-dom";
 import NZHome2 from "./image/NZHome2.jpg";
 import translationsMap from "./components/locales/translationsMap";
 import bgVideo from "./video/bg.mp4";
+import { GlobeIcon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const languages = [
+  { code: "zh", label: "Chinese" },
+  { code: "ja", label: "Japanese" },
+  { code: "en", label: "English" },
+  { code: "ko", label: "Korean" },
+  { code: "ms", label: "Malay" },
+];
 
 function ContactPage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem("language") || "en";
-  });
-  const translations = translationsMap[language] || translationsMap["en"];
 
   const [animate, setAnimate] = useState(false);
 
@@ -26,6 +32,26 @@ function ContactPage() {
 
     return () => clearTimeout(timeout);
   }, []);
+
+  //Language
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [language, setLanguage] = useState(
+    () => localStorage.getItem("language") || "en"
+  );
+  const translations = translationsMap[language] || translationsMap["en"];
+
+  const [selectedLang, setSelectedLang] = useState("");
+  const handleLanguageChange = () => {
+    const currentIndex = languages.indexOf(selectedLang);
+    const nextIndex = (currentIndex + 1) % languages.length;
+    const newLang = languages[nextIndex];
+    setSelectedLang(newLang);
+    setLanguage(newLang);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center bg-white">
@@ -44,7 +70,7 @@ function ContactPage() {
       <div className="absolute inset-0 bg-black bg-opacity-70"></div>
 
       {/* Header Section */}
-      <header className="fixed z-50 w-full flex items-center bg-black shadow-md px-6 py-1 md:px-10">
+      <header className="fixed z-[11000] w-full flex items-center bg-black shadow-md px-6 py-1 md:px-10">
         <div className="grid grid-cols-3 w-full items-center">
           {/* Logo */}
           <a href="/">
@@ -60,28 +86,66 @@ function ContactPage() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:space-x-6 lg:space-x-12 justify-center text-[1.2rem] text-white">
             <a href="/about" className="hover:text-orange-500">
-            {translations.aboutUs}
+              {translations.aboutUs}
             </a>
             <a href="/contact" className="hover:text-orange-500">
-            {translations.contactUs}
+              {translations.contactUs}
             </a>
           </nav>
 
           {/* Buttons */}
           <div className="hidden md:flex space-x-3 ml-auto text-[1.2rem]">
+            {/* Language Dropdown */}
+            <div className="z-[10000] relative hidden md:flex items-center space-x-3 ml-auto text-[1rem] text-white">
+              <div
+                className="p-2 border border-gray-600 rounded-md bg-black flex items-center space-x-2 cursor-pointer"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <GlobeIcon className="w-5 h-5 text-gray-300 hover:text-white" />
+                <span className="font-medium">
+                  {languages.find((l) => l.code === language)?.label}
+                </span>
+              </div>
+
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-[12rem] w-32 bg-black border border-gray-800 rounded-md shadow-lg"
+                  >
+                    {languages.map((lang) => (
+                      <div
+                        key={lang.code}
+                        className="px-3 py-1 text-sm hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        {lang.label}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {!localStorage.getItem("token") ? (
               <>
                 <a
                   href="/login"
                   className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
-                   {translations.loginButton}
+                  {translations.loginButton}
                 </a>
                 <a
                   href="/register"
                   className="hover:bg-gray-800 border bg-orange-500 font-bold text-white px-4 py-2 rounded-full"
                 >
-                   {translations.signUp}
+                  {translations.signUp}
                 </a>
               </>
             ) : (
@@ -97,25 +161,77 @@ function ContactPage() {
       </header>
 
       {/* Mobile Menu */}
-      {menuOpen && (
-        <nav className="relative md:hidden w-full bg-black shadow-md flex flex-col items-center space-y-2 py-4 text-[1.2rem]">
-          <a href="#" className="font-bold text-white hover:text-orange-500">
-          {translations.home}
-          </a>
-          <a
-            href="/contact"
-            className="font-bold text-white hover:text-orange-500"
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed z-[10000] md:hidden w-full bg-black shadow-md flex flex-col items-center space-y-6 py-4 mt-[10%] text-[1.2rem]"
           >
-             {translations.contactUs}
-          </a>
-          <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
-          {translations.loginButton}
-          </button>
-          <button className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40">
-          {translations.signUp}
-          </button>
-        </nav>
-      )}
+            <a
+              href="/about"
+              className="font-bold text-white hover:text-orange-500"
+            >
+              {translations.aboutUs}
+            </a>
+            <a
+              href="/contact"
+              className="font-bold text-white hover:text-orange-500"
+            >
+              {translations.contactUs}
+            </a>
+            <a
+              href="/login"
+              className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40"
+            >
+              {translations.loginButton}
+            </a>
+            <a
+              href="/register"
+              className="border hover:bg-gray-800 bg-orange-500 font-bold text-white px-4 py-2 rounded-full w-40"
+            >
+              {translations.signUp}
+            </a>
+
+            <div
+              className="p-2 text-white border border-gray-600 rounded-md bg-black flex items-center space-x-2 cursor-pointer"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              <GlobeIcon className="w-5 h-5 text-gray-300 hover:text-white" />
+              <span className="font-medium">
+                {languages.find((l) => l.code === language)?.label}
+              </span>
+            </div>
+
+            <AnimatePresence>
+              {dropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute text-white left-[37.5%] top-[28%] transform -translate-x-1/2 -translate-y-1/2 w-32 bg-black border border-gray-800 rounded-md shadow-lg"
+                >
+                  {languages.map((lang) => (
+                    <div
+                      key={lang.code}
+                      className="px-3 py-1 text-sm hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      {lang.label}
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <main className="relative flex flex-col items-center justify-center min-h-screen w-full px-6 py-8 md:px-12 text-white text-center pt-[15%]">
@@ -125,7 +241,7 @@ function ContactPage() {
               animate ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-             {translations.contactUs}
+            {translations.contactUs}
           </h1>
           <p
             className={`text-1xl md:text-[1.2rem] transition-opacity ${
