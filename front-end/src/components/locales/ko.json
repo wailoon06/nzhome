@@ -257,5 +257,19 @@
   "contactp1": "질문, 의견 또는 지원이 필요하시면 언제든지 문의해 주세요.",
   "name": "이름",
   "message": "메시지",
-  "sendMess": "메시지 보내기"
+  "sendMess": "메시지 보내기",
+
+  "month": "월",
+  "week": "주",
+  "day": "일",
+  "groupby": "그룹별 :",
+  "graphtype": "그래프 유형 :",
+
+  "helpfeed": "도움말 및 피드백",
+  "typemess": "여기에 메시지를 입력하세요...",
+  "posting": "게시 중...",
+  "postmess": "메시지 게시",
+
+  "old_password": "기존 비밀번호",
+  "new_password": "새 비밀번호"
 }

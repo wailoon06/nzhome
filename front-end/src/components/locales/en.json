@@ -257,5 +257,22 @@
 "contactp1": "We’d love to hear from you! Whether you have questions, feedback, or need support, feel free to reach out to us.",
 "name": "Name",
 "message": "Message",
-"sendMess": "Send Message"
+"sendMess": "Send Message",
+
+
+
+
+"month": "Month",
+"week": "Week",
+"day": "Day",
+"groupby": "Group by :",
+"graphtype": "Graph Type :",
+
+"helpfeed": "Help & Feedback",
+"typemess": "Type your message here...",
+"posting": "Posting...",
+"postmess": "Post Message",
+
+"old_password": "Old Password",
+"new_password": "New Password"
 }

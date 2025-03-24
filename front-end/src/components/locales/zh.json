@@ -258,5 +258,19 @@
   "contactp1": "我们期待您的来信！如果您有任何问题、反馈或需要帮助，请随时联系我们。",
   "name": "姓名",
   "message": "留言",
-  "sendMess": "发送留言"
+  "sendMess": "发送留言",
+
+  "month": "月份",
+  "week": "星期",
+  "day": "日",
+  "groupby": "分组方式：",
+  "graphtype": "图表类型：",
+
+  "helpfeed": "帮助与反馈",
+  "typemess": "在这里输入您的消息...",
+  "posting": "正在发布...",
+  "postmess": "发布消息",
+
+  "old_password": "旧密码",
+  "new_password": "新密码"
 }
