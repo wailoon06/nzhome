@@ -20,7 +20,7 @@
   "select": "Select",
   "turnOn": "Turn On",
   "turnOff": "Turn Off",
-  "auto": "Auto",
+  "auto": "Auto apply settings on startup",
   "done": "Done",
 
   "temperatureLabel": "Temperature",

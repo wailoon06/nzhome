@@ -20,7 +20,7 @@
   "select": "Pilih",
   "turnOn": "Hidupkan",
   "turnOff": "Matikan",
-  "auto": "Automatik",
+  "auto": "Auto gunakan tetapan semasa permulaan",
   "done": "Selesai",
 
   "temperatureLabel": "Suhu",

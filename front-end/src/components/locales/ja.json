@@ -20,7 +20,7 @@
   "select": "選択",
   "turnOn": "オン",
   "turnOff": "オフ",
-  "auto": "自動",
+  "auto": "起動時に設定を自動適用する",
   "done": "完了",
 
   "temperatureLabel": "温度",

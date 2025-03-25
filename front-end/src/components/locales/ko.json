@@ -20,7 +20,7 @@
   "select": "선택",
   "turnOn": "켜기",
   "turnOff": "끄기",
-  "auto": "자동",
+  "auto": "시작 시 설정 자동 적용",
   "done": "완료",
 
   "temperatureLabel": "온도",

@@ -20,7 +20,7 @@
   "select": "选择",
   "turnOn": "开启",
   "turnOff": "关闭",
-  "auto": "自动",
+  "auto": "启动时自动应用设置",
   "done": "完成",
 
   "temperatureLabel": "温度",
