@@ -49,7 +49,7 @@ function InternetUsagePage() {
     }
   
     axios
-      .get("https://humdrum-beef-production.up.railway.app/api/internet", { headers: { Authorization: `Bearer ${token}` } })
+      .get("http://localhost:8080/api/internet", { headers: { Authorization: `Bearer ${token}` } })
       .then((response) => {
         console.log("API Response:", response.data); // Debugging
   
@@ -144,7 +144,7 @@ function InternetUsagePage() {
     }
 
     axios
-      .get("https://humdrum-beef-production.up.railway.app/api/internet", { headers: { Authorization: `Bearer ${token}` } })
+      .get("http://localhost:8080/api/internet", { headers: { Authorization: `Bearer ${token}` } })
       .then((response) => {
         console.log("API Response:", response.data);
 

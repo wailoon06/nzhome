@@ -69,7 +69,7 @@ function RoomsDevicesPage() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "https://humdrum-beef-production.up.railway.app/api/getDeviceRoom",
+        "http://localhost:8080/api/getDeviceRoom",
         { roomName: roomTitle },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +83,7 @@ function RoomsDevicesPage() {
         try {
           // Validate device permission
           await axios.post(
-            "https://humdrum-beef-production.up.railway.app/api/validateDevicePermission",
+            "http://localhost:8080/api/validateDevicePermission",
             { deviceid: device.deviceid },
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -150,7 +150,7 @@ function RoomsDevicesPage() {
 
       const token = localStorage.getItem("token");
       await axios.put(
-        "https://humdrum-beef-production.up.railway.app/api/OnOff",
+        "http://localhost:8080/api/OnOff",
         {
           deviceid: deviceid,
           state: newState ? "On" : "Off",
@@ -218,7 +218,7 @@ function RoomsDevicesPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("https://humdrum-beef-production.up.railway.app/api/getUserFam", {
+      const response = await axios.get("http://localhost:8080/api/getUserFam", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -242,7 +242,7 @@ function RoomsDevicesPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "https://humdrum-beef-production.up.railway.app/api/getUserWithPermission",
+        "http://localhost:8080/api/getUserWithPermission",
         {
           roomid: roomid,
         },
@@ -302,7 +302,7 @@ function RoomsDevicesPage() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "https://humdrum-beef-production.up.railway.app/api/grantPermission",
+        "http://localhost:8080/api/grantPermission",
         {
           userid: selectedUsers,
           roomid: roomid,
@@ -363,7 +363,7 @@ function RoomsDevicesPage() {
       const token = localStorage.getItem("token");
 
       const response = await axios.delete(
-        "https://humdrum-beef-production.up.railway.app/api/deletePermission",
+        "http://localhost:8080/api/deletePermission",
         {
           headers: { Authorization: `Bearer ${token}` },
           data: {
@@ -428,7 +428,7 @@ function RoomsDevicesPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getUserDetails",
+        "http://localhost:8080/api/getUserDetails",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

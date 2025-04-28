@@ -66,7 +66,7 @@ function RoomsNewPage() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getDeviceNoRoom",
+        "http://localhost:8080/api/getDeviceNoRoom",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -168,7 +168,7 @@ function RoomsNewPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "https://humdrum-beef-production.up.railway.app/api/createRoom",
+        "http://localhost:8080/api/createRoom",
         formData,
         {
           headers: {

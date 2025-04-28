@@ -113,7 +113,7 @@ function ElectricUsagePage() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "https://humdrum-beef-production.up.railway.app/api/getEnergyFam",
+          "http://localhost:8080/api/getEnergyFam",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -227,7 +227,7 @@ function ElectricUsagePage() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "https://humdrum-beef-production.up.railway.app/api/getEnergyFam",
+          "http://localhost:8080/api/getEnergyFam",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -311,7 +311,7 @@ function ElectricUsagePage() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "https://humdrum-beef-production.up.railway.app/api/getEnergyFam",
+          "http://localhost:8080/api/getEnergyFam",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -395,7 +395,7 @@ function ElectricUsagePage() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "https://humdrum-beef-production.up.railway.app/api/getEnergyFam",
+          "http://localhost:8080/api/getEnergyFam",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

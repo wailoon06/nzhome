@@ -47,7 +47,7 @@ function Devices() {
 
       // Step 1: Get all devices
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getAllDevice",
+        "http://localhost:8080/api/getAllDevice",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -58,7 +58,7 @@ function Devices() {
         try {
           // Validate device permission
           await axios.post(
-            "https://humdrum-beef-production.up.railway.app/api/validateDevicePermission",
+            "http://localhost:8080/api/validateDevicePermission",
             { deviceid: device.deviceid },
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -186,7 +186,7 @@ function Devices() {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        "https://humdrum-beef-production.up.railway.app/api/OnOff",
+        "http://localhost:8080/api/OnOff",
         { deviceid: deviceid },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -248,7 +248,7 @@ function Devices() {
       for (const device of devicesToToggle) {
         console.log(`Toggling device: ${device.deviceid}`);
         await axios.put(
-          "https://humdrum-beef-production.up.railway.app/api/OnOff",
+          "http://localhost:8080/api/OnOff",
           { deviceid: device.deviceid },
           { headers: { Authorization: `Bearer ${token}` } }
         );

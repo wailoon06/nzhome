@@ -50,7 +50,7 @@ function Users() {
           return;
         }
 
-        const response = await axios.get("https://humdrum-beef-production.up.railway.app/api/getUserFam", {
+        const response = await axios.get("http://localhost:8080/api/getUserFam", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

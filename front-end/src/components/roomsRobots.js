@@ -21,7 +21,7 @@ function RoomsRobots() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getUserDetails",
+        "http://localhost:8080/api/getUserDetails",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -43,7 +43,7 @@ function RoomsRobots() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getAllRooms",
+        "http://localhost:8080/api/getAllRooms",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -64,7 +64,7 @@ function RoomsRobots() {
       for (const room of response.data) {
         try {
           await axios.post(
-            "https://humdrum-beef-production.up.railway.app/api/validatePermission",
+            "http://localhost:8080/api/validatePermission",
             { roomid: room.roomid },
             {
               headers: { Authorization: `Bearer ${token}` },
@@ -174,7 +174,7 @@ function RoomsRobots() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getAllDevice",
+        "http://localhost:8080/api/getAllDevice",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

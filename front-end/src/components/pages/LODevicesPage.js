@@ -39,7 +39,7 @@ function LODevicesPage() {
   
       // Step 1: Get all devices
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getUserDetails",
+        "http://localhost:8080/api/getUserDetails",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -80,7 +80,7 @@ function LODevicesPage() {
   
       // Step 1: Get all devices
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getAllDevice",
+        "http://localhost:8080/api/getAllDevice",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
@@ -91,7 +91,7 @@ function LODevicesPage() {
         try {
           // Validate device permission
           await axios.post(
-            "https://humdrum-beef-production.up.railway.app/api/validateDevicePermission",
+            "http://localhost:8080/api/validateDevicePermission",
             { deviceid: device.deviceid },
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -163,7 +163,7 @@ function LODevicesPage() {
 
       const token = localStorage.getItem("token");
       await axios.put(
-        "https://humdrum-beef-production.up.railway.app/api/OnOff",
+        "http://localhost:8080/api/OnOff",
         {
           deviceid: deviceid,
           state: newState ? "On" : "Off",

@@ -100,7 +100,7 @@ function App() {
       // Get token
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://humdrum-beef-production.up.railway.app/api/getUserDetails",
+        "http://localhost:8080/api/getUserDetails",
         {
           headers: {
             Authorization: `Bearer ${token}`,
